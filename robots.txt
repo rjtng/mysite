@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alrajitheng.vercel.app/sitemap.xml

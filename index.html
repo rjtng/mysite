@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Al-Raji Theng — Computer Engineer &amp; Developer</title>
+
+<meta name="description" content="Al-Raji Theng is a computer engineer in the Philippines building web and mobile applications, with a habit of wandering down into computer vision, embedded hardware and networks.">
+<meta name="author" content="Al-Raji Theng">
+<meta name="theme-color" content="#050A16">
+<link rel="canonical" href="https://alrajitheng.vercel.app/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Al-Raji Theng">
+<meta property="og:title" content="Al-Raji Theng — Computer Engineer &amp; Developer">
+<meta property="og:description" content="Web and mobile development, computer vision, and the networking and embedded layers underneath.">
+<meta property="og:url" content="https://alrajitheng.vercel.app/">
+<meta property="og:image" content="https://alrajitheng.vercel.app/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Al-Raji Theng — computer engineer. Web and mobile development, computer vision, networks.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Al-Raji Theng — Computer Engineer &amp; Developer">
+<meta name="twitter:description" content="Web and mobile development, computer vision, and the networking and embedded layers underneath.">
+<meta name="twitter:image" content="https://alrajitheng.vercel.app/assets/img/og-cover.png">
+
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/favicon.svg">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.credly.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/styles.css">
+
+<!-- Entry fades only exist when scripting does. Without this class the .reveal
+     rule never applies, so the page renders fully rather than staying blank. -->
+<script>document.documentElement.classList.add('js');</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Al-Raji Theng",
+  "jobTitle": "Computer Engineer",
+  "email": "mailto:alrajitheng@gmail.com",
+  "url": "https://alrajitheng.vercel.app/",
+  "address": { "@type": "PostalAddress", "addressCountry": "PH" },
+  "alumniOf": { "@type": "CollegeOrUniversity", "name": "Universidad de Zamboanga" },
+  "knowsAbout": ["Web Development","Mobile Development","Computer Vision","Embedded Systems","Computer Networking","Cloud Infrastructure","UI/UX Design"],
+  "sameAs": [
+    "https://github.com/rjtng",
+    "https://linkedin.com/in/rjtg",
+    "https://credly.com/users/rjt",
+    "https://g.dev/teg"
+  ]
+}
+</script>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="atmos" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════ nav ═══════════════════════════ -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#home">Al-Raji Theng<span>.</span></a>
+
+  <nav class="nav__links" aria-label="Sections">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#certifications">Certifications</a>
+    <a href="#experience">Experience</a>
+  </nav>
+
+  <a class="nav__cta" href="#contact">Get in touch</a>
+
+  <button class="nav__burger" id="burger" aria-expanded="false" aria-controls="sheet" aria-label="Open menu">
+    <i></i><i></i><i></i>
+  </button>
+</header>
+
+<div class="sheet" id="sheet" hidden>
+  <nav aria-label="Sections">
+    <a href="#about"><span>01</span>About</a>
+    <a href="#skills"><span>02</span>Skills</a>
+    <a href="#projects"><span>03</span>Projects</a>
+    <a href="#certifications"><span>04</span>Certifications</a>
+    <a href="#experience"><span>05</span>Experience</a>
+    <a href="#contact"><span>06</span>Contact</a>
+  </nav>
+  <p class="sheet__mail"><a href="mailto:alrajitheng@gmail.com">alrajitheng@gmail.com</a></p>
+</div>
+
+<main id="main">
+
+<!-- ═══════════════════════════ 1 · hero ═══════════════════════════ -->
+<section class="hero" id="home">
+  <div class="wrap">
+    <div class="hero__grid">
+
+      <div>
+        <!-- EDIT: remove this pill once you're no longer looking. -->
+        <p class="pill"><span class="dot" aria-hidden="true"></span>Open to work</p>
+
+        <h1 class="hero__name">Al-Raji<br><em>Theng</em></h1>
+
+        <p class="roles">
+          <span>Computer engineer &mdash;</span>
+          <span class="roles__slot" id="roles" aria-live="polite">
+            <b class="on">full-stack developer</b>
+            <b>Flutter developer</b>
+            <b>computer vision tinkerer</b>
+            <b>network technician</b>
+            <b>generalist, by necessity</b>
+          </span>
+          <span class="caret" aria-hidden="true"></span>
+        </p>
+
+        <p class="hero__intro">
+          I build web and mobile applications, and I am comfortable a good deal further
+          down the stack than most web developers. <strong>Computer vision, embedded
+          hardware, and the networks holding it together</strong> — that half of the degree
+          is the half people tend not to expect.
+        </p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#projects">
+            See the work
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a class="btn btn--ghost" href="mailto:alrajitheng@gmail.com">Email me</a>
+        </div>
+
+        <p class="hero__social">
+          <a href="https://github.com/rjtng" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://linkedin.com/in/rjtg" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://credly.com/users/rjt" target="_blank" rel="noopener noreferrer">Credly</a>
+          <a href="https://g.dev/teg" target="_blank" rel="noopener noreferrer">g.dev</a>
+        </p>
+      </div>
+
+      <div class="hero__portrait">
+        <div class="hero__chip">
+          <b>60</b>
+          <span>Verified credentials</span>
+        </div>
+
+        <div class="portrait">
+          <!-- EDIT: to use a photo, save it as assets/img/portrait.jpg (portrait
+               crop, roughly 4:5, 800px wide is plenty) and delete the two comment
+               markers around the line below. It sits on top of the monogram.
+               Left commented out so the page never requests a file that isn't there. -->
+          <!--
+          <img src="/assets/img/portrait.jpg" alt="Al-Raji Theng" width="800" height="1000">
+          -->
+          <div class="portrait__mark" aria-hidden="true">AT</div>
+          <p class="portrait__tag">
+            <b>Zamboanga, Philippines</b>
+            BS Computer Engineering · Universidad de Zamboanga
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <dl class="facts">
+      <div>
+        <dt>Based in</dt>
+        <dd>Philippines</dd>
+      </div>
+      <div>
+        <dt>Focus</dt>
+        <dd>Web, mobile &amp; vision</dd>
+      </div>
+      <div>
+        <dt>Daily drivers</dt>
+        <dd>Flutter · PHP · Python</dd>
+      </div>
+      <div>
+        <dt>Studying since</dt>
+        <dd>June 2024</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ marquee ═══════════════════════════ -->
+<div class="band" aria-hidden="true">
+  <div class="band__track" id="band">
+    <ul>
+      <li>Flutter</li><li>Python</li><li>PHP</li><li>OpenCV</li><li>React</li>
+      <li>MySQL</li><li>Firebase</li><li>Docker</li><li>Cisco IOS</li>
+      <li>Google Cloud</li><li>Node.js</li><li>MediaPipe</li><li>Figma</li>
+      <li>Kubernetes</li><li>Dart</li><li>TensorFlow</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ 2 · about ═══════════════════════════ -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="head">
+      <p class="head__index">01 / About</p>
+      <div class="head__rule"></div>
+      <h2 class="head__title">A generalist, and honest about it</h2>
+    </div>
+
+    <div class="about">
+      <aside class="profile card reveal">
+        <dl>
+          <div>
+            <dt>Full name</dt>
+            <dd>Al-Raji Theng</dd>
+          </div>
+          <div>
+            <dt>Degree</dt>
+            <dd>BS Computer Engineering
+              <small>Universidad de Zamboanga</small></dd>
+          </div>
+          <div>
+            <dt>Location</dt>
+            <dd>Philippines
+              <small>Open to remote and relocation</small></dd>
+          </div>
+          <div>
+            <dt>Enjoys most</dt>
+            <dd>Computer vision
+              <small>Detection and tracking, small scale</small></dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd><a href="mailto:alrajitheng@gmail.com" style="color:var(--sky)">alrajitheng@gmail.com</a></dd>
+          </div>
+        </dl>
+      </aside>
+
+      <div class="prose reveal">
+        <p class="prose__lead">
+          My degree is computer engineering, which meant as much time on logic gates,
+          microprocessors and subnet masks as on software. Everything I know about the web
+          and mobile side, I taught myself alongside it.
+        </p>
+
+        <p>
+          In practice that makes me a generalist. I have written PHP and MySQL systems for
+          local government records, Flutter apps that run on Android and iOS from one
+          codebase, and small OpenCV programs that track faces in a live camera feed.
+          <em>The computer vision work is the part I keep coming back to</em>, even when
+          nobody asked for it.
+        </p>
+
+        <p>
+          Since the middle of 2024 I have worked through sixty certificate programmes from
+          IBM, Google, Cisco, Meta and Microsoft. That number sounds ridiculous written down
+          and I know how it reads. The honest version is that structured courses are how I
+          learn best when there is no senior developer nearby to ask, and each one ends in a
+          graded project rather than a quiz.
+        </p>
+
+        <p>
+          What I want next is a team. I have done a lot of learning alone and I would like to
+          do the next part of it with people who are further along than me.
+        </p>
+
+        <!-- EDIT: these three go stale fastest. Update them or delete the list. -->
+        <ul class="now">
+          <li><span>Building</span> ReadySetHire, a recruitment app in Flutter</li>
+          <li><span>Learning</span> Kubernetes properly, past the skill badges</li>
+          <li><span>Reading</span> more about real-time tracking than is probably healthy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 3 · skills ═══════════════════════════ -->
+<section class="section" id="skills">
+  <div class="wrap">
+    <div class="head">
+      <p class="head__index">02 / Skills &amp; Technologies</p>
+      <div class="head__rule"></div>
+      <h2 class="head__title">What I reach for, and where it came from</h2>
+      <p class="head__sub">
+        Ordered by how often I actually use them. Highlighted items are the ones I have
+        shipped something with — the rest I have studied and would need a week to get sharp
+        again. I would rather draw that line than let you find it later.
+      </p>
+    </div>
+
+    <div class="stack">
+      <div class="stack__row reveal">
+        <div class="stack__label"><i>01</i><h3>Languages</h3></div>
+        <div>
+          <ul class="chips">
+            <li class="key">Python</li><li class="key">JavaScript</li><li class="key">PHP</li>
+            <li class="key">Dart</li><li class="key">SQL</li><li>Java</li>
+            <li>C++</li><li>C#</li><li>Assembly</li>
+          </ul>
+          <p class="stack__note">
+            Python and JavaScript are what I reach for first. C++ and Assembly are from
+            microprocessor coursework, not from production.
+          </p>
+        </div>
+      </div>
+
+      <div class="stack__row reveal">
+        <div class="stack__label"><i>02</i><h3>Web</h3></div>
+        <div>
+          <ul class="chips">
+            <li class="key">PHP</li><li class="key">MySQL</li><li class="key">Bootstrap</li>
+            <li class="key">Apache</li><li>React</li><li>Node.js</li>
+            <li>Express</li><li>Django</li><li>Flask</li><li>Tailwind</li>
+          </ul>
+          <p class="stack__note">
+            Most of what I have actually shipped is PHP against MySQL. React and Node are
+            where the last year has gone.
+          </p>
+        </div>
+      </div>
+
+      <div class="stack__row reveal">
+        <div class="stack__label"><i>03</i><h3>Mobile</h3></div>
+        <div>
+          <ul class="chips">
+            <li class="key">Flutter</li><li class="key">Dart</li><li class="key">Firebase</li>
+            <li>Android Studio</li><li>Material Design</li>
+          </ul>
+          <p class="stack__note">
+            Flutter for anything cross-platform. ReadySetHire is the current example of it.
+          </p>
+        </div>
+      </div>
+
+      <div class="stack__row reveal">
+        <div class="stack__label"><i>04</i><h3>Vision &amp; ML</h3></div>
+        <div>
+          <ul class="chips">
+            <li class="key">OpenCV</li><li class="key">NumPy</li><li>MediaPipe</li>
+            <li>TensorFlow</li><li>Vertex AI</li>
+          </ul>
+          <p class="stack__note">
+            Detection and tracking, mostly. Small projects, but the work I enjoy most.
+          </p>
+        </div>
+      </div>
+
+      <div class="stack__row reveal">
+        <div class="stack__label"><i>05</i><h3>Infrastructure</h3></div>
+        <div>
+          <ul class="chips">
+            <li class="key">MySQL</li><li class="key">MariaDB</li><li class="key">Apache</li>
+            <li>NGINX</li><li>Docker</li><li>Google Cloud</li><li>Kubernetes</li><li>Vercel</li>
+          </ul>
+          <p class="stack__note">
+            Comfortable deploying and wiring things together. Kubernetes is recent and I am
+            still slow at it.
+          </p>
+        </div>
+      </div>
+
+      <div class="stack__row reveal">
+        <div class="stack__label"><i>06</i><h3>Networking</h3></div>
+        <div>
+          <ul class="chips">
+            <li class="key">TCP/IP</li><li class="key">Subnetting</li><li class="key">Cisco IOS</li>
+            <li>Routing &amp; switching</li><li>DHCP</li><li>DNS</li><li>Wireless</li>
+          </ul>
+          <p class="stack__note">
+            CCNA coursework and Cisco&rsquo;s network technician path. The half of my degree that
+            tends to surprise people.
+          </p>
+        </div>
+      </div>
+
+      <div class="stack__row reveal">
+        <div class="stack__label"><i>07</i><h3>Design &amp; tools</h3></div>
+        <div>
+          <ul class="chips">
+            <li class="key">Figma</li><li class="key">Git</li><li class="key">Linux</li>
+            <li>Wireframing</li><li>CMake</li>
+          </ul>
+          <p class="stack__note">
+            I design the interfaces I build. Figma first, then code — including this page.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 4 · projects ═══════════════════════════ -->
+<section class="section" id="projects">
+  <div class="wrap">
+    <div class="head">
+      <p class="head__index">03 / Projects &amp; Portfolio</p>
+      <div class="head__rule"></div>
+      <h2 class="head__title">Two worth explaining, then the rest</h2>
+      <p class="head__sub">
+        Most of my public repositories are small. The larger systems I have worked on live on
+        school servers or in private repos, which is why this list is shorter than the
+        credential list below it.
+      </p>
+    </div>
+
+    <!-- EDIT: the third paragraph of each case study is written from the repo alone.
+         Replace it with the problem you actually hit. Specific and slightly awkward
+         beats polished — it is the part an interviewer will ask about. -->
+    <div class="cases">
+
+      <article class="case reveal">
+        <div class="case__art">
+          <span class="case__year">2026</span>
+          <span class="case__glyph">RSH</span>
+        </div>
+        <div class="case__body">
+          <p class="case__kicker">Personal project · In progress</p>
+          <h3><a href="https://github.com/rjtng/readysethire" target="_blank" rel="noopener noreferrer">ReadySetHire</a></h3>
+          <p>
+            A recruitment app in Flutter covering candidate profiles, job listings and the
+            stages an application moves through. One Dart codebase for Android and iOS, with
+            Firebase behind it.
+          </p>
+          <p>
+            The interesting part has been state. An application belongs to a candidate and to
+            a role at the same time, and both sides want to see it change. I rewrote that
+            layer twice before it stopped fighting me.
+          </p>
+          <div class="case__foot">
+            <p class="case__tech">Dart · Flutter · Firebase · Material</p>
+            <a class="case__link" href="https://github.com/rjtng/readysethire" target="_blank" rel="noopener noreferrer">
+              Repository
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="case case--flip reveal">
+        <div class="case__art">
+          <span class="case__year">2025</span>
+          <span class="case__glyph">BM</span>
+        </div>
+        <div class="case__body">
+          <p class="case__kicker">Records system · Local government</p>
+          <h3><a href="https://github.com/rjtng/Barangay_Maganda_MI_System" target="_blank" rel="noopener noreferrer">Barangay Maganda MIS</a></h3>
+          <p>
+            A management information system for a barangay office: resident records, document
+            requests, and the reports the staff have to file. PHP and MySQL, deliberately,
+            because it had to run on the hosting they already had.
+          </p>
+          <p>
+            Building for clerks rather than developers changed how I designed it. Fewer
+            screens, bigger targets, and every destructive action asks twice.
+          </p>
+          <div class="case__foot">
+            <p class="case__tech">PHP · MySQL · Apache · Bootstrap</p>
+            <a class="case__link" href="https://github.com/rjtng/Barangay_Maganda_MI_System" target="_blank" rel="noopener noreferrer">
+              Repository
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="repos reveal">
+      <h3>Smaller things &amp; collaborations</h3>
+      <ul>
+        <li>
+          <a href="https://github.com/rjtng/MeowCV" target="_blank" rel="noopener noreferrer">
+            <span class="repos__name">MeowCV</span>
+            <span class="repos__desc">Face detection that puts a cat on every face it finds. A joke with real tracking behind it.</span>
+            <span class="repos__tech">Python · OpenCV</span>
+            <svg class="repos__go" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/rjtng/naruto-shadow-clone-jutsu" target="_blank" rel="noopener noreferrer">
+            <span class="repos__name">Shadow Clone Jutsu</span>
+            <span class="repos__desc">A webcam experiment that duplicates you across the canvas. Runs entirely in the browser.</span>
+            <span class="repos__tech">JavaScript · Canvas</span>
+            <svg class="repos__go" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/rjtng/dict_frcc" target="_blank" rel="noopener noreferrer">
+            <span class="repos__name">DICT FRCC</span>
+            <span class="repos__desc">A team web application. I worked on the front end and the client-side logic.</span>
+            <span class="repos__tech">JavaScript · HTML · CSS</span>
+            <svg class="repos__go" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5"/></svg>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/rjtng/reycoin" target="_blank" rel="noopener noreferrer">
+            <span class="repos__name">ReyCoin</span>
+            <span class="repos__desc">A PHP platform built with the same group. Server-side logic and the data model.</span>
+            <span class="repos__tech">PHP · MySQL</span>
+            <svg class="repos__go" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5"/></svg>
+          </a>
+        </li>
+      </ul>
+      <p class="outro">
+        Everything public lives at
+        <a href="https://github.com/rjtng?tab=repositories" target="_blank" rel="noopener noreferrer">github.com/rjtng</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 5 · certifications ═══════════════════════════ -->
+<section class="section" id="certifications">
+  <div class="wrap">
+    <div class="head">
+      <p class="head__index">04 / Certifications &amp; Achievements</p>
+      <div class="head__rule"></div>
+      <h2 class="head__title">Sixty of them, all verifiable</h2>
+      <p class="head__sub">
+        Certificates are not the same thing as experience and I will not pretend otherwise.
+        What they are is a record of what I have deliberately sat down and studied. These
+        twelve are the ones I would actually point at in an interview.
+      </p>
+    </div>
+
+    <dl class="counts reveal" id="counts"></dl>
+
+    <div class="badges reveal" id="badgeGrid"></div>
+
+    <div class="record reveal">
+      <div class="record__bar">
+        <h3>The full record</h3>
+        <div id="filters"></div>
+      </div>
+      <ul class="record__list" id="recordList"></ul>
+      <button class="record__more" id="recordMore" type="button" hidden></button>
+    </div>
+
+    <noscript>
+      <p class="outro">
+        The complete list, with issue dates and verification links, is public at
+        <a href="https://credly.com/users/rjt" target="_blank" rel="noopener noreferrer">credly.com/users/rjt</a>.
+      </p>
+    </noscript>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 6 · experience ═══════════════════════════ -->
+<section class="section" id="experience">
+  <div class="wrap">
+    <div class="head">
+      <p class="head__index">05 / Experience</p>
+      <div class="head__rule"></div>
+      <h2 class="head__title">How the last few years went</h2>
+      <p class="head__sub">
+        Study, self-directed work and the projects that came out of both. I have not held a
+        salaried developer role yet, so this is what I have — written plainly rather than
+        dressed up.
+      </p>
+    </div>
+
+    <!-- EDIT: jobs, internships and OJT go at the top of this list. Copy one <li>
+         block, change the dates, the organisation and the description. -->
+    <ol class="timeline">
+      <li class="reveal">
+        <p class="timeline__when">2026
+          <span class="timeline__where">Personal &amp; team projects</span>
+        </p>
+        <div class="timeline__what">
+          <h3>Full-stack and mobile</h3>
+          <p>
+            Building ReadySetHire in Flutter, and contributing front-end work to two team
+            projects. Finished Cisco&rsquo;s DevNet Associate and the IBM and Meta developer
+            tracks in the same stretch.
+          </p>
+          <ul class="timeline__tags">
+            <li>Flutter</li><li>Firebase</li><li>React</li><li>DevNet</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="reveal">
+        <p class="timeline__when">2025
+          <span class="timeline__where">Barangay Maganda · Google Cloud</span>
+        </p>
+        <div class="timeline__what">
+          <h3>Cloud, networks, and a records system</h3>
+          <p>
+            Built and delivered the Barangay Maganda management information system. Alongside
+            it, eleven Google Cloud skill badges — Kubernetes, load balancing, Cloud SQL
+            migration, Vertex AI — and the CCNA routing and switching coursework.
+          </p>
+          <ul class="timeline__tags">
+            <li>PHP</li><li>MySQL</li><li>Kubernetes</li><li>CCNA</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="reveal">
+        <p class="timeline__when">2024
+          <span class="timeline__where">IBM · Google · Meta · Microsoft</span>
+        </p>
+        <div class="timeline__what">
+          <h3>The year of courses</h3>
+          <p>
+            Most of the certificate list dates from here: data science, data engineering, AI
+            development, business intelligence, cybersecurity analysis, and Google&rsquo;s UX design
+            and project management tracks. A deliberate, and fairly relentless, catch-up.
+          </p>
+          <ul class="timeline__tags">
+            <li>Data science</li><li>Cybersecurity</li><li>UX design</li><li>Python</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="reveal">
+        <p class="timeline__when">Degree
+          <span class="timeline__where">Universidad de Zamboanga</span>
+        </p>
+        <div class="timeline__what">
+          <h3>BS Computer Engineering</h3>
+          <p>
+            Digital logic, microprocessors and assembly, embedded systems, and computer
+            networks. Still the foundation everything else sits on, and the reason I am not
+            nervous about hardware.
+          </p>
+          <ul class="timeline__tags">
+            <li>Embedded</li><li>Assembly</li><li>Networks</li><li>Digital logic</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 7 · contact ═══════════════════════════ -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="contact reveal">
+      <p class="contact__index">06 / Contact</p>
+      <h2>Let&rsquo;s talk about what you&rsquo;re building</h2>
+      <p>
+        If you are hiring, or you have something you think I would find interesting, write to
+        me. I read everything and I reply.
+      </p>
+
+      <a class="contact__mail" href="mailto:alrajitheng@gmail.com">alrajitheng@gmail.com</a>
+
+      <div class="social">
+        <a href="https://github.com/rjtng" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.5 5 18.5 5.3 18.5 5.3c.6 1.7.2 2.9.1 3.2.8.9 1.2 1.9 1.2 3.2 0 4.6-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+          <span><b>GitHub</b><span>@rjtng</span></span>
+        </a>
+        <a href="https://linkedin.com/in/rjtg" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8 19H5V9.5h3V19ZM6.5 8.2a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5ZM19 19h-3v-4.6c0-1.1 0-2.5-1.6-2.5s-1.8 1.2-1.8 2.4V19h-3V9.5h2.9v1.3h.1a3.2 3.2 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.5V19Z"/></svg>
+          <span><b>LinkedIn</b><span>in/rjtg</span></span>
+        </a>
+        <a href="https://credly.com/users/rjt" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.2 7 22l5-2.5 5 2.5-1.5-7.8"/></svg>
+          <span><b>Credly</b><span>60 badges</span></span>
+        </a>
+        <a href="https://g.dev/teg" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3a9 9 0 1 0 8.5 12H12V9.8h11"/></svg>
+          <span><b>Google Developers</b><span>g.dev/teg</span></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <p>&copy; <span id="year">2026</span> Al-Raji Theng — built by hand, no framework</p>
+    <a class="foot__top" href="#home">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 13V3M4 7l4-4 4 4"/></svg>
+      Back to top
+    </a>
+  </div>
+</footer>
+
+<script src="/assets/js/data-certs.js"></script>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

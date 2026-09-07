@@ -1,0 +1,12 @@
+{
+  "name": "Al-Raji Theng — Portfolio",
+  "short_name": "Al-Raji",
+  "description": "Computer engineer and full-stack developer working across web, mobile, computer vision and embedded systems.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050A16",
+  "theme_color": "#050A16",
+  "icons": [
+    { "src": "/assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
