@@ -668,7 +668,20 @@ main { position: relative; z-index: 2; }
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  /* Draggable. pan-y keeps vertical page scrolling with the browser and hands
+     only the horizontal gesture to the script. */
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
 }
+.band.dragging { cursor: grabbing; }
+
+/* Carries the manual drag offset. Separating it from the track means the CSS
+   auto-scroll below keeps running on its own transform, and the two simply
+   compose. */
+.band__drag { will-change: transform; }
+
 .band__track {
   display: flex;
   width: max-content;
@@ -678,7 +691,8 @@ main { position: relative; z-index: 2; }
    technologies changes the length of the strip and not its speed.
    Without JS the row simply sits still, which is fine — it is decoration. */
 .band__track[data-ready] { animation: slide var(--band-time, 90s) linear infinite; }
-.band:hover .band__track { animation-play-state: paused; }
+.band:hover .band__track,
+.band.dragging .band__track { animation-play-state: paused; }
 .band ul { display: flex; align-items: center; }
 .band li {
   display: flex;
@@ -689,14 +703,13 @@ main { position: relative; z-index: 2; }
   font-size: clamp(15px, 1.8vw, 20px);
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: rgba(233,241,252,.5);
   white-space: nowrap;
-  transition: color .25s var(--ease);
+  /* Each item carries its own --brand, written by tools/fetch-logos.py from
+     the official palette and lifted toward white only where the brand colour
+     would have been unreadable on this background. Shown at rest rather than
+     on hover, so mark and label are always in the real colour. */
+  color: var(--brand, var(--sky));
 }
-/* Each item carries its own --brand, written by tools/fetch-logos.py from the
-   official palette and lifted toward white only where the brand colour would
-   have been unreadable on this background. */
-.band li:hover { color: var(--brand, var(--sky)); }
 .band li::after {
   content: "";
   width: 6px; height: 6px;
@@ -706,10 +719,11 @@ main { position: relative; z-index: 2; }
   opacity: .55;
 }
 
-/* The mark inherits the item's colour, so text and logo light up together.
+/* The mark inherits the item's colour, so mark and label match.
    Hidden until main.js has injected the sprite, so a failed or blocked fetch
    leaves a clean text strip rather than a row of empty boxes. */
-.band__logo { display: none; }
+.band__logo,
+.chip__logo { display: none; }
 .sprite-ready .band__logo {
   display: block;
   width: 1.15em;
@@ -828,6 +842,9 @@ main { position: relative; z-index: 2; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   padding: 6px 13px;
   border: 1px solid var(--line);
   border-radius: var(--pill);
@@ -841,6 +858,16 @@ main { position: relative; z-index: 2; }
   border-color: rgba(99,205,255,.4);
   background: rgba(44,123,242,.13);
   color: var(--sky-pale);
+}
+/* The mark keeps its own brand colour while the label stays in the chip's
+   text colour, so the "key" highlight still reads as a highlight. Chips whose
+   skill has no logo — subnetting, DHCP and the rest — are plain text. */
+.sprite-ready .chip__logo {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  fill: var(--brand, currentColor);
 }
 
 .stack__note {

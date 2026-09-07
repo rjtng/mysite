@@ -182,7 +182,7 @@
      unreliable in WebKit. Until it lands the marks stay hidden, so a blocked or
      failed request degrades to the plain text strip this used to be. */
   if (window.fetch && $('.band__logo')) {
-    fetch('/assets/img/tech-sprite.svg?v=2')
+    fetch('/assets/img/tech-sprite.svg?v=3')
       .then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); })
       .then(function (text) {
         var doc = new DOMParser().parseFromString(text, 'image/svg+xml');
@@ -198,6 +198,50 @@
         paceBand();   // the marks widen every item, so re-measure
       })
       .catch(function () { /* the labels stand on their own */ });
+  }
+
+  /* --- marquee: drag to scrub ------------------------------------------------
+     The auto-scroll is a CSS animation on the track. Dragging moves a separate
+     wrapper around it, so the two transforms compose rather than fight, and
+     the animation never has to be unwound and restarted.
+
+     The strip is two identical copies, so the content repeats every one row
+     width. Wrapping the drag offset into that span keeps the seam invisible no
+     matter how far someone drags, and stops the number growing without bound. */
+  var viewport = $('#bandViewport');
+  var dragEl   = $('#bandDrag');
+
+  if (viewport && dragEl && row && window.PointerEvent) {
+    var offset = 0, startX = 0, startOffset = 0, dragging = false;
+
+    viewport.addEventListener('pointerdown', function (e) {
+      if (e.button) { return; }              // left button and touch only
+      dragging = true;
+      startX = e.clientX;
+      startOffset = offset;
+      viewport.classList.add('dragging');
+      try { viewport.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    viewport.addEventListener('pointermove', function (e) {
+      if (!dragging) { return; }
+      offset = startOffset + (e.clientX - startX);
+      var period = row.getBoundingClientRect().width;
+      if (period) { offset = offset % period; }
+      dragEl.style.transform = 'translateX(' + offset + 'px)';
+    });
+
+    function endDrag(e) {
+      if (!dragging) { return; }
+      dragging = false;
+      viewport.classList.remove('dragging');
+      if (e && e.pointerId !== undefined) {
+        try { viewport.releasePointerCapture(e.pointerId); } catch (err) {}
+      }
+    }
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
+    viewport.addEventListener('lostpointercapture', endDrag);
   }
 
   /* =========================================================================
