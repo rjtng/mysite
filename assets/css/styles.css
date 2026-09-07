@@ -1403,9 +1403,21 @@ main { position: relative; z-index: 2; }
   .hero__portrait { max-width: none; }
   .hero__chip { top: 14px; right: 14px; padding: 10px 14px; }
   .hero__chip b { font-size: 21px; }
-  /* Two rows, left-aligned: centring is a cross-axis rule, and the cross axis
-     is horizontal once this becomes a column. */
-  .roles { flex-direction: column; align-items: flex-start; gap: 2px; }
+
+  /* Hero text centres on phones. At this width the column is narrow enough
+     that a left rag reads as an off-centre block rather than as alignment,
+     and the portrait below is full-bleed, so a centred axis lines the two up.
+     Everything above 620px keeps the left rag, where the text sits beside
+     the portrait and has a column edge to align to. */
+  .hero__grid > :first-child { text-align: center; }
+  .hero__actions,
+  .hero__social { justify-content: center; }
+  /* The caption follows, or it reads as a stray left edge under a centred
+     column. Pinned both sides so the centre is the card's, not the text's. */
+  .portrait__tag { left: 20px; right: 20px; text-align: center; }
+  /* Two rows, both centred: this is a cross-axis rule, and the cross axis is
+     horizontal once the line becomes a column. */
+  .roles { flex-direction: column; align-items: center; gap: 2px; }
   .roles__slot { min-width: 0; flex: 1 1 auto; }
   .now li { grid-template-columns: 1fr; gap: 3px; }
   .repos li a { grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }

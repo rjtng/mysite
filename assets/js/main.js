@@ -182,7 +182,7 @@
      unreliable in WebKit. Until it lands the marks stay hidden, so a blocked or
      failed request degrades to the plain text strip this used to be. */
   if (window.fetch && $('.band__logo')) {
-    fetch('/assets/img/tech-sprite.svg?v=4')
+    fetch('/assets/img/tech-sprite.svg?v=5')
       .then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); })
       .then(function (text) {
         var doc = new DOMParser().parseFromString(text, 'image/svg+xml');
