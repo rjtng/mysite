@@ -646,28 +646,57 @@ main { position: relative; z-index: 2; }
   width: max-content;
 }
 /* The loop needs two identical copies; JS clones the list and sets this flag.
+   It also sets the duration from the measured width, so adding or removing
+   technologies changes the length of the strip and not its speed.
    Without JS the row simply sits still, which is fine — it is decoration. */
-.band__track[data-ready] { animation: slide 46s linear infinite; }
+.band__track[data-ready] { animation: slide var(--band-time, 90s) linear infinite; }
 .band:hover .band__track { animation-play-state: paused; }
 .band ul { display: flex; align-items: center; }
 .band li {
   display: flex;
   align-items: center;
-  gap: 26px;
-  padding-right: 26px;
+  gap: 10px;
+  padding-right: 22px;
   font-family: var(--display);
   font-size: clamp(15px, 1.8vw, 20px);
   font-weight: 500;
   letter-spacing: -0.02em;
   color: rgba(233,241,252,.5);
   white-space: nowrap;
+  transition: color .25s var(--ease);
 }
+/* Each item carries its own --brand, written by tools/fetch-logos.py from the
+   official palette and lifted toward white only where the brand colour would
+   have been unreadable on this background. */
+.band li:hover { color: var(--brand, var(--sky)); }
 .band li::after {
   content: "";
   width: 6px; height: 6px;
+  margin-left: 12px;
   border-radius: 50%;
   background: var(--sky);
   opacity: .55;
+}
+
+/* The mark inherits the item's colour, so text and logo light up together.
+   Hidden until main.js has injected the sprite, so a failed or blocked fetch
+   leaves a clean text strip rather than a row of empty boxes. */
+.band__logo { display: none; }
+.sprite-ready .band__logo {
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  fill: currentColor;
+}
+
+/* Holds the <symbol> definitions. Never painted, but must stay in the layout
+   tree — display:none on the container breaks <use> in some engines. */
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 @keyframes slide {
   from { transform: translateX(0); }

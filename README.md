@@ -10,7 +10,9 @@ assets/js/main.js          nav, mobile sheet, reveals, credential rendering
 assets/js/data-certs.js    generated — 60 Credly credentials
 assets/img/favicon.svg     tab icon
 assets/img/og-cover.png    1200x630 social card
+assets/img/tech-sprite.svg generated — 32 technology logos
 tools/fetch-credly.ps1     regenerates data-certs.js from Credly
+tools/fetch-logos.py       regenerates tech-sprite.svg and the marquee
 tools/make-og.py           regenerates og-cover.png
 vercel.json                headers and caching
 ```
@@ -91,12 +93,20 @@ Both give you a `*.vercel.app` URL immediately.
 ### After the first deploy
 
 The canonical URL, the sitemap and the social card point at
-`https://alrajitheng.vercel.app/`. If your deployment lands on a different
-hostname, change it in three places:
+`https://rjtg.vercel.app/`. If your deployment lands on a different hostname,
+change it in three places:
 
 - the `canonical`, `og:url` and both image tags in `index.html`
 - the `Sitemap:` line in `robots.txt`
 - the `<loc>` in `sitemap.xml`
+
+### A note on caching
+
+`/assets/*` used to be served `max-age=31536000, immutable`. That is only safe
+when filenames carry a content hash, and these do not, so a returning visitor
+would have been pinned to a stale stylesheet or logo sprite for up to a year.
+It is now `max-age=3600, must-revalidate`: an hour of hard cache, then a cheap
+ETag revalidation that returns a 304 when nothing has changed.
 
 ---
 
@@ -141,6 +151,25 @@ Credly stores badge art as 1200px PNGs, roughly 400 KB each, for a 58px slot.
 `main.js` rewrites those URLs to Credly's 110px and 220px variants, which cuts
 each one to about 9 KB. Two older badges use a `/blob` URL that ignores the
 resize and are left at full size.
+
+## Regenerating the technology strip
+
+```bash
+python tools/fetch-logos.py
+```
+
+Edit the `TECH` list at the top of that script to change what appears, then
+re-run it. It rewrites `assets/img/tech-sprite.svg` and the region between the
+`tech-marquee` markers in `index.html`. Do not hand-edit between those markers.
+
+The sprite is fetched at run time and injected, rather than inlined into the
+HTML, so it is cached separately instead of adding roughly 22 KB to every HTML
+response. Until it arrives the marks stay hidden, so a blocked request leaves
+the plain text strip rather than a row of empty boxes. See `tools/README.md`
+for where the marks and their brand colours come from.
+
+The marquee speed is set from the measured width of the row, so adding a
+technology makes the strip longer rather than faster.
 
 ## Regenerating the social card
 

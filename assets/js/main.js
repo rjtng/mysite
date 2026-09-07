@@ -121,11 +121,60 @@
     }
   }
 
-  /* --- marquee: needs two copies to loop seamlessly ------------------------- */
+  /* --- marquee ---------------------------------------------------------------
+     Two identical copies so the loop is seamless, paced off the measured width
+     so the strip always travels at the same speed. Adding a technology then
+     makes the row longer rather than faster, which is the part that is easy to
+     get wrong by hand. */
   var band = $('#band');
+  var paceBand = function () {};
+
   if (band && band.firstElementChild) {
-    band.appendChild(band.firstElementChild.cloneNode(true));
+    var row = band.firstElementChild;
+    band.appendChild(row.cloneNode(true));
     band.setAttribute('data-ready', '');
+
+    var PX_PER_SEC = 52;
+    var lastSeconds = 0;
+    paceBand = function () {
+      var width = row.getBoundingClientRect().width;
+      if (!width) { return; }
+      var seconds = Math.round(width / PX_PER_SEC);
+      if (seconds === lastSeconds) { return; }   // don't restart for nothing
+      lastSeconds = seconds;
+      band.style.setProperty('--band-time', seconds + 's');
+    };
+
+    paceBand();
+    // The labels are webfont text, so the row gets wider once Sora arrives.
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(paceBand); }
+    window.addEventListener('resize', paceBand);
+  }
+
+  /* --- technology logos ------------------------------------------------------
+     The sprite is fetched rather than inlined so it sits under /assets and is
+     cached for a year instead of riding along in every HTML response. It is
+     injected into the document rather than referenced with
+     <use href="sprite.svg#id">, because external references there are still
+     unreliable in WebKit. Until it lands the marks stay hidden, so a blocked or
+     failed request degrades to the plain text strip this used to be. */
+  if (window.fetch && $('.band__logo')) {
+    fetch('/assets/img/tech-sprite.svg')
+      .then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); })
+      .then(function (text) {
+        var doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+        var svg = doc.documentElement;
+        if (!svg || svg.nodeName.toLowerCase() !== 'svg' || doc.querySelector('parsererror')) {
+          return;
+        }
+        svg.setAttribute('class', 'sprite');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.setAttribute('focusable', 'false');
+        document.body.insertBefore(document.importNode(svg, true), document.body.firstChild);
+        document.documentElement.classList.add('sprite-ready');
+        paceBand();   // the marks widen every item, so re-measure
+      })
+      .catch(function () { /* the labels stand on their own */ });
   }
 
   /* =========================================================================
