@@ -1,6 +1,6 @@
 # tools
 
-Two generators. Neither runs at deploy time — the site is served as static
+Three generators. None of them run at deploy time — the site is served as static
 files — so run them by hand when the source data changes and commit the result.
 
 ## fetch-credly.ps1
@@ -21,25 +21,35 @@ are all derived from that one file, so they stay correct on their own.
 
 ## fetch-logos.py
 
-Rebuilds the technology strip in the hero marquee.
+Rebuilds the brand marks used in two places: the hero marquee and the skills
+chips.
 
     python tools/fetch-logos.py
 
-Edit the `TECH` list at the top to add, remove or reorder technologies, then
-re-run it. It writes `assets/img/tech-sprite.svg` and rewrites the region
-between the `tech-marquee` markers in `index.html`. Do not hand-edit between
-those markers.
+It writes `assets/img/tech-sprite.svg`, the region between the `tech-marquee`
+markers in `index.html`, and the contents of every `<ul class="chips">`. All
+three are regenerated from scratch each run, so it is safe to re-run. Do not
+hand-edit inside them.
 
-Marks come from Simple Icons, which publishes the official single-colour
-version of each logo. Simple Icons dropped C# and Java over trademark
-concerns, so those two come from Devicon's monochrome "plain" variants.
+`MARQUEE` at the top of the script is the strip, in scroll order. `ICONS` maps a
+label as written on the page to its mark. The chips rewrite reads the label
+already in the HTML and keeps the `key` class, so the skills list stays
+hand-authored; a label with no `ICONS` entry is left as plain text, which covers
+subnetting, DHCP and the rest of the networking list.
 
-Each mark is stripped of its own fill and drawn in `currentColor`, so the strip
-sits quiet in the page palette and lights up in the brand colour on hover. The
-brand colours come from the two projects' own data files, not from memory. Ten
-of them are too dark to read on this background, so the script walks each one
-toward white only as far as it must to clear 3.6:1 and prints what it changed.
-GitHub's brand black, for instance, ships as `#181717` and lands at `#747373`.
+Marks come from Simple Icons, which publishes the official single-colour version
+of each logo. Simple Icons dropped C# and Java over trademark concerns, so those
+two come from Devicon's monochrome "plain" variants. Brand colours come from the
+two projects' own data files, not from memory.
+
+Symbol ids are derived from the source slug rather than the label. Deriving them
+from the label stripped punctuation, which collapsed both "C++" and "C#" to `c`
+— one id for two logos, so C# rendered the C++ mark until this was fixed.
+
+Colour is held to 4.5:1 against the page background. That is the WCAG AA floor
+for normal text rather than the 3:1 that would do for a graphic, because the
+colour carries the label as well as the mark. Anything darker is walked toward
+white until it clears; the script prints every colour it changed.
 
 ## make-og.py
 

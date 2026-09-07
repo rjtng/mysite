@@ -10,7 +10,7 @@
 
     <meta
       name="description"
-      content="Al-Raji Theng is a computer engineer in the Philippines building web and mobile applications, with a habit of wandering down into computer vision, embedded hardware and networks."
+      content="Al-Raji Theng is a computer engineer building web and mobile applications, with a habit of wandering down into computer vision, embedded hardware and networks."
     />
     <meta name="author" content="Al-Raji Theng" />
     <meta name="theme-color" content="#050A16" />
@@ -62,7 +62,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=2" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=3" />
 
     <!-- Entry fades only exist when scripting does. Without this class the .reveal
      rule never applies, so the page renders fully rather than staying blank. -->
@@ -248,172 +248,49 @@
       </section>
 
       <!-- ═══════════════════════════ marquee ═══════════════════════════ -->
-      <div class="band" aria-hidden="true">
-        <div class="band__track" id="band">
+      <div class="band" id="bandViewport" aria-hidden="true">
+        <!-- Drag offset lives on its own element so the auto-scroll
+             animation on the track underneath is left untouched. -->
+        <div class="band__drag" id="bandDrag">
+          <div class="band__track" id="band">
           <ul>
             <!-- tech-marquee:start -->
-            <li style="--brand: #276faa">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-flutter"></use></svg
-              ><span>Flutter</span>
-            </li>
-            <li style="--brand: #0175c2">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-dart"></use></svg
-              ><span>Dart</span>
-            </li>
-            <li style="--brand: #3776ab">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-python"></use></svg
-              ><span>Python</span>
-            </li>
-            <li style="--brand: #f7df1e">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-javascript"></use></svg
-              ><span>JavaScript</span>
-            </li>
-            <li style="--brand: #777bb4">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-php"></use></svg
-              ><span>PHP</span>
-            </li>
-            <li style="--brand: #ea2d2e">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-java"></use></svg
-              ><span>Java</span>
-            </li>
-            <li style="--brand: #2671aa">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-c"></use></svg
-              ><span>C++</span>
-            </li>
-            <li style="--brand: #8d589b">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-c"></use></svg
-              ><span>C#</span>
-            </li>
-            <li style="--brand: #e34f26">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-html5"></use></svg
-              ><span>HTML5</span>
-            </li>
-            <li style="--brand: #845bad">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-css3"></use></svg
-              ><span>CSS3</span>
-            </li>
-            <li style="--brand: #06b6d4">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-tailwindcss"></use></svg
-              ><span>Tailwind CSS</span>
-            </li>
-            <li style="--brand: #7f5ab6">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-bootstrap"></use></svg
-              ><span>Bootstrap</span>
-            </li>
-            <li style="--brand: #61dafb">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-react"></use></svg
-              ><span>React</span>
-            </li>
-            <li style="--brand: #5fa04e">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-nodejs"></use></svg
-              ><span>Node.js</span>
-            </li>
-            <li style="--brand: #4479a1">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-mysql"></use></svg
-              ><span>MySQL</span>
-            </li>
-            <li style="--brand: #4c717c">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-mariadb"></use></svg
-              ><span>MariaDB</span>
-            </li>
-            <li style="--brand: #dd2c00">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-firebase"></use></svg
-              ><span>Firebase</span>
-            </li>
-            <li style="--brand: #6c51ea">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-opencv"></use></svg
-              ><span>OpenCV</span>
-            </li>
-            <li style="--brand: #0097a7">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-mediapipe"></use></svg
-              ><span>MediaPipe</span>
-            </li>
-            <li style="--brand: #ff6f00">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-tensorflow"></use></svg
-              ><span>TensorFlow</span>
-            </li>
-            <li style="--brand: #2496ed">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-docker"></use></svg
-              ><span>Docker</span>
-            </li>
-            <li style="--brand: #326ce5">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-kubernetes"></use></svg
-              ><span>Kubernetes</span>
-            </li>
-            <li style="--brand: #4285f4">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-googlecloud"></use></svg
-              ><span>Google Cloud</span>
-            </li>
-            <li style="--brand: #727272">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-vercel"></use></svg
-              ><span>Vercel</span>
-            </li>
-            <li style="--brand: #fcc624">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-linux"></use></svg
-              ><span>Linux</span>
-            </li>
-            <li style="--brand: #747373">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-github"></use></svg
-              ><span>GitHub</span>
-            </li>
-            <li style="--brand: #1ba0d7">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-ciscoios"></use></svg
-              ><span>Cisco IOS</span>
-            </li>
-            <li style="--brand: #00878f">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-arduino"></use></svg
-              ><span>Arduino</span>
-            </li>
-            <li style="--brand: #af4861">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-raspberrypi"></use></svg
-              ><span>Raspberry Pi</span>
-            </li>
-            <li style="--brand: #3ddc84">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-androidstudio"></use></svg
-              ><span>Android Studio</span>
-            </li>
-            <li style="--brand: #f24e1e">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-figma"></use></svg
-              ><span>Figma</span>
-            </li>
-            <li style="--brand: #00c4cc">
-              <svg class="band__logo" width="20" height="20" aria-hidden="true">
-                <use href="#t-canva"></use></svg
-              ><span>Canva</span>
-            </li>
+            <li style="--brand:#4180B4"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-flutter"></use></svg><span>Flutter</span></li>
+            <li style="--brand:#1A82C8"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-dart"></use></svg><span>Dart</span></li>
+            <li style="--brand:#4B83B3"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-python"></use></svg><span>Python</span></li>
+            <li style="--brand:#F7DF1E"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-javascript"></use></svg><span>JavaScript</span></li>
+            <li style="--brand:#777BB4"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-php"></use></svg><span>PHP</span></li>
+            <li style="--brand:#EA2D2E"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-java"></use></svg><span>Java</span></li>
+            <li style="--brand:#3F82B4"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-cplusplus"></use></svg><span>C++</span></li>
+            <li style="--brand:#9C6EA8"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-csharp"></use></svg><span>C#</span></li>
+            <li style="--brand:#E34F26"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-html5"></use></svg><span>HTML5</span></li>
+            <li style="--brand:#9370B7"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-css"></use></svg><span>CSS3</span></li>
+            <li style="--brand:#06B6D4"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-tailwindcss"></use></svg><span>Tailwind CSS</span></li>
+            <li style="--brand:#8D6BBE"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-bootstrap"></use></svg><span>Bootstrap</span></li>
+            <li style="--brand:#61DAFB"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-react"></use></svg><span>React</span></li>
+            <li style="--brand:#5FA04E"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-nodedotjs"></use></svg><span>Node.js</span></li>
+            <li style="--brand:#4D7FA5"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-mysql"></use></svg><span>MySQL</span></li>
+            <li style="--brand:#65858F"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-mariadb"></use></svg><span>MariaDB</span></li>
+            <li style="--brand:#FB7A24"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-xampp"></use></svg><span>XAMPP</span></li>
+            <li style="--brand:#E04119"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-firebase"></use></svg><span>Firebase</span></li>
+            <li style="--brand:#7C64EC"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-opencv"></use></svg><span>OpenCV</span></li>
+            <li style="--brand:#0097A7"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-mediapipe"></use></svg><span>MediaPipe</span></li>
+            <li style="--brand:#FF6F00"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-tensorflow"></use></svg><span>TensorFlow</span></li>
+            <li style="--brand:#2496ED"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-docker"></use></svg><span>Docker</span></li>
+            <li style="--brand:#3C73E6"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-kubernetes"></use></svg><span>Kubernetes</span></li>
+            <li style="--brand:#4285F4"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-googlecloud"></use></svg><span>Google Cloud</span></li>
+            <li style="--brand:#7F7F7F"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-vercel"></use></svg><span>Vercel</span></li>
+            <li style="--brand:#FCC624"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-linux"></use></svg><span>Linux</span></li>
+            <li style="--brand:#7F7F7F"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-github"></use></svg><span>GitHub</span></li>
+            <li style="--brand:#1BA0D7"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-cisco"></use></svg><span>Cisco IOS</span></li>
+            <li style="--brand:#00878F"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-arduino"></use></svg><span>Arduino</span></li>
+            <li style="--brand:#B95D74"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-raspberrypi"></use></svg><span>Raspberry Pi</span></li>
+            <li style="--brand:#3DDC84"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-androidstudio"></use></svg><span>Android Studio</span></li>
+            <li style="--brand:#F24E1E"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-figma"></use></svg><span>Figma</span></li>
+            <li style="--brand:#00C4CC"><svg class="band__logo" width="20" height="20" aria-hidden="true"><use href="#t-canva"></use></svg><span>Canva</span></li>
             <!-- tech-marquee:end -->
           </ul>
+          </div>
         </div>
       </div>
 
@@ -423,11 +300,11 @@
           <div class="head">
             <p class="head__index">01 / About</p>
             <div class="head__rule"></div>
-            <h2 class="head__title">A generalist, and honest about it</h2>
+            <!-- <h2 class="head__title">A generalist, and honest about it</h2> -->
           </div>
 
           <div class="about">
-            <aside class="profile card reveal">
+            <!-- <aside class="profile card reveal">
               <dl>
                 <div>
                   <dt>Full name</dt>
@@ -447,7 +324,7 @@
                   </dd>
                 </div>
               </dl>
-            </aside>
+            </aside> -->
 
             <div class="prose reveal">
               <p class="prose__lead">
@@ -485,14 +362,14 @@
               </div>
               <div>
                 <ul class="chips">
-                  <li class="key">Python</li>
-                  <li class="key">JavaScript</li>
-                  <li class="key">PHP</li>
-                  <li class="key">Dart</li>
+                  <li class="key" style="--brand:#4B83B3"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-python"></use></svg><span>Python</span></li>
+                  <li class="key" style="--brand:#F7DF1E"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-javascript"></use></svg><span>JavaScript</span></li>
+                  <li class="key" style="--brand:#777BB4"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-php"></use></svg><span>PHP</span></li>
+                  <li class="key" style="--brand:#1A82C8"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-dart"></use></svg><span>Dart</span></li>
                   <li class="key">SQL</li>
-                  <li>Java</li>
-                  <li>C++</li>
-                  <li>C#</li>
+                  <li style="--brand:#EA2D2E"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-java"></use></svg><span>Java</span></li>
+                  <li style="--brand:#3F82B4"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-cplusplus"></use></svg><span>C++</span></li>
+                  <li style="--brand:#9C6EA8"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-csharp"></use></svg><span>C#</span></li>
                   <li>Assembly</li>
                 </ul>
               </div>
@@ -505,16 +382,16 @@
               </div>
               <div>
                 <ul class="chips">
-                  <li class="key">PHP</li>
-                  <li class="key">MySQL</li>
-                  <li class="key">Bootstrap</li>
-                  <li class="key">Apache</li>
-                  <li>React</li>
-                  <li>Node.js</li>
-                  <li>Express</li>
-                  <li>Django</li>
-                  <li>Flask</li>
-                  <li>Tailwind</li>
+                  <li class="key" style="--brand:#777BB4"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-php"></use></svg><span>PHP</span></li>
+                  <li class="key" style="--brand:#4D7FA5"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-mysql"></use></svg><span>MySQL</span></li>
+                  <li class="key" style="--brand:#8D6BBE"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-bootstrap"></use></svg><span>Bootstrap</span></li>
+                  <li class="key" style="--brand:#D84248"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-apache"></use></svg><span>Apache</span></li>
+                  <li style="--brand:#61DAFB"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-react"></use></svg><span>React</span></li>
+                  <li style="--brand:#5FA04E"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-nodedotjs"></use></svg><span>Node.js</span></li>
+                  <li style="--brand:#7F7F7F"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-express"></use></svg><span>Express</span></li>
+                  <li style="--brand:#6B8179"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-django"></use></svg><span>Django</span></li>
+                  <li style="--brand:#3BABC3"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-flask"></use></svg><span>Flask</span></li>
+                  <li style="--brand:#06B6D4"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-tailwindcss"></use></svg><span>Tailwind</span></li>
                 </ul>
               </div>
             </div>
@@ -526,11 +403,11 @@
               </div>
               <div>
                 <ul class="chips">
-                  <li class="key">Flutter</li>
-                  <li class="key">Dart</li>
-                  <li class="key">Firebase</li>
-                  <li>Android Studio</li>
-                  <li>Material Design</li>
+                  <li class="key" style="--brand:#4180B4"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-flutter"></use></svg><span>Flutter</span></li>
+                  <li class="key" style="--brand:#1A82C8"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-dart"></use></svg><span>Dart</span></li>
+                  <li class="key" style="--brand:#E04119"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-firebase"></use></svg><span>Firebase</span></li>
+                  <li style="--brand:#3DDC84"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-androidstudio"></use></svg><span>Android Studio</span></li>
+                  <li style="--brand:#8573B6"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-materialdesign"></use></svg><span>Material Design</span></li>
                 </ul>
               </div>
             </div>
@@ -542,10 +419,10 @@
               </div>
               <div>
                 <ul class="chips">
-                  <li class="key">OpenCV</li>
-                  <li class="key">NumPy</li>
-                  <li>MediaPipe</li>
-                  <li>TensorFlow</li>
+                  <li class="key" style="--brand:#7C64EC"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-opencv"></use></svg><span>OpenCV</span></li>
+                  <li class="key" style="--brand:#66848E"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-numpy"></use></svg><span>NumPy</span></li>
+                  <li style="--brand:#0097A7"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-mediapipe"></use></svg><span>MediaPipe</span></li>
+                  <li style="--brand:#FF6F00"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-tensorflow"></use></svg><span>TensorFlow</span></li>
                   <li>Vertex AI</li>
                 </ul>
               </div>
@@ -558,14 +435,14 @@
               </div>
               <div>
                 <ul class="chips">
-                  <li class="key">MySQL</li>
-                  <li class="key">MariaDB</li>
-                  <li class="key">Apache</li>
-                  <li>NGINX</li>
-                  <li>Docker</li>
-                  <li>Google Cloud</li>
-                  <li>Kubernetes</li>
-                  <li>Vercel</li>
+                  <li class="key" style="--brand:#4D7FA5"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-mysql"></use></svg><span>MySQL</span></li>
+                  <li class="key" style="--brand:#65858F"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-mariadb"></use></svg><span>MariaDB</span></li>
+                  <li class="key" style="--brand:#D84248"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-apache"></use></svg><span>Apache</span></li>
+                  <li style="--brand:#009639"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-nginx"></use></svg><span>NGINX</span></li>
+                  <li style="--brand:#2496ED"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-docker"></use></svg><span>Docker</span></li>
+                  <li style="--brand:#4285F4"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-googlecloud"></use></svg><span>Google Cloud</span></li>
+                  <li style="--brand:#3C73E6"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-kubernetes"></use></svg><span>Kubernetes</span></li>
+                  <li style="--brand:#7F7F7F"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-vercel"></use></svg><span>Vercel</span></li>
                 </ul>
               </div>
             </div>
@@ -579,7 +456,7 @@
                 <ul class="chips">
                   <li class="key">TCP/IP</li>
                   <li class="key">Subnetting</li>
-                  <li class="key">Cisco IOS</li>
+                  <li class="key" style="--brand:#1BA0D7"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-cisco"></use></svg><span>Cisco IOS</span></li>
                   <li>Routing &amp; switching</li>
                   <li>DHCP</li>
                   <li>DNS</li>
@@ -595,11 +472,11 @@
               </div>
               <div>
                 <ul class="chips">
-                  <li class="key">Figma</li>
-                  <li class="key">Git</li>
-                  <li class="key">Linux</li>
+                  <li class="key" style="--brand:#F24E1E"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-figma"></use></svg><span>Figma</span></li>
+                  <li class="key" style="--brand:#F05032"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-git"></use></svg><span>Git</span></li>
+                  <li class="key" style="--brand:#FCC624"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-linux"></use></svg><span>Linux</span></li>
                   <li>Wireframing</li>
-                  <li>CMake</li>
+                  <li style="--brand:#5083AE"><svg class="chip__logo" width="16" height="16" aria-hidden="true"><use href="#t-cmake"></use></svg><span>CMake</span></li>
                 </ul>
               </div>
             </div>
@@ -1099,7 +976,7 @@
       </div>
     </footer>
 
-    <script src="/assets/js/data-certs.js?v=2"></script>
-    <script src="/assets/js/main.js?v=2"></script>
+    <script src="/assets/js/data-certs.js?v=3"></script>
+    <script src="/assets/js/main.js?v=3"></script>
   </body>
 </html>

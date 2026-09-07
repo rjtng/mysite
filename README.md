@@ -10,9 +10,9 @@ assets/js/main.js          nav, mobile sheet, reveals, credential rendering
 assets/js/data-certs.js    generated — 60 Credly credentials
 assets/img/favicon.svg     tab icon
 assets/img/og-cover.png    1200x630 social card
-assets/img/tech-sprite.svg generated — 32 technology logos
+assets/img/tech-sprite.svg generated — 42 brand marks
 tools/fetch-credly.ps1     regenerates data-certs.js from Credly
-tools/fetch-logos.py       regenerates tech-sprite.svg and the marquee
+tools/fetch-logos.py       regenerates tech-sprite.svg, marquee and chips
 tools/make-og.py           regenerates og-cover.png
 vercel.json                headers and caching
 ```
@@ -114,9 +114,9 @@ expires. Only a different URL reaches them, so the stylesheet and scripts carry
 a `?v=` token:
 
 ```html
-<link rel="stylesheet" href="/assets/css/styles.css?v=2" />
-<script src="/assets/js/data-certs.js?v=2"></script>
-<script src="/assets/js/main.js?v=2"></script>
+<link rel="stylesheet" href="/assets/css/styles.css?v=3" />
+<script src="/assets/js/data-certs.js?v=3"></script>
+<script src="/assets/js/main.js?v=3"></script>
 ```
 
 `main.js` uses the same token when it fetches the logo sprite. **Bump all four
@@ -173,18 +173,32 @@ resize and are left at full size.
 python tools/fetch-logos.py
 ```
 
-Edit the `TECH` list at the top of that script to change what appears, then
-re-run it. It rewrites `assets/img/tech-sprite.svg` and the region between the
-`tech-marquee` markers in `index.html`. Do not hand-edit between those markers.
+This rebuilds three things: `assets/img/tech-sprite.svg`, the region between
+the `tech-marquee` markers in `index.html`, and the contents of every
+`<ul class="chips">` in the skills section. Do not hand-edit any of them.
+
+Two lists at the top of the script control it. `MARQUEE` is the strip, in
+scroll order. `ICONS` maps a label as written on the page to its brand mark, and
+is what the chips look themselves up in — so the skills list stays hand-written
+and this only attaches marks to it. Ten skills have no logo to attach, the
+networking list mostly, and stay as plain text.
+
+Marks and labels are shown in the official brand colour at rest. Because the
+colour carries the label and not just the mark, the script holds each one to the
+4.5:1 WCAG AA minimum for normal text, walking it toward white only as far as it
+must. Twenty-one need it; the script prints which. They stay recognisable —
+Flutter is still blue, GitHub still grey.
 
 The sprite is fetched at run time and injected, rather than inlined into the
 HTML, so it is cached separately instead of adding roughly 22 KB to every HTML
-response. Until it arrives the marks stay hidden, so a blocked request leaves
-the plain text strip rather than a row of empty boxes. See `tools/README.md`
-for where the marks and their brand colours come from.
+response. Until it arrives the marks stay hidden, so a blocked request leaves a
+clean text strip rather than a row of empty boxes.
 
 The marquee speed is set from the measured width of the row, so adding a
-technology makes the strip longer rather than faster.
+technology makes the strip longer rather than faster. It can also be dragged:
+the auto-scroll is a CSS animation on the track and the drag offset lives on a
+wrapper around it, so the two compose instead of fighting. The offset wraps into
+one row width, which keeps the seam invisible however far it is dragged.
 
 ## Regenerating the social card
 
