@@ -748,11 +748,21 @@ main { position: relative; z-index: 2; }
 /* =============================================================================
    2 — About
    ========================================================================== */
+/* One column by default, two only when the profile card is actually present.
+
+   The card is optional and is currently commented out. With a hard-coded
+   340px first column, removing it left the prose stranded in that narrow rail
+   with the wide column empty. Defaulting to one column and letting :has()
+   promote it means either state reads correctly, and a browser without :has()
+   falls back to the single column rather than the broken one. */
 .about {
   display: grid;
-  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(32px, 4.5vw, 64px);
   align-items: start;
+}
+.about:has(> .profile) {
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
 }
 
 .profile {
@@ -779,7 +789,14 @@ main { position: relative; z-index: 2; }
 .profile dd { font-size: 15.5px; font-weight: 500; }
 .profile dd small { display: block; color: var(--muted); font-size: 13.5px; font-weight: 400; }
 
-.prose { font-size: clamp(16px, 1.5vw, 18px); color: var(--muted); line-height: 1.72; }
+/* Capped so the measure stays readable when the prose has the full width to
+   itself; without the card it would otherwise run past 100 characters a line. */
+.prose {
+  max-width: 60ch;
+  font-size: clamp(16px, 1.5vw, 18px);
+  color: var(--muted);
+  line-height: 1.72;
+}
 .prose__lead {
   font-family: var(--display);
   font-size: clamp(20px, 2.5vw, 27px);
