@@ -166,9 +166,14 @@ def main():
         symbols.append(
             f'<symbol id="t-{ident}" viewBox="{viewbox_of(svg)}">{body_of(svg)}</symbol>'
         )
+        # The width/height attributes are a floor, not the display size: CSS
+        # scales the mark to 1.15em. Without them an <svg> with no intrinsic
+        # size falls back to 300x150, which is what a stale or missing
+        # stylesheet used to turn this strip into.
         items.append(
             f'<li style="--brand:{colour}">'
-            f'<svg class="band__logo" aria-hidden="true"><use href="#t-{ident}"></use></svg>'
+            f'<svg class="band__logo" width="20" height="20" aria-hidden="true">'
+            f'<use href="#t-{ident}"></use></svg>'
             f"<span>{label.replace('&', '&amp;')}</span></li>"
         )
         print(f"  {label:<16} {kind:<4} {colour}  {ratio}:1")

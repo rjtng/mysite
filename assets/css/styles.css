@@ -430,27 +430,55 @@ main { position: relative; z-index: 2; }
   color: transparent;
 }
 
-/* The rotating role line. One slot, the words swap inside it. */
+/* The rotating role line. One slot, the words swap inside it.
+
+   Cross-axis alignment is centre, not baseline, and that is deliberate. The
+   slot has overflow:hidden, and such a box takes its baseline from its bottom
+   margin edge rather than from the text inside it — so baseline alignment
+   dropped the slot's descender line onto the static text's baseline and lifted
+   the rotating word about 7px. Centring two boxes of equal line height puts
+   the two runs of text on the same optical line instead. */
 .roles {
+  --roles-line: 1.6em;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
   margin-top: 20px;
   font-family: var(--mono);
   font-size: clamp(13px, 1.5vw, 15.5px);
+  line-height: var(--roles-line);
   letter-spacing: .02em;
   color: var(--muted);
 }
+/* Keeps the caret with the word when the line wraps on a narrow screen. */
+.roles__run {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
 .roles__slot {
   position: relative;
-  display: inline-block;
-  height: 1.6em;
+  display: block;
+  height: var(--roles-line);
+  line-height: var(--roles-line);
   overflow: hidden;
-  min-width: 24ch;
+  max-width: 100%;
+  /* Width tracks the active word, set by main.js, so the caret sits just after
+     the text instead of parking at the end of a fixed-width box. 24ch is the
+     widest label, used before the script runs and if it never does. */
+  width: 24ch;
+  transition: width .45s var(--ease);
 }
 .roles__slot b {
   position: absolute;
-  inset: 0;
+  left: 0; top: 0;
+  /* No max-width here. It would resolve against the slot, whose width is in
+     turn measured from this element — a circular constraint that pinned every
+     word to the first one's width and clipped the longest role. Narrow screens
+     are handled by max-width on the slot instead. */
+  width: max-content;
+  line-height: var(--roles-line);   /* match the slot, so glyphs sit centred */
   font-weight: 500;
   color: var(--sky-pale);
   opacity: 0;
@@ -460,10 +488,10 @@ main { position: relative; z-index: 2; }
 .roles__slot b.on { opacity: 1; transform: none; }
 .roles__slot b.off { opacity: 0; transform: translateY(-90%); }
 .caret {
-  display: inline-block;
+  display: block;
+  flex: none;
   width: 8px; height: 1.05em;
   background: var(--sky);
-  transform: translateY(2px);
   animation: blink 1.15s steps(1) infinite;
 }
 @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
@@ -1331,8 +1359,10 @@ main { position: relative; z-index: 2; }
   .hero__portrait { max-width: none; }
   .hero__chip { top: 14px; right: 14px; padding: 10px 14px; }
   .hero__chip b { font-size: 21px; }
-  .roles { flex-direction: column; gap: 2px; }
-  .roles__slot { min-width: 0; width: 100%; }
+  /* Two rows, left-aligned: centring is a cross-axis rule, and the cross axis
+     is horizontal once this becomes a column. */
+  .roles { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .roles__slot { min-width: 0; flex: 1 1 auto; }
   .now li { grid-template-columns: 1fr; gap: 3px; }
   .repos li a { grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
   .repos__desc { display: none; }

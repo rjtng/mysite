@@ -104,18 +104,41 @@
 
   /* --- hero: rotate the role words ------------------------------------------ */
   var slot = $('#roles');
-  if (slot && !still) {
+  if (slot) {
     var words = $$('b', slot);
     var at = 0;
-    if (words.length > 1) {
+
+    // Size the slot to the visible word so the caret sits right after it.
+    // The words are absolutely positioned at width:max-content, so offsetWidth
+    // is the text width rather than the slot's.
+    function fitSlot(el) {
+      if (el && el.offsetWidth) { slot.style.width = el.offsetWidth + 'px'; }
+    }
+    fitSlot(words[0]);
+    // The label is webfont text, so it is wider once JetBrains Mono arrives.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { fitSlot(words[at]); });
+    }
+
+    if (words.length > 1 && !still) {
       setInterval(function () {
         var prev = words[at];
         at = (at + 1) % words.length;
+        var next = words[at];
+
         prev.classList.remove('on');
         prev.classList.add('off');
-        words[at].classList.remove('off');
-        // Next frame, so the browser sees the start position before animating.
-        requestAnimationFrame(function () { words[at].classList.add('on'); });
+        next.classList.remove('off');
+
+        // Force a reflow so the browser registers the start position before
+        // the transition. This used to be a requestAnimationFrame callback,
+        // but rAF does not run in a background or unpainted tab, so the
+        // interval would strip 'on' from the old word and never add it to the
+        // new one — leaving the line blank until the tab was looked at again.
+        void next.offsetWidth;
+        next.classList.add('on');
+        fitSlot(next);
+
         setTimeout(function () { prev.classList.remove('off'); }, 500);
       }, 2600);
     }
@@ -159,7 +182,7 @@
      unreliable in WebKit. Until it lands the marks stay hidden, so a blocked or
      failed request degrades to the plain text strip this used to be. */
   if (window.fetch && $('.band__logo')) {
-    fetch('/assets/img/tech-sprite.svg')
+    fetch('/assets/img/tech-sprite.svg?v=2')
       .then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); })
       .then(function (text) {
         var doc = new DOMParser().parseFromString(text, 'image/svg+xml');

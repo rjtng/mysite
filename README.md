@@ -108,6 +108,21 @@ would have been pinned to a stale stylesheet or logo sprite for up to a year.
 It is now `max-age=3600, must-revalidate`: an hour of hard cache, then a cheap
 ETag revalidation that returns a 304 when nothing has changed.
 
+Changing that header does not rescue browsers that already cached the old
+stylesheet, because an `immutable` response is never revalidated until it
+expires. Only a different URL reaches them, so the stylesheet and scripts carry
+a `?v=` token:
+
+```html
+<link rel="stylesheet" href="/assets/css/styles.css?v=2" />
+<script src="/assets/js/data-certs.js?v=2"></script>
+<script src="/assets/js/main.js?v=2"></script>
+```
+
+`main.js` uses the same token when it fetches the logo sprite. **Bump all four
+together** whenever you change the CSS or JS and want the change to reach people
+immediately rather than within the hour.
+
 ---
 
 ## Running it locally
