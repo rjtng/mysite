@@ -244,6 +244,79 @@
     viewport.addEventListener('lostpointercapture', endDrag);
   }
 
+  /* --- projects carousel --------------------------------------------------- */
+  var carousel = $('#projectsCarousel');
+  if (carousel) {
+    var carouselViewport = $('[data-carousel-viewport]', carousel);
+    var carouselTrack = $('[data-carousel-track]', carousel);
+    var projectCards = $$('[data-carousel-track] .project-card', carousel);
+    var carouselStatus = $('[data-carousel-status]', carousel);
+    var previousProject = $('[data-carousel-prev]', carousel);
+    var nextProject = $('[data-carousel-next]', carousel);
+    var projectAt = 0;
+    var projectStartX = 0;
+    var projectStartOffset = 0;
+    var projectDragging = false;
+    var projectOffset = 0;
+
+    function positionProjects() {
+      if (!carouselViewport || !carouselTrack || !projectCards.length) { return; }
+      var cardWidth = projectCards[0].getBoundingClientRect().width;
+      var gap = parseFloat(window.getComputedStyle(carouselTrack).gap) || 0;
+      projectOffset = (carouselViewport.clientWidth - cardWidth) / 2 - projectAt * (cardWidth + gap);
+      carouselTrack.style.transform = 'translateX(' + projectOffset + 'px)';
+      projectCards.forEach(function (card, index) {
+        card.classList.toggle('is-active', index === projectAt);
+        card.setAttribute('aria-hidden', index === projectAt ? 'false' : 'true');
+      });
+      if (carouselStatus) { carouselStatus.textContent = 'Showing project ' + (projectAt + 1) + ' of ' + projectCards.length; }
+      if (previousProject) { previousProject.disabled = projectAt === 0; }
+      if (nextProject) { nextProject.disabled = projectAt === projectCards.length - 1; }
+    }
+
+    function showProject(index) {
+      projectAt = Math.max(0, Math.min(index, projectCards.length - 1));
+      positionProjects();
+    }
+    if (previousProject) { previousProject.addEventListener('click', function () { showProject(projectAt - 1); }); }
+    if (nextProject) { nextProject.addEventListener('click', function () { showProject(projectAt + 1); }); }
+    carousel.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); showProject(projectAt - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); showProject(projectAt + 1); }
+    });
+    if (carouselViewport && window.PointerEvent) {
+      carouselViewport.addEventListener('pointerdown', function (e) {
+        if (e.button || e.target.closest('a, button')) { return; }
+        projectDragging = true;
+        projectStartX = e.clientX;
+        projectStartOffset = projectOffset;
+        carouselViewport.classList.add('is-dragging');
+        try { carouselViewport.setPointerCapture(e.pointerId); } catch (err) {}
+      });
+      carouselViewport.addEventListener('pointermove', function (e) {
+        if (!projectDragging) { return; }
+        carouselTrack.style.transform = 'translateX(' + (projectStartOffset + e.clientX - projectStartX) + 'px)';
+      });
+      function endProjectDrag(e) {
+        if (!projectDragging) { return; }
+        projectDragging = false;
+        carouselViewport.classList.remove('is-dragging');
+        var distance = e && e.clientX !== undefined ? e.clientX - projectStartX : 0;
+        if (Math.abs(distance) > 55) { showProject(projectAt + (distance < 0 ? 1 : -1)); }
+        else { positionProjects(); }
+        if (e && e.pointerId !== undefined) {
+          try { carouselViewport.releasePointerCapture(e.pointerId); } catch (err) {}
+        }
+      }
+      carouselViewport.addEventListener('pointerup', endProjectDrag);
+      carouselViewport.addEventListener('pointercancel', endProjectDrag);
+      carouselViewport.addEventListener('lostpointercapture', endProjectDrag);
+    }
+    carousel.classList.add('is-ready');
+    positionProjects();
+    window.addEventListener('resize', positionProjects);
+  }
+
   /* =========================================================================
      Credentials. Everything below is generated from assets/js/data-certs.js,
      which is written by tools/fetch-credly.ps1 straight off the Credly feed.

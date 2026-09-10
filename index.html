@@ -1101,107 +1101,71 @@
             <div class="head__rule"></div>
           </div>
 
-          <!-- EDIT: the third paragraph of each case study is written from the repo alone.
-         Replace it with the problem you actually hit. Specific and slightly awkward
-         beats polished — it is the part an interviewer will ask about. -->
-          <div class="cases">
-            <article class="case reveal">
-              <div class="case__art">
-                <span class="case__year">2026</span>
-                <span class="case__glyph">RSH</span>
+          <div class="projects-carousel reveal" id="projectsCarousel">
+            <div class="projects-carousel__toolbar">
+              <p class="projects-carousel__hint"><span>Drag to explore</span> / <span>01 — 03</span></p>
+              <div class="projects-carousel__controls">
+                <button class="carousel-button" type="button" data-carousel-prev aria-label="Show previous project">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5M7.5 10H17" /></svg>
+                </button>
+                <button class="carousel-button" type="button" data-carousel-next aria-label="Show next project">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m7.5 4.5 5.5 5.5-5.5 5.5M12.5 10H3" /></svg>
+                </button>
               </div>
-              <div class="case__body">
-                <p class="case__kicker">Personal project · In progress</p>
-                <h3>
-                  <a
-                    href="https://github.com/rjtng/readysethire"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >ReadySetHire</a
-                  >
-                </h3>
-                <p>
-                  A recruitment app in Flutter covering candidate profiles, job
-                  listings and the stages an application moves through. One Dart
-                  codebase for Android and iOS, with Firebase behind it.
-                </p>
-                <p>
-                  The interesting part has been state. An application belongs to
-                  a candidate and to a role at the same time, and both sides
-                  want to see it change. I rewrote that layer twice before it
-                  stopped fighting me.
-                </p>
-                <div class="case__foot">
-                  <p class="case__tech">Dart · Flutter · Firebase · Material</p>
-                  <a
-                    class="case__link"
-                    href="https://github.com/rjtng/readysethire"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Repository
-                    <svg
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.6"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 11L11 5M6 5h5v5" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </article>
+            </div>
 
-            <article class="case case--flip reveal">
-              <div class="case__art">
-                <span class="case__year">2025</span>
-                <span class="case__glyph">BM</span>
+            <div class="projects-carousel__viewport" data-carousel-viewport>
+              <div class="projects-carousel__track" data-carousel-track>
+                <article class="project-card project-card--hire">
+                  <div class="project-card__visual">
+                    <span class="project-card__number">01 / 03</span>
+                    <div class="project-preview project-preview--hire" aria-label="ReadySetHire application dashboard preview">
+                      <div class="preview__topbar"><i></i><i></i><i></i><b>readyset<span>hire</span></b><em>⌁</em></div>
+                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Overview</span><strong>Find the right fit.</strong><div class="preview__stats"><i></i><i></i><i></i></div><div class="preview__rows"><i></i><i></i><i></i></div></div></div>
+                    </div>
+                  </div>
+                  <div class="project-card__body">
+                    <p class="case__kicker">Personal project · In progress</p>
+                    <h3><a href="https://github.com/rjtng/readysethire" target="_blank" rel="noopener noreferrer">ReadySetHire</a></h3>
+                    <p>A focused recruitment app for candidate profiles, job listings, and the stages an application moves through.</p>
+                    <div class="project-card__foot"><p class="case__tech">Dart · Flutter · Firebase · Material</p><a class="case__link" href="https://github.com/rjtng/readysethire" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                  </div>
+                </article>
+
+                <article class="project-card project-card--records">
+                  <div class="project-card__visual">
+                    <span class="project-card__number">02 / 03</span>
+                    <div class="project-preview project-preview--records" aria-label="Barangay Maganda records system preview">
+                      <div class="preview__topbar"><i></i><i></i><i></i><b>MAGANDA <span>MIS</span></b><em>◌</em></div>
+                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Resident records</span><strong>Good morning, staff.</strong><div class="preview__table"><i></i><i></i><i></i><i></i></div><div class="preview__graph"><b></b><b></b><b></b><b></b><b></b></div></div></div>
+                    </div>
+                  </div>
+                  <div class="project-card__body">
+                    <p class="case__kicker">Records system · Local government</p>
+                    <h3><a href="https://github.com/rjtng/Barangay_Maganda_MI_System" target="_blank" rel="noopener noreferrer">Barangay Maganda MIS</a></h3>
+                    <p>A practical management information system for resident records, document requests, and office reports.</p>
+                    <div class="project-card__foot"><p class="case__tech">PHP · MySQL · Apache · Bootstrap</p><a class="case__link" href="https://github.com/rjtng/Barangay_Maganda_MI_System" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                  </div>
+                </article>
+
+                <article class="project-card project-card--vision">
+                  <div class="project-card__visual">
+                    <span class="project-card__number">03 / 03</span>
+                    <div class="project-preview project-preview--vision" aria-label="MeowCV computer vision project preview">
+                      <div class="preview__topbar"><i></i><i></i><i></i><b>meow<span>cv</span></b><em>✦</em></div>
+                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Live camera</span><strong>Face detected <b>98%</b></strong><div class="preview__camera"><i></i><b>MEOW</b></div></div></div>
+                    </div>
+                  </div>
+                  <div class="project-card__body">
+                    <p class="case__kicker">Computer vision · Experiment</p>
+                    <h3><a href="https://github.com/rjtng/MeowCV" target="_blank" rel="noopener noreferrer">MeowCV</a></h3>
+                    <p>A playful face-detection experiment that tracks faces in real time and adds a cat to every one it finds.</p>
+                    <div class="project-card__foot"><p class="case__tech">Python · OpenCV · Computer vision</p><a class="case__link" href="https://github.com/rjtng/MeowCV" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                  </div>
+                </article>
               </div>
-              <div class="case__body">
-                <p class="case__kicker">Records system · Local government</p>
-                <h3>
-                  <a
-                    href="https://github.com/rjtng/Barangay_Maganda_MI_System"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >Barangay Maganda MIS</a
-                  >
-                </h3>
-                <p>
-                  A management information system for a barangay office:
-                  resident records, document requests, and the reports the staff
-                  have to file. PHP and MySQL, deliberately, because it had to
-                  run on the hosting they already had.
-                </p>
-                <p>
-                  Building for clerks rather than developers changed how I
-                  designed it. Fewer screens, bigger targets, and every
-                  destructive action asks twice.
-                </p>
-                <div class="case__foot">
-                  <p class="case__tech">PHP · MySQL · Apache · Bootstrap</p>
-                  <a
-                    class="case__link"
-                    href="https://github.com/rjtng/Barangay_Maganda_MI_System"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Repository
-                    <svg
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.6"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 11L11 5M6 5h5v5" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </article>
+            </div>
+            <p class="projects-carousel__status" data-carousel-status aria-live="polite">Showing project 1 of 3</p>
           </div>
 
           <div class="repos reveal">
