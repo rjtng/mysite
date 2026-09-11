@@ -1204,7 +1204,9 @@ main { position: relative; z-index: 2; }
 .credly-row.is-dragging .credly-row__track { animation-play-state: paused; }
 .credly-row ul {
   display: flex;
+  flex: 0 0 auto;
   gap: var(--badge-gap);
+  margin: 0;
   padding: 0;
 }
 .credly-badge {
