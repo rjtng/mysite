@@ -1177,80 +1177,98 @@ main { position: relative; z-index: 2; }
 /* =============================================================================
    5 — Certifications
    ========================================================================== */
-.counts {
+.credly-marquee {
+  --badge-gap: 14px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: var(--r);
+  gap: 14px;
   overflow: hidden;
-  margin-bottom: clamp(30px, 4vw, 46px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
-.counts div { background: var(--bg-2); padding: 24px 22px; }
-.counts b {
-  display: block;
-  font-family: var(--display);
-  font-size: clamp(30px, 4vw, 42px);
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  font-variant-numeric: tabular-nums;
-  background: var(--grad-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.credly-row {
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
 }
-.counts span {
-  display: block;
-  margin-top: 6px;
-  font: 400 11.5px/1.4 var(--mono);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--dim);
+.credly-row.is-dragging { cursor: grabbing; }
+.credly-row__drag { width: max-content; will-change: transform; }
+.credly-row__track { display: flex; width: max-content; }
+.credly-row__track[data-ready] { animation: credly-slide-left var(--credly-time, 50s) linear infinite; }
+.credly-row[data-direction="right"] .credly-row__track[data-ready] {
+  animation-name: credly-slide-right;
 }
-
-.badges {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
-  gap: 12px;
-}
-.badge {
+.credly-row:hover .credly-row__track,
+.credly-row.is-dragging .credly-row__track { animation-play-state: paused; }
+.credly-row ul {
   display: flex;
-  flex-direction: column;
-  gap: 13px;
-  padding: 20px 18px;
+  gap: var(--badge-gap);
+  padding: 0;
+}
+.credly-badge {
+  display: grid;
+  flex: 0 0 clamp(164px, 18vw, 208px);
+  gap: 9px;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: var(--r);
-  background: linear-gradient(165deg, rgba(14,32,67,.6), rgba(8,18,36,.5));
+  background: linear-gradient(165deg, rgba(14,32,67,.82), rgba(8,18,36,.72));
   transition: border-color .25s var(--ease), transform .25s var(--ease), background .25s var(--ease);
 }
-.badge:hover {
-  border-color: rgba(99,205,255,.42);
-  background: linear-gradient(165deg, rgba(20,48,98,.7), rgba(8,18,36,.55));
-  transform: translateY(-4px);
+.credly-badge:hover,
+.credly-badge:focus-visible {
+  border-color: rgba(99,205,255,.58);
+  background: linear-gradient(165deg, rgba(20,48,98,.9), rgba(8,18,36,.8));
+  transform: translateY(-3px);
 }
-.badge img {
-  width: 58px; height: 58px;
+.credly-badge__image {
+  display: grid;
+  place-items: center;
+  height: clamp(112px, 12vw, 142px);
+  border-radius: calc(var(--r) - 4px);
+  background: rgba(4,11,25,.52);
+}
+.credly-badge__image img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: saturate(1.05);
 }
-.badge__name {
-  font-size: 13.5px;
+.credly-badge__name {
+  min-height: 2.8em;
+  font-size: 13px;
   font-weight: 500;
-  line-height: 1.42;
-  letter-spacing: -0.01em;
+  line-height: 1.4;
 }
-.badge__meta {
-  margin-top: auto;
-  padding-top: 12px;
+.credly-badge__issuer {
+  color: var(--sky);
+  font: 400 10.5px/1.2 var(--mono);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.credly-badge__issuer span { color: var(--muted); }
+.credly-marquee__hint {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  font: 400 11px/1 var(--mono);
-  letter-spacing: .08em;
+  gap: 18px;
+  padding: 3px 6px 0;
   color: var(--dim);
+  font: 400 11px/1.4 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
-.badge:hover .badge__meta { color: var(--sky); }
+.credly-marquee__hint a { color: var(--sky); }
+.credly-marquee__hint a:hover { color: var(--sky-pale); }
+@keyframes credly-slide-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - var(--badge-gap) / 2)); }
+}
+@keyframes credly-slide-right {
+  from { transform: translateX(calc(-50% - var(--badge-gap) / 2)); }
+  to { transform: translateX(0); }
+}
 
 /* Filter + full record ----------------------------------------------------- */
 .record { margin-top: clamp(34px, 4vw, 52px); }
@@ -1565,7 +1583,10 @@ main { position: relative; z-index: 2; }
   .repos__desc { display: none; }
   .record__list a { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; }
   .record__issuer { grid-row: 2; grid-column: 1 / -1; }
-  .badges { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .credly-marquee { --badge-gap: 10px; }
+  .credly-badge { flex-basis: 154px; padding: 11px; }
+  .credly-badge__image { height: 112px; }
+  .credly-marquee__hint { align-items: flex-start; flex-direction: column; gap: 5px; }
   .projects-carousel__toolbar { align-items: flex-end; }
   .projects-carousel__hint span:first-child { display: none; }
   .project-card { width: calc(100vw - 48px); min-height: 0; }
@@ -1590,6 +1611,7 @@ main { position: relative; z-index: 2; }
   }
   .js .reveal { opacity: 1; transform: none; }
   .band__track[data-ready] { animation: none; }
+  .credly-row__track[data-ready] { animation: none; }
 }
 
 @media print {

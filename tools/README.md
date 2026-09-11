@@ -13,11 +13,11 @@ Run it from the project root with Windows PowerShell:
     powershell -ExecutionPolicy Bypass -File tools/fetch-credly.ps1
 
 It re-reads every page of the public badge feed, classifies each badge by brand
-and domain, and rewrites the data file. The `$featured` array near the top
-decides which twelve appear in the badge grid on the page.
+and domain, and rewrites the data file. The marquee uses the complete generated
+list and alternates badges between its two scrolling rows.
 
-The headline counts, the issuer filter buttons and the full record on the page
-are all derived from that one file, so they stay correct on their own.
+The badge images and verification URLs in the marquee are all derived from that
+one file, so the showcase stays current after regeneration.
 
 ## fetch-logos.py
 
