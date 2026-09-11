@@ -347,8 +347,10 @@
   }
 
   var rows = $$('[data-credly-track]', marquee);
+  var BADGES_PER_ROW = 30;
   rows.forEach(function (track, rowIndex) {
-    var rowCerts = CERTS.slice(rowIndex * 30, (rowIndex + 1) * 30);
+    var rowStart = rowIndex * BADGES_PER_ROW;
+    var rowCerts = CERTS.slice(rowStart, rowStart + BADGES_PER_ROW);
     track.innerHTML = '<ul>' + rowCerts.map(badgeMarkup).join('') + '</ul>';
     track.appendChild(track.firstElementChild.cloneNode(true));
     track.setAttribute('data-ready', '');
