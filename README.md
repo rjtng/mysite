@@ -154,18 +154,16 @@ powershell -ExecutionPolicy Bypass -File tools/fetch-credly.ps1
 ```
 
 The script reads every page of your public Credly feed, sorts by issue date,
-tags each badge with an issuer, and writes the file. Which twelve badges appear
-in the featured grid is set by the `$featured` array near the top of that
-script — edit the list there, not in the generated file.
+tags each badge with an issuer, and writes the file. The certifications section
+uses the complete generated list, alternating badges between two scrolling rows.
 
-The headline counts, the issuer filter buttons and the full record all derive
-from that one file, so they stay correct on their own. Projects, skills and the
-experience timeline are hand-written in `index.html`.
+The badge images and verification URLs all derive from that one file, so the
+showcase stays correct on its own. Projects, skills and the experience timeline
+are hand-written in `index.html`.
 
-Credly stores badge art as 1200px PNGs, roughly 400 KB each, for a 58px slot.
-`main.js` rewrites those URLs to Credly's 110px and 220px variants, which cuts
-each one to about 9 KB. Two older badges use a `/blob` URL that ignores the
-resize and are left at full size.
+Credly stores badge art as 1200px PNGs. `main.js` rewrites those URLs to
+Credly's 220px and 440px variants for the responsive marquee. Older badges that
+use a `/blob` URL are left at their original source.
 
 ## Regenerating the technology strip
 

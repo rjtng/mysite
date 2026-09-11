@@ -318,44 +318,12 @@
   }
 
   /* =========================================================================
-     Credentials. Everything below is generated from assets/js/data-certs.js,
-     which is written by tools/fetch-credly.ps1 straight off the Credly feed.
+     Credly badge marquee. The data is generated from the public profile by
+     tools/fetch-credly.ps1, so every image and verification URL stays official.
      ====================================================================== */
   var CERTS = Array.isArray(window.CERTIFICATIONS) ? window.CERTIFICATIONS : [];
   if (!CERTS.length) { return; }
 
-  var monthOf = function (c) {
-    var d = new Date(c.date + 'T00:00:00');
-    return isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
-  };
-
-  /* --- headline counts ------------------------------------------------------ */
-  var counts = $('#counts');
-  var brands = [];
-  var brandTally = {};
-  CERTS.forEach(function (c) {
-    if (!brandTally[c.brand]) { brandTally[c.brand] = 0; brands.push(c.brand); }
-    brandTally[c.brand]++;
-  });
-  brands.sort(function (a, b) { return brandTally[b] - brandTally[a]; });
-
-  var domains = {};
-  CERTS.forEach(function (c) { domains[c.domain] = 1; });
-
-  if (counts) {
-    var oldest = CERTS.reduce(function (a, c) { return c.date < a ? c.date : a; }, CERTS[0].date);
-    var rows = [
-      [CERTS.length, 'Credentials'],
-      [brands.length, 'Issuing bodies'],
-      [Object.keys(domains).length, 'Subject areas'],
-      [monthOf({ date: oldest }), 'First one earned']
-    ];
-    counts.innerHTML = rows.map(function (r) {
-      return '<div><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>';
-    }).join('');
-  }
-
-  /* --- the twelve featured badges ------------------------------------------- */
   /* Credly stores these as 1200px PNGs — around 400 KB each, for a 58px slot.
      It serves resized copies from /size/<w>x<h>/, but only when the URL ends in
      a real filename; the older "/blob" ones just redirect back to the original,
@@ -365,94 +333,66 @@
     return url.replace('/images/', '/size/' + size + '/images/');
   }
 
-  var grid = $('#badgeGrid');
-  if (grid) {
-    grid.innerHTML = CERTS.filter(function (c) { return c.featured; }).map(function (c) {
-      var src = thumb(c.img, '110x110');
-      var x2  = thumb(c.img, '220x220');
-      return '<a class="badge" href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer">' +
-               '<img src="' + esc(src) + '"' +
-                 (x2 !== src ? ' srcset="' + esc(src) + ' 1x, ' + esc(x2) + ' 2x"' : '') +
-                 ' alt="" loading="lazy" decoding="async" width="58" height="58">' +
-               '<span class="badge__name">' + esc(c.name) + '</span>' +
-               '<span class="badge__meta"><span>' + esc(c.brand) + '</span>' +
-                 '<span>' + esc(String(c.date).slice(0, 4)) + '</span></span>' +
-             '</a>';
-    }).join('');
+  var marquee = $('#credlyMarquee');
+  if (!marquee) { return; }
+
+  function badgeMarkup(c) {
+    var src = thumb(c.img, '220x220');
+    var x2 = thumb(c.img, '440x440');
+    return '<a class="credly-badge" href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Verify ' + esc(c.name) + ' on Credly">' +
+      '<span class="credly-badge__image"><img src="' + esc(src) + '"' +
+        (x2 !== src ? ' srcset="' + esc(src) + ' 1x, ' + esc(x2) + ' 2x"' : '') +
+        ' alt="" loading="lazy" decoding="async" width="104" height="104"></span>' +
+      '<span class="credly-badge__name">' + esc(c.name) + '</span>' +
+      '<span class="credly-badge__issuer">' + esc(c.brand) + ' <span aria-hidden="true">↗</span></span>' +
+      '</a>';
   }
 
-  /* --- full record, filterable by issuer ------------------------------------ */
-  var list    = $('#recordList');
-  var filters = $('#filters');
-  var more    = $('#recordMore');
-  var STEP    = 12;
+  var rows = $$('[data-credly-track]', marquee);
+  rows.forEach(function (track, rowIndex) {
+    var rowCerts = CERTS.filter(function (_, index) { return index % 2 === rowIndex; });
+    track.innerHTML = '<ul>' + rowCerts.map(badgeMarkup).join('') + '</ul>';
+    track.appendChild(track.firstElementChild.cloneNode(true));
+    track.setAttribute('data-ready', '');
+    var row = track.parentElement;
+    var pace = function () {
+      var width = track.firstElementChild.getBoundingClientRect().width;
+      if (width) { track.style.setProperty('--credly-time', Math.max(32, Math.round(width / 34)) + 's'); }
+    };
+    pace();
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(pace); }
+    window.addEventListener('resize', pace);
 
-  if (!list) { return; }
-
-  list.innerHTML = CERTS.map(function (c) {
-    return '<li data-brand="' + esc(c.brand) + '">' +
-             '<a href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer">' +
-               '<span class="record__issuer">' + esc(c.brand) + '</span>' +
-               '<span class="record__name">' + esc(c.name) + '</span>' +
-               '<time class="record__date" datetime="' + esc(c.date) + '">' + esc(monthOf(c)) + '</time>' +
-             '</a>' +
-           '</li>';
-  }).join('');
-
-  var items   = $$('li', list);
-  var current = 'All';
-  var shown   = STEP;
-
-  function paint() {
-    var seen = 0;
-    items.forEach(function (li) {
-      var match = current === 'All' || li.getAttribute('data-brand') === current;
-      if (match && seen < shown) { li.hidden = false; seen++; }
-      else if (match) { li.hidden = true; seen++; }
-      else { li.hidden = true; }
+    if (!window.PointerEvent) { return; }
+    var drag = row.parentElement;
+    var dragWrap = row;
+    var offset = 0, startX = 0, startOffset = 0, dragging = false, moved = false;
+    drag.addEventListener('pointerdown', function (e) {
+      if (e.button) { return; }
+      dragging = true; moved = false; startX = e.clientX; startOffset = offset;
+      drag.classList.add('is-dragging');
+      try { drag.setPointerCapture(e.pointerId); } catch (err) {}
     });
-
-    var total = current === 'All' ? CERTS.length : brandTally[current];
-    if (more) {
-      if (total > shown) {
-        more.hidden = false;
-        more.textContent = 'Show ' + (total - shown) + ' more';
-      } else if (total > STEP) {
-        more.hidden = false;
-        more.textContent = 'Show fewer';
-      } else {
-        more.hidden = true;
+    drag.addEventListener('pointermove', function (e) {
+      if (!dragging) { return; }
+      moved = moved || Math.abs(e.clientX - startX) > 5;
+      offset = startOffset + (e.clientX - startX);
+      var period = track.firstElementChild.getBoundingClientRect().width;
+      if (period) { offset = offset % period; }
+      dragWrap.style.transform = 'translateX(' + offset + 'px)';
+    });
+    function endCredlyDrag(e) {
+      if (!dragging) { return; }
+      dragging = false; drag.classList.remove('is-dragging');
+      if (e && e.pointerId !== undefined) {
+        try { drag.releasePointerCapture(e.pointerId); } catch (err) {}
       }
     }
-  }
-
-  if (filters) {
-    filters.innerHTML = ['All'].concat(brands).map(function (b) {
-      var n = b === 'All' ? CERTS.length : brandTally[b];
-      return '<button class="filter" type="button" data-brand="' + esc(b) + '" ' +
-             'aria-pressed="' + (b === 'All') + '">' + esc(b) + '<b>' + n + '</b></button>';
-    }).join('');
-
-    filters.addEventListener('click', function (e) {
-      var btn = e.target.closest('.filter');
-      if (!btn) { return; }
-      current = btn.getAttribute('data-brand');
-      shown = STEP;
-      $$('.filter', filters).forEach(function (f) {
-        f.setAttribute('aria-pressed', String(f === btn));
-      });
-      paint();
-    });
-  }
-
-  if (more) {
-    more.addEventListener('click', function () {
-      var total = current === 'All' ? CERTS.length : brandTally[current];
-      shown = shown >= total ? STEP : total;
-      paint();
-      if (shown === STEP) { list.scrollIntoView({ block: 'nearest' }); }
-    });
-  }
-
-  paint();
+    drag.addEventListener('pointerup', endCredlyDrag);
+    drag.addEventListener('pointercancel', endCredlyDrag);
+    drag.addEventListener('lostpointercapture', endCredlyDrag);
+    drag.addEventListener('click', function (e) {
+      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+  });
 })();
