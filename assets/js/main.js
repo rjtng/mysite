@@ -324,10 +324,10 @@
   var CERTS = Array.isArray(window.CERTIFICATIONS) ? window.CERTIFICATIONS : [];
   if (!CERTS.length) { return; }
 
-  /* Credly stores these as 1200px PNGs — around 400 KB each, for a 58px slot.
+  /* Credly stores these as 1200px PNGs — around 400 KB each, for a badge slot.
      It serves resized copies from /size/<w>x<h>/, but only when the URL ends in
      a real filename; the older "/blob" ones just redirect back to the original,
-     so those are left alone. 110 and 220 are both stocked sizes. */
+     so those are left alone. */
   function thumb(url, size) {
     if (!/^https:\/\/images\.credly\.com\/images\//.test(url) || /\/blob$/.test(url)) { return url; }
     return url.replace('/images/', '/size/' + size + '/images/');
@@ -348,14 +348,19 @@
 
   var rows = $$('[data-credly-track]', marquee);
   rows.forEach(function (track, rowIndex) {
-    var rowCerts = CERTS.filter(function (_, index) { return index % 2 === rowIndex; });
+    var rowCerts = CERTS.slice(rowIndex * 30, (rowIndex + 1) * 30);
     track.innerHTML = '<ul>' + rowCerts.map(badgeMarkup).join('') + '</ul>';
     track.appendChild(track.firstElementChild.cloneNode(true));
     track.setAttribute('data-ready', '');
     var row = track.parentElement;
     var pace = function () {
       var width = track.firstElementChild.getBoundingClientRect().width;
-      if (width) { track.style.setProperty('--credly-time', Math.max(32, Math.round(width / 34)) + 's'); }
+      var gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
+      var distance = width + gap;
+      if (width) {
+        track.style.setProperty('--credly-distance', distance + 'px');
+        track.style.setProperty('--credly-time', Math.max(32, Math.round(distance / 34)) + 's');
+      }
     };
     pace();
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(pace); }
@@ -376,6 +381,8 @@
       moved = moved || Math.abs(e.clientX - startX) > 5;
       offset = startOffset + (e.clientX - startX);
       var period = track.firstElementChild.getBoundingClientRect().width;
+      var gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
+      period += gap;
       if (period) { offset = offset % period; }
       dragWrap.style.transform = 'translateX(' + offset + 'px)';
     });

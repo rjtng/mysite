@@ -1195,7 +1195,7 @@ main { position: relative; z-index: 2; }
 }
 .credly-row.is-dragging { cursor: grabbing; }
 .credly-row__drag { width: max-content; will-change: transform; }
-.credly-row__track { display: flex; width: max-content; }
+.credly-row__track { display: flex; width: max-content; gap: var(--badge-gap); }
 .credly-row__track[data-ready] { animation: credly-slide-left var(--credly-time, 50s) linear infinite; }
 .credly-row[data-direction="right"] .credly-row__track[data-ready] {
   animation-name: credly-slide-right;
@@ -1250,10 +1250,10 @@ main { position: relative; z-index: 2; }
 .credly-marquee__hint a:hover { color: var(--sky-pale); }
 @keyframes credly-slide-left {
   from { transform: translateX(0); }
-  to { transform: translateX(calc(-50% - var(--badge-gap) / 2)); }
+  to { transform: translateX(calc(-1 * var(--credly-distance))); }
 }
 @keyframes credly-slide-right {
-  from { transform: translateX(calc(-50% - var(--badge-gap) / 2)); }
+  from { transform: translateX(calc(-1 * var(--credly-distance))); }
   to { transform: translateX(0); }
 }
 
