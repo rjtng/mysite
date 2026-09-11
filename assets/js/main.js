@@ -343,8 +343,6 @@
       '<span class="credly-badge__image"><img src="' + esc(src) + '"' +
         (x2 !== src ? ' srcset="' + esc(src) + ' 1x, ' + esc(x2) + ' 2x"' : '') +
         ' alt="" loading="lazy" decoding="async" width="104" height="104"></span>' +
-      '<span class="credly-badge__name">' + esc(c.name) + '</span>' +
-      '<span class="credly-badge__issuer">' + esc(c.brand) + ' <span aria-hidden="true">↗</span></span>' +
       '</a>';
   }
 

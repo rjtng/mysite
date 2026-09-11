@@ -1236,19 +1236,6 @@ main { position: relative; z-index: 2; }
   object-fit: contain;
   filter: saturate(1.05);
 }
-.credly-badge__name {
-  min-height: 2.8em;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.4;
-}
-.credly-badge__issuer {
-  color: var(--sky);
-  font: 400 10.5px/1.2 var(--mono);
-  letter-spacing: .07em;
-  text-transform: uppercase;
-}
-.credly-badge__issuer span { color: var(--muted); }
 .credly-marquee__hint {
   display: flex;
   justify-content: space-between;
