@@ -68,6 +68,12 @@
      rule never applies, so the page renders fully rather than staying blank. -->
     <script>
       document.documentElement.classList.add("js");
+      try {
+        var savedTheme = localStorage.getItem("portfolio-theme");
+        if (savedTheme === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (error) {}
     </script>
 
     <script type="application/ld+json">
@@ -95,6 +101,7 @@
         "sameAs": [
           "https://github.com/rjtng",
           "https://linkedin.com/in/rjtg",
+          "https://facebook.com/rjitg",
           "https://credly.com/users/rjt",
           "https://g.dev/teg"
         ]
@@ -120,6 +127,10 @@
         <a href="#experience">Experience</a>
       </nav>
 
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+        <span class="theme-toggle__icon" aria-hidden="true">☼</span>
+        <span data-theme-label>Light mode</span>
+      </button>
       <a class="nav__cta" href="#contact">Get in touch</a>
 
       <button
@@ -145,6 +156,10 @@
       <p class="sheet__mail">
         <a href="mailto:alrajitheng@gmail.com">alrajitheng@gmail.com</a>
       </p>
+      <button class="theme-toggle theme-toggle--sheet" type="button" data-theme-toggle aria-pressed="false">
+        <span class="theme-toggle__icon" aria-hidden="true">☼</span>
+        <span data-theme-label>Light mode</span>
+      </button>
     </div>
 
     <main id="main">
@@ -1111,7 +1126,7 @@
 
           <div class="projects-carousel reveal" id="projectsCarousel">
             <div class="projects-carousel__toolbar">
-              <p class="projects-carousel__hint"><span>Drag to explore</span> / <span>01 — 03</span></p>
+              <p class="projects-carousel__hint"><span>Drag to explore</span> / <span>01 — 04</span></p>
               <div class="projects-carousel__controls">
                 <button class="carousel-button" type="button" data-carousel-prev aria-label="Show previous project">
                   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5M7.5 10H17" /></svg>
@@ -1126,11 +1141,21 @@
               <div class="projects-carousel__track" data-carousel-track>
                 <article class="project-card project-card--hire">
                   <div class="project-card__visual">
-                    <span class="project-card__number">01 / 03</span>
-                    <div class="project-preview project-preview--hire" aria-label="ReadySetHire application dashboard preview">
-                      <div class="preview__topbar"><i></i><i></i><i></i><b>readyset<span>hire</span></b><em>⌁</em></div>
-                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Overview</span><strong>Find the right fit.</strong><div class="preview__stats"><i></i><i></i><i></i></div><div class="preview__rows"><i></i><i></i><i></i></div></div></div>
-                    </div>
+                    <span class="project-card__number">01 / 04</span>
+                    <div class="project-image-placeholder" role="img" aria-label="Image placeholder for DICT Flag Raising Compliance Checker">Project image<br />coming soon</div>
+                  </div>
+                  <div class="project-card__body">
+                    <p class="case__kicker">Web application · Government technology</p>
+                    <h3><a href="https://github.com/walidsalih111-ux/dict_frcc" target="_blank" rel="noopener noreferrer">DICT Flag Raising Compliance Checker</a></h3>
+                    <p>A web-based attendance and compliance checker for flag-raising activities, employee records, and reporting.</p>
+                    <div class="project-card__foot"><p class="case__tech">PHP · MySQL · DataTables · Chart.js</p><a class="case__link" href="https://github.com/walidsalih111-ux/dict_frcc" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                  </div>
+                </article>
+
+                <article class="project-card project-card--hire">
+                  <div class="project-card__visual">
+                    <span class="project-card__number">02 / 04</span>
+                    <div class="project-image-placeholder" role="img" aria-label="Image placeholder for ReadySetHire">Project image<br />coming soon</div>
                   </div>
                   <div class="project-card__body">
                     <p class="case__kicker">Personal project · In progress</p>
@@ -1142,11 +1167,21 @@
 
                 <article class="project-card project-card--records">
                   <div class="project-card__visual">
-                    <span class="project-card__number">02 / 03</span>
-                    <div class="project-preview project-preview--records" aria-label="Barangay Maganda records system preview">
-                      <div class="preview__topbar"><i></i><i></i><i></i><b>MAGANDA <span>MIS</span></b><em>◌</em></div>
-                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Resident records</span><strong>Good morning, staff.</strong><div class="preview__table"><i></i><i></i><i></i><i></i></div><div class="preview__graph"><b></b><b></b><b></b><b></b><b></b></div></div></div>
-                    </div>
+                    <span class="project-card__number">03 / 04</span>
+                    <div class="project-image-placeholder" role="img" aria-label="Image placeholder for RECYCOIN">Project image<br />coming soon</div>
+                  </div>
+                  <div class="project-card__body">
+                    <p class="case__kicker">Collaborative platform · Sustainability</p>
+                    <h3><a href="https://github.com/rjtng/reycoin" target="_blank" rel="noopener noreferrer">RECYCOIN</a></h3>
+                    <p>A recycling-focused platform designed to connect sustainable actions with a simple digital rewards experience.</p>
+                    <div class="project-card__foot"><p class="case__tech">PHP · MySQL</p><a class="case__link" href="https://github.com/rjtng/reycoin" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                  </div>
+                </article>
+
+                <article class="project-card project-card--vision">
+                  <div class="project-card__visual">
+                    <span class="project-card__number">04 / 04</span>
+                    <div class="project-image-placeholder" role="img" aria-label="Image placeholder for Barangay Maganda MIS">Project image<br />coming soon</div>
                   </div>
                   <div class="project-card__body">
                     <p class="case__kicker">Records system · Local government</p>
@@ -1155,136 +1190,9 @@
                     <div class="project-card__foot"><p class="case__tech">PHP · MySQL · Apache · Bootstrap</p><a class="case__link" href="https://github.com/rjtng/Barangay_Maganda_MI_System" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
                   </div>
                 </article>
-
-                <article class="project-card project-card--vision">
-                  <div class="project-card__visual">
-                    <span class="project-card__number">03 / 03</span>
-                    <div class="project-preview project-preview--vision" aria-label="MeowCV computer vision project preview">
-                      <div class="preview__topbar"><i></i><i></i><i></i><b>meow<span>cv</span></b><em>✦</em></div>
-                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Live camera</span><strong>Face detected <b>98%</b></strong><div class="preview__camera"><i></i><b>MEOW</b></div></div></div>
-                    </div>
-                  </div>
-                  <div class="project-card__body">
-                    <p class="case__kicker">Computer vision · Experiment</p>
-                    <h3><a href="https://github.com/rjtng/MeowCV" target="_blank" rel="noopener noreferrer">MeowCV</a></h3>
-                    <p>A playful face-detection experiment that tracks faces in real time and adds a cat to every one it finds.</p>
-                    <div class="project-card__foot"><p class="case__tech">Python · OpenCV · Computer vision</p><a class="case__link" href="https://github.com/rjtng/MeowCV" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
-                  </div>
-                </article>
               </div>
             </div>
-            <p class="projects-carousel__status" data-carousel-status aria-live="polite">Showing project 1 of 3</p>
-          </div>
-
-          <div class="repos reveal">
-            <h3>Smaller things &amp; collaborations</h3>
-            <ul>
-              <li>
-                <a
-                  href="https://github.com/rjtng/MeowCV"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span class="repos__name">MeowCV</span>
-                  <span class="repos__desc"
-                    >Face detection that puts a cat on every face it finds. A
-                    joke with real tracking behind it.</span
-                  >
-                  <span class="repos__tech">Python · OpenCV</span>
-                  <svg
-                    class="repos__go"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 11L11 5M6 5h5v5" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/rjtng/naruto-shadow-clone-jutsu"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span class="repos__name">Shadow Clone Jutsu</span>
-                  <span class="repos__desc"
-                    >A webcam experiment that duplicates you across the canvas.
-                    Runs entirely in the browser.</span
-                  >
-                  <span class="repos__tech">JavaScript · Canvas</span>
-                  <svg
-                    class="repos__go"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 11L11 5M6 5h5v5" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/rjtng/dict_frcc"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span class="repos__name">DICT FRCC</span>
-                  <span class="repos__desc"
-                    >A team web application. I worked on the front end and the
-                    client-side logic.</span
-                  >
-                  <span class="repos__tech">JavaScript · HTML · CSS</span>
-                  <svg
-                    class="repos__go"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 11L11 5M6 5h5v5" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/rjtng/reycoin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span class="repos__name">ReyCoin</span>
-                  <span class="repos__desc"
-                    >A PHP platform built with the same group. Server-side logic
-                    and the data model.</span
-                  >
-                  <span class="repos__tech">PHP · MySQL</span>
-                  <svg
-                    class="repos__go"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 11L11 5M6 5h5v5" />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-            <p class="outro">
-              Everything public lives at
-              <a
-                href="https://github.com/rjtng?tab=repositories"
-                target="_blank"
-                rel="noopener noreferrer"
-                >github.com/rjtng</a
-              >.
-            </p>
+            <p class="projects-carousel__status" data-carousel-status aria-live="polite">Showing project 1 of 4</p>
           </div>
         </div>
       </section>
@@ -1455,6 +1363,16 @@
                 <span><b>LinkedIn</b><span>in/rjtg</span></span>
               </a>
               <a
+                href="https://facebook.com/rjitg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.4-.1c-2.4 0-4 1.5-4 4.1V10H8v3h2.4v8h3.1Z" />
+                </svg>
+                <span><b>Facebook</b><span>facebook.com/rjitg</span></span>
+              </a>
+              <a
                 href="https://credly.com/users/rjt"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1495,22 +1413,8 @@
 
     <footer class="foot">
       <div class="wrap foot__inner">
-        <p>
-          &copy; <span id="year">2026</span> Al-Raji Theng — built by hand, no
-          framework
-        </p>
-        <a class="foot__top" href="#home">
-          <svg
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            aria-hidden="true"
-          >
-            <path d="M8 13V3M4 7l4-4 4 4" />
-          </svg>
-          Back to top
-        </a>
+        <p>Copyright &copy; 2026 Al-Raji Theng. All Rights Reserved.</p>
+        <a class="foot__top" href="#home">Back to Top</a>
       </div>
     </footer>
 
