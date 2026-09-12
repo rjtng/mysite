@@ -1365,6 +1365,13 @@ main { position: relative; z-index: 2; }
   color: var(--dim);
 }
 .timeline__what h3 { font-size: clamp(19px, 2.2vw, 24px); }
+.timeline__what a {
+  color: var(--sky-pale);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.timeline__what a:hover { color: var(--sky); }
 .timeline__what p {
   margin-top: 12px;
   max-width: 66ch;
@@ -1372,6 +1379,22 @@ main { position: relative; z-index: 2; }
   font-size: 15.5px;
   line-height: 1.68;
 }
+.timeline__role {
+  color: var(--sky-pale) !important;
+  font-weight: 500;
+}
+.timeline__bullets {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  max-width: 76ch;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.68;
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.timeline__bullets li { list-style: disc; }
 .timeline__tags {
   display: flex;
   flex-wrap: wrap;
