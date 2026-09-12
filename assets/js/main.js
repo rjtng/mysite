@@ -18,10 +18,8 @@
     if (light) { themeRoot.setAttribute('data-theme', 'light'); }
     themeButtons.forEach(function (button) {
       button.setAttribute('aria-pressed', String(light));
-      var label = $('[data-theme-label]', button);
-      var icon = $('.theme-toggle__icon', button);
-      if (label) { label.textContent = light ? 'Dark mode' : 'Light mode'; }
-      if (icon) { icon.textContent = light ? '☾' : '☼'; }
+      button.setAttribute('aria-label', light ? 'Switch to dark mode' : 'Switch to light mode');
+      button.setAttribute('title', light ? 'Dark mode' : 'Light mode');
     });
     var themeColor = $('meta[name="theme-color"]');
     if (themeColor) { themeColor.setAttribute('content', light ? '#F3F7FC' : '#050A16'); }
