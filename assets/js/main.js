@@ -306,8 +306,9 @@
         card.style.setProperty('--card-x', x + 'px');
         card.style.setProperty('--card-rotate', rotation + 'deg');
         card.style.setProperty('--card-scale', scale);
-        card.style.zIndex = String(10 - Math.abs(distance));
+        card.style.zIndex = distance === 0 ? '30' : (visible ? '10' : '0');
         card.classList.toggle('is-active', index === projectAt);
+        card.classList.toggle('is-neighbor', visible && index !== projectAt);
         card.setAttribute('aria-hidden', visible ? 'false' : 'true');
         card.setAttribute('tabindex', index === projectAt ? '0' : '-1');
       });
