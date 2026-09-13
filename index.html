@@ -128,13 +128,31 @@
       </nav>
 
       <div class="nav__actions">
-        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light mode" aria-pressed="false">
-          <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+        <button
+          class="theme-toggle"
+          type="button"
+          data-theme-toggle
+          aria-label="Switch to light mode"
+          aria-pressed="false"
+        >
+          <svg
+            class="theme-toggle__icon theme-toggle__icon--sun"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"
+            ></path>
           </svg>
-          <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"></path>
+          <svg
+            class="theme-toggle__icon theme-toggle__icon--moon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"
+            ></path>
           </svg>
         </button>
         <a
@@ -142,7 +160,8 @@
           href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
-        >Resume <span aria-hidden="true">↗</span></a>
+          >Resume <span aria-hidden="true">↗</span></a
+        >
       </div>
       <a class="nav__cta" href="#contact">Get in touch</a>
 
@@ -213,7 +232,9 @@
                     <path d="M3 8h10M9 4l4 4-4 4" />
                   </svg>
                 </a>
-                <a class="btn btn--ghost" href="mailto:@alrajitheng@gmail.com">Email me</a>
+                <a class="btn btn--ghost" href="mailto:@alrajitheng@gmail.com"
+                  >Email me</a
+                >
                 <a
                   class="btn btn--ghost"
                   href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
@@ -644,6 +665,11 @@
       <!-- ═══════════════════════════ 3 · skills ═══════════════════════════ -->
       <section class="section" id="skills">
         <div class="wrap">
+          <div class="head">
+            <p class="head__index">02 / Skills</p>
+            <div class="head__rule"></div>
+          </div>
+
           <div class="stack">
             <div class="stack__row reveal">
               <div class="stack__label">
@@ -1135,81 +1161,414 @@
 
           <div class="projects-carousel reveal" id="projectsCarousel">
             <div class="projects-carousel__toolbar">
-              <p class="projects-carousel__hint"><span>Drag to explore</span> / <span>01 — 04</span></p>
+              <p class="projects-carousel__hint">
+                <span>Drag to explore</span> / <span>01 — 04</span>
+              </p>
               <div class="projects-carousel__controls">
-                <button class="carousel-button" type="button" data-carousel-prev aria-label="Show previous project">
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5M7.5 10H17" /></svg>
+                <button
+                  class="carousel-button"
+                  type="button"
+                  data-carousel-prev
+                  aria-label="Show previous project"
+                >
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    aria-hidden="true"
+                  >
+                    <path d="M12.5 4.5 7 10l5.5 5.5M7.5 10H17" />
+                  </svg>
                 </button>
-                <button class="carousel-button" type="button" data-carousel-next aria-label="Show next project">
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m7.5 4.5 5.5 5.5-5.5 5.5M12.5 10H3" /></svg>
+                <button
+                  class="carousel-button"
+                  type="button"
+                  data-carousel-next
+                  aria-label="Show next project"
+                >
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    aria-hidden="true"
+                  >
+                    <path d="m7.5 4.5 5.5 5.5-5.5 5.5M12.5 10H3" />
+                  </svg>
                 </button>
               </div>
             </div>
 
-            <div class="projects-carousel__viewport" data-carousel-viewport tabindex="0" aria-label="Projects carousel. Use the arrow keys to change project.">
+            <div
+              class="projects-carousel__viewport"
+              data-carousel-viewport
+              tabindex="0"
+              aria-label="Projects carousel. Use the arrow keys to change project."
+            >
               <div class="projects-carousel__track" data-carousel-track>
                 <article class="project-card project-card--hire">
                   <div class="project-card__visual">
-                    <div class="project-preview" role="img" aria-label="Dashboard preview for DICT Flag Raising Compliance Checker">
-                      <div class="preview__topbar"><i></i><i></i><i></i><b>DICT <span>COMPLIANCE</span></b></div>
-                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Attendance overview</span><strong>Flag raising<br />compliance</strong><div class="preview__stats"><i></i><i></i><i></i></div><div class="preview__rows"><i></i><i></i><i></i></div></div></div>
+                    <div
+                      class="project-preview"
+                      role="img"
+                      aria-label="Dashboard preview for DICT Flag Raising Compliance Checker"
+                    >
+                      <div class="preview__topbar">
+                        <i></i><i></i><i></i><b>DICT <span>COMPLIANCE</span></b>
+                      </div>
+                      <div class="preview__body">
+                        <div class="preview__side"></div>
+                        <div class="preview__content">
+                          <span class="preview__eyebrow"
+                            >Attendance overview</span
+                          ><strong>Flag raising<br />compliance</strong>
+                          <div class="preview__stats">
+                            <i></i><i></i><i></i>
+                          </div>
+                          <div class="preview__rows"><i></i><i></i><i></i></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="project-card__body">
-                    <h3><a href="https://github.com/walidsalih111-ux/dict_frcc" target="_blank" rel="noopener noreferrer">DICT Flag Raising Compliance Checker</a></h3>
-                    <p class="project-card__role">Lead Full-Stack Developer &amp; UI/UX Designer</p>
-                    <p class="project-card__description">A web-based attendance and compliance checker for flag-raising activities, employee records, and reporting.</p>
-                    <div class="project-card__foot"><div class="project-card__tech" aria-label="Technologies used"><span class="project-card__tech-item" role="img" title="PHP" aria-label="PHP"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-php"></use></svg></span><span class="project-card__tech-item" role="img" title="MySQL" aria-label="MySQL"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-mysql"></use></svg></span><span class="project-card__tech-item" role="img" title="DataTables" aria-label="DataTables"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M8 9v11M13 9v11M18 9v11"></path></svg></span><span class="project-card__tech-item" role="img" title="Chart.js" aria-label="Chart.js"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 19V5M4 19h17"></path><path d="m7 15 3-4 3 2 5-7"></path></svg></span></div><a class="case__link" href="https://github.com/walidsalih111-ux/dict_frcc" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                    <h3>
+                      <a
+                        href="https://github.com/walidsalih111-ux/dict_frcc"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >DICT Flag Raising Compliance Checker</a
+                      >
+                    </h3>
+                    <p class="project-card__role">
+                      Lead Full-Stack Developer &amp; UI/UX Designer
+                    </p>
+                    <p class="project-card__description">
+                      A web-based attendance and compliance checker for
+                      flag-raising activities, employee records, and reporting.
+                    </p>
+                    <div class="project-card__foot">
+                      <div
+                        class="project-card__tech"
+                        aria-label="Technologies used"
+                      >
+                        <span
+                          class="project-card__tech-item"
+                          role="img"
+                          title="PHP"
+                          aria-label="PHP"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-php"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          role="img"
+                          title="MySQL"
+                          aria-label="MySQL"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-mysql"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          role="img"
+                          title="DataTables"
+                          aria-label="DataTables"
+                          ><svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            aria-hidden="true"
+                          >
+                            <rect
+                              x="3"
+                              y="4"
+                              width="18"
+                              height="16"
+                              rx="2"
+                            ></rect>
+                            <path
+                              d="M3 9h18M8 9v11M13 9v11M18 9v11"
+                            ></path></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          role="img"
+                          title="Chart.js"
+                          aria-label="Chart.js"
+                          ><svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            aria-hidden="true"
+                          >
+                            <path d="M4 19V5M4 19h17"></path>
+                            <path d="m7 15 3-4 3 2 5-7"></path></svg
+                        ></span>
+                      </div>
+                      <a
+                        class="case__link"
+                        href="https://github.com/walidsalih111-ux/dict_frcc"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >View repository <span aria-hidden="true">↗</span></a
+                      >
+                    </div>
                   </div>
                 </article>
 
                 <article class="project-card project-card--hire">
                   <div class="project-card__visual">
-                    <div class="project-preview project-preview--records" role="img" aria-label="Recruitment dashboard preview for ReadySetHire">
-                      <div class="preview__topbar"><i></i><i></i><i></i><b>READY<span>SETHIRE</span></b></div>
-                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Candidate pipeline</span><strong>Find your<br />next hire</strong><div class="preview__table"><i></i><i></i><i></i><i></i></div><div class="preview__graph"><b></b><b></b><b></b><b></b><b></b></div></div></div>
+                    <div
+                      class="project-preview project-preview--records"
+                      role="img"
+                      aria-label="Recruitment dashboard preview for ReadySetHire"
+                    >
+                      <div class="preview__topbar">
+                        <i></i><i></i><i></i><b>READY<span>SETHIRE</span></b>
+                      </div>
+                      <div class="preview__body">
+                        <div class="preview__side"></div>
+                        <div class="preview__content">
+                          <span class="preview__eyebrow"
+                            >Candidate pipeline</span
+                          ><strong>Find your<br />next hire</strong>
+                          <div class="preview__table">
+                            <i></i><i></i><i></i><i></i>
+                          </div>
+                          <div class="preview__graph">
+                            <b></b><b></b><b></b><b></b><b></b>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="project-card__body">
-                    <h3><a href="https://github.com/rjtng/readysethire" target="_blank" rel="noopener noreferrer">ReadySetHire</a></h3>
-                    <p class="project-card__role">Product Designer &amp; Flutter Developer</p>
-                    <p class="project-card__description">A focused recruitment app for candidate profiles, job listings, and the stages an application moves through.</p>
-                    <div class="project-card__foot"><div class="project-card__tech" aria-label="Technologies used"><span class="project-card__tech-item" role="img" title="Dart" aria-label="Dart"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-dart"></use></svg></span><span class="project-card__tech-item" role="img" title="Flutter" aria-label="Flutter"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-flutter"></use></svg></span><span class="project-card__tech-item" role="img" title="Firebase" aria-label="Firebase"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-firebase"></use></svg></span><span class="project-card__tech-item" role="img" title="Material" aria-label="Material Design"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-materialdesign"></use></svg></span></div><a class="case__link" href="https://github.com/rjtng/readysethire" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                    <h3>
+                      <a
+                        href="https://github.com/rjtng/readysethire"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >ReadySetHire</a
+                      >
+                    </h3>
+                    <p class="project-card__role">
+                      Product Designer &amp; Flutter Developer
+                    </p>
+                    <p class="project-card__description">
+                      A focused recruitment app for candidate profiles, job
+                      listings, and the stages an application moves through.
+                    </p>
+                    <div class="project-card__foot">
+                      <div
+                        class="project-card__tech"
+                        aria-label="Technologies used"
+                      >
+                        <span
+                          class="project-card__tech-item"
+                          role="img"
+                          title="Dart"
+                          aria-label="Dart"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-dart"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          role="img"
+                          title="Flutter"
+                          aria-label="Flutter"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-flutter"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          role="img"
+                          title="Firebase"
+                          aria-label="Firebase"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-firebase"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          role="img"
+                          title="Material"
+                          aria-label="Material Design"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-materialdesign"></use></svg
+                        ></span>
+                      </div>
+                      <a
+                        class="case__link"
+                        href="https://github.com/rjtng/readysethire"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >View repository <span aria-hidden="true">↗</span></a
+                      >
+                    </div>
                   </div>
                 </article>
 
                 <article class="project-card project-card--records">
                   <div class="project-card__visual">
-                    <div class="project-preview project-preview--vision" role="img" aria-label="Rewards dashboard preview for RECYCOIN">
-                      <div class="preview__topbar"><i></i><i></i><i></i><b>RECY<span>COIN</span></b></div>
-                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Sustainable actions</span><strong>Recycle today.<br /><b>Earn tomorrow.</b></strong><div class="preview__camera"><i></i><b>SCAN + EARN</b></div></div></div>
+                    <div
+                      class="project-preview project-preview--vision"
+                      role="img"
+                      aria-label="Rewards dashboard preview for RECYCOIN"
+                    >
+                      <div class="preview__topbar">
+                        <i></i><i></i><i></i><b>RECY<span>COIN</span></b>
+                      </div>
+                      <div class="preview__body">
+                        <div class="preview__side"></div>
+                        <div class="preview__content">
+                          <span class="preview__eyebrow"
+                            >Sustainable actions</span
+                          ><strong
+                            >Recycle today.<br /><b>Earn tomorrow.</b></strong
+                          >
+                          <div class="preview__camera">
+                            <i></i><b>SCAN + EARN</b>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="project-card__body">
-                    <h3><a href="https://github.com/rjtng/reycoin" target="_blank" rel="noopener noreferrer">RECYCOIN</a></h3>
-                    <p class="project-card__role">UX Researcher &amp; Full-Stack Developer</p>
-                    <p class="project-card__description">A recycling-focused platform designed to connect sustainable actions with a simple digital rewards experience.</p>
-                    <div class="project-card__foot"><div class="project-card__tech" aria-label="Technologies used"><span class="project-card__tech-item" title="PHP" aria-label="PHP"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-php"></use></svg></span><span class="project-card__tech-item" title="MySQL" aria-label="MySQL"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-mysql"></use></svg></span><span class="project-card__tech-item" title="Bootstrap" aria-label="Bootstrap"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-bootstrap"></use></svg></span></div><a class="case__link" href="https://github.com/rjtng/reycoin" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                    <h3>
+                      <a
+                        href="https://github.com/rjtng/reycoin"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >RECYCOIN</a
+                      >
+                    </h3>
+                    <p class="project-card__role">
+                      UX Researcher &amp; Full-Stack Developer
+                    </p>
+                    <p class="project-card__description">
+                      A recycling-focused platform designed to connect
+                      sustainable actions with a simple digital rewards
+                      experience.
+                    </p>
+                    <div class="project-card__foot">
+                      <div
+                        class="project-card__tech"
+                        aria-label="Technologies used"
+                      >
+                        <span
+                          class="project-card__tech-item"
+                          title="PHP"
+                          aria-label="PHP"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-php"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          title="MySQL"
+                          aria-label="MySQL"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-mysql"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          title="Bootstrap"
+                          aria-label="Bootstrap"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-bootstrap"></use></svg
+                        ></span>
+                      </div>
+                      <a
+                        class="case__link"
+                        href="https://github.com/rjtng/reycoin"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >View repository <span aria-hidden="true">↗</span></a
+                      >
+                    </div>
                   </div>
                 </article>
 
                 <article class="project-card project-card--vision">
                   <div class="project-card__visual">
-                    <div class="project-preview project-preview--vision" role="img" aria-label="Records management preview for Barangay Maganda MIS">
-                      <div class="preview__topbar"><i></i><i></i><i></i><b>BARANGAY <span>MIS</span></b></div>
-                      <div class="preview__body"><div class="preview__side"></div><div class="preview__content"><span class="preview__eyebrow">Resident records</span><strong>Maganda<br />information system</strong><div class="preview__camera"><i></i><b>RECORDS ONLINE</b></div></div></div>
+                    <div
+                      class="project-preview project-preview--vision"
+                      role="img"
+                      aria-label="Records management preview for Barangay Maganda MIS"
+                    >
+                      <div class="preview__topbar">
+                        <i></i><i></i><i></i><b>BARANGAY <span>MIS</span></b>
+                      </div>
+                      <div class="preview__body">
+                        <div class="preview__side"></div>
+                        <div class="preview__content">
+                          <span class="preview__eyebrow">Resident records</span
+                          ><strong>Maganda<br />information system</strong>
+                          <div class="preview__camera">
+                            <i></i><b>RECORDS ONLINE</b>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="project-card__body">
-                    <h3><a href="https://github.com/rjtng/Barangay_Maganda_MI_System" target="_blank" rel="noopener noreferrer">Barangay Maganda MIS</a></h3>
-                    <p class="project-card__role">Full-Stack Developer &amp; Systems Designer</p>
-                    <p class="project-card__description">A practical management information system for resident records, document requests, and office reports.</p>
-                    <div class="project-card__foot"><div class="project-card__tech" aria-label="Technologies used"><span class="project-card__tech-item" title="PHP" aria-label="PHP"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-php"></use></svg></span><span class="project-card__tech-item" title="MySQL" aria-label="MySQL"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-mysql"></use></svg></span><span class="project-card__tech-item" title="Apache" aria-label="Apache"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-apache"></use></svg></span><span class="project-card__tech-item" title="Bootstrap" aria-label="Bootstrap"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#t-bootstrap"></use></svg></span></div><a class="case__link" href="https://github.com/rjtng/Barangay_Maganda_MI_System" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">↗</span></a></div>
+                    <h3>
+                      <a
+                        href="https://github.com/rjtng/Barangay_Maganda_MI_System"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Barangay Maganda MIS</a
+                      >
+                    </h3>
+                    <p class="project-card__role">
+                      Full-Stack Developer &amp; Systems Designer
+                    </p>
+                    <p class="project-card__description">
+                      A practical management information system for resident
+                      records, document requests, and office reports.
+                    </p>
+                    <div class="project-card__foot">
+                      <div
+                        class="project-card__tech"
+                        aria-label="Technologies used"
+                      >
+                        <span
+                          class="project-card__tech-item"
+                          title="PHP"
+                          aria-label="PHP"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-php"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          title="MySQL"
+                          aria-label="MySQL"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-mysql"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          title="Apache"
+                          aria-label="Apache"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-apache"></use></svg></span
+                        ><span
+                          class="project-card__tech-item"
+                          title="Bootstrap"
+                          aria-label="Bootstrap"
+                          ><svg viewBox="0 0 24 24" aria-hidden="true">
+                            <use href="#t-bootstrap"></use></svg
+                        ></span>
+                      </div>
+                      <a
+                        class="case__link"
+                        href="https://github.com/rjtng/Barangay_Maganda_MI_System"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >View repository <span aria-hidden="true">↗</span></a
+                      >
+                    </div>
                   </div>
                 </article>
               </div>
             </div>
-            <p class="projects-carousel__status" data-carousel-status aria-live="polite">Showing project 1 of 4</p>
+            <p
+              class="projects-carousel__status"
+              data-carousel-status
+              aria-live="polite"
+            >
+              Showing project 1 of 4
+            </p>
           </div>
         </div>
       </section>
@@ -1241,7 +1600,12 @@
             </div>
             <p class="credly-marquee__hint">
               <span>Drag or swipe to explore</span>
-              <a href="https://www.credly.com/users/rjt" target="_blank" rel="noopener noreferrer">View all on Credly <span aria-hidden="true">↗</span></a>
+              <a
+                href="https://www.credly.com/users/rjt"
+                target="_blank"
+                rel="noopener noreferrer"
+                >View all on Credly <span aria-hidden="true">↗</span></a
+              >
             </p>
           </div>
 
@@ -1385,7 +1749,9 @@
                 rel="noopener noreferrer"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.4-.1c-2.4 0-4 1.5-4 4.1V10H8v3h2.4v8h3.1Z" />
+                  <path
+                    d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.4-.1c-2.4 0-4 1.5-4 4.1V10H8v3h2.4v8h3.1Z"
+                  />
                 </svg>
                 <span><b>Facebook</b><span>facebook.com/rjitg</span></span>
               </a>
@@ -1404,7 +1770,7 @@
                   <circle cx="12" cy="9" r="6" />
                   <path d="M8.5 14.2 7 22l5-2.5 5 2.5-1.5-7.8" />
                 </svg>
-                <span><b>Credly</b><span>60 badges</span></span>
+                <span><b>Credly</b><span>credly.com/users/rjt</span></span>
               </a>
               <a
                 href="https://g.dev/teg"
