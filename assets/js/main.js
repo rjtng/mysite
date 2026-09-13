@@ -292,13 +292,24 @@
 
     function positionProjects() {
       if (!carouselViewport || !carouselTrack || !projectCards.length) { return; }
+      var isMobile = window.matchMedia('(max-width: 620px)').matches;
       var cardWidth = projectCards[0].getBoundingClientRect().width;
-      var gap = parseFloat(window.getComputedStyle(carouselTrack).gap) || 0;
-      projectOffset = (carouselViewport.clientWidth - cardWidth) / 2 - projectAt * (cardWidth + gap);
-      carouselTrack.style.transform = 'translateX(' + projectOffset + 'px)';
+      var spacing = isMobile ? cardWidth * .12 : Math.min(cardWidth * .76, 560);
+      projectOffset = 0;
+      carouselTrack.style.transform = 'none';
       projectCards.forEach(function (card, index) {
+        var distance = index - projectAt;
+        var visible = Math.abs(distance) <= 1;
+        var rotation = isMobile ? 0 : distance * -25;
+        var scale = isMobile ? 1 : (distance === 0 ? 1 : .85);
+        var x = isMobile ? distance * (cardWidth + 24) : distance * spacing;
+        card.style.setProperty('--card-x', x + 'px');
+        card.style.setProperty('--card-rotate', rotation + 'deg');
+        card.style.setProperty('--card-scale', scale);
+        card.style.zIndex = String(10 - Math.abs(distance));
         card.classList.toggle('is-active', index === projectAt);
-        card.setAttribute('aria-hidden', index === projectAt ? 'false' : 'true');
+        card.setAttribute('aria-hidden', visible ? 'false' : 'true');
+        card.setAttribute('tabindex', index === projectAt ? '0' : '-1');
       });
       if (carouselStatus) { carouselStatus.textContent = 'Showing project ' + (projectAt + 1) + ' of ' + projectCards.length; }
       if (previousProject) { previousProject.disabled = projectAt === 0; }
@@ -309,6 +320,11 @@
       projectAt = Math.max(0, Math.min(index, projectCards.length - 1));
       positionProjects();
     }
+    projectCards.forEach(function (card, index) {
+      card.addEventListener('click', function (e) {
+        if (index !== projectAt && !e.target.closest('a, button')) { showProject(index); }
+      });
+    });
     if (previousProject) { previousProject.addEventListener('click', function () { showProject(projectAt - 1); }); }
     if (nextProject) { nextProject.addEventListener('click', function () { showProject(projectAt + 1); }); }
     carousel.addEventListener('keydown', function (e) {
@@ -326,7 +342,7 @@
       });
       carouselViewport.addEventListener('pointermove', function (e) {
         if (!projectDragging) { return; }
-        carouselTrack.style.transform = 'translateX(' + (projectStartOffset + e.clientX - projectStartX) + 'px)';
+        carouselTrack.style.transform = 'translateX(' + (e.clientX - projectStartX) + 'px)';
       });
       function endProjectDrag(e) {
         if (!projectDragging) { return; }
