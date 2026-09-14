@@ -32,6 +32,100 @@
     });
   });
 
+  /* --- constellation layer ----------------------------------------------- */
+  var constellationCanvas = $('#constellations');
+  if (constellationCanvas && constellationCanvas.getContext) {
+    var constellationContext = constellationCanvas.getContext('2d');
+    var constellationStars = [];
+    var constellationWidth = 0;
+    var constellationHeight = 0;
+    var constellationDpr = 1;
+    var constellationPointer = { x: 0, y: 0, active: false };
+
+    function resizeConstellations() {
+      constellationWidth = window.innerWidth;
+      constellationHeight = window.innerHeight;
+      constellationDpr = Math.min(window.devicePixelRatio || 1, 2);
+      constellationCanvas.width = constellationWidth * constellationDpr;
+      constellationCanvas.height = constellationHeight * constellationDpr;
+      constellationCanvas.style.width = constellationWidth + 'px';
+      constellationCanvas.style.height = constellationHeight + 'px';
+      constellationContext.setTransform(constellationDpr, 0, 0, constellationDpr, 0, 0);
+      var count = Math.min(72, Math.max(30, Math.round(constellationWidth * constellationHeight / 18000)));
+      constellationStars = [];
+      for (var i = 0; i < count; i++) {
+        constellationStars.push({
+          x: Math.random() * constellationWidth,
+          y: Math.random() * constellationHeight,
+          radius: .7 + Math.random() * 1.3,
+          phase: Math.random() * Math.PI * 2,
+          drift: .08 + Math.random() * .16
+        });
+      }
+    }
+
+    function drawConstellations(time) {
+      constellationContext.clearRect(0, 0, constellationWidth, constellationHeight);
+      var shiftX = constellationPointer.active ? (constellationPointer.x - constellationWidth / 2) * .012 : 0;
+      var shiftY = constellationPointer.active ? (constellationPointer.y - constellationHeight / 2) * .012 : 0;
+      var points = constellationStars.map(function (star) {
+        var drift = still ? 0 : Math.sin(time * .00008 * star.drift + star.phase) * 4;
+        return { x: star.x + shiftX + drift, y: star.y + shiftY + drift * .45, star: star };
+      });
+      constellationContext.lineWidth = 1;
+      for (var i = 0; i < points.length; i++) {
+        for (var j = i + 1; j < points.length; j++) {
+          var dx = points[i].x - points[j].x;
+          var dy = points[i].y - points[j].y;
+          var distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 145) {
+            constellationContext.strokeStyle = 'rgba(120, 190, 255, ' + (0.13 * (1 - distance / 145)) + ')';
+            constellationContext.beginPath();
+            constellationContext.moveTo(points[i].x, points[i].y);
+            constellationContext.lineTo(points[j].x, points[j].y);
+            constellationContext.stroke();
+          }
+        }
+      }
+      points.forEach(function (point) {
+        var pulse = still ? 1 : .82 + Math.sin(time * .001 + point.star.phase) * .18;
+        constellationContext.fillStyle = 'rgba(169, 224, 255, ' + (.42 * pulse) + ')';
+        constellationContext.beginPath();
+        constellationContext.arc(point.x, point.y, point.star.radius, 0, Math.PI * 2);
+        constellationContext.fill();
+      });
+      if (!still) { window.requestAnimationFrame(drawConstellations); }
+    }
+
+    resizeConstellations();
+    window.addEventListener('resize', resizeConstellations);
+    window.addEventListener('pointermove', function (event) {
+      constellationPointer.x = event.clientX;
+      constellationPointer.y = event.clientY;
+      constellationPointer.active = true;
+    }, { passive: true });
+    window.requestAnimationFrame(drawConstellations);
+  }
+
+  /* --- portrait flip ------------------------------------------------------ */
+  var portrait = $('.portrait');
+  if (portrait) {
+    function flipPortrait() {
+      var flipped = portrait.getAttribute('aria-pressed') === 'true';
+      portrait.setAttribute('aria-pressed', String(!flipped));
+      portrait.setAttribute('aria-label', flipped ? 'Show more about Al-Raji Theng' : 'Show portrait of Al-Raji Theng');
+      var back = $('.portrait__face--back', portrait);
+      if (back) { back.setAttribute('aria-hidden', String(flipped)); }
+    }
+    portrait.addEventListener('click', flipPortrait);
+    portrait.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        flipPortrait();
+      }
+    });
+  }
+
   var backToTop = $('.foot__top');
   if (backToTop) {
     backToTop.addEventListener('click', function (event) {

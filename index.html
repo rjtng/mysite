@@ -113,6 +113,7 @@
     <a class="skip" href="#main">Skip to content</a>
 
     <div class="atmos" aria-hidden="true"></div>
+    <canvas class="constellations" id="constellations" aria-hidden="true"></canvas>
     <div class="grain" aria-hidden="true"></div>
 
     <!-- ═══════════════════════════ nav ═══════════════════════════ -->
@@ -128,6 +129,7 @@
       </nav>
 
       <div class="nav__actions">
+        <a class="nav__cta" href="#contact">Get in touch</a>
         <button
           class="theme-toggle"
           type="button"
@@ -163,7 +165,6 @@
           >Resume <span aria-hidden="true">↗</span></a
         >
       </div>
-      <a class="nav__cta" href="#contact">Get in touch</a>
 
       <button
         class="nav__burger"
@@ -279,19 +280,38 @@
                 <span>Verified credentials</span>
               </div> -->
 
-              <div class="portrait">
-                <img
-                  src="/assets/img/portrait.png"
-                  alt="Al-Raji Theng"
-                  width="800"
-                  height="1000"
-                />
+              <div
+                class="portrait"
+                role="button"
+                tabindex="0"
+                aria-pressed="false"
+                aria-label="Show more about Al-Raji Theng"
+              >
+                <div class="portrait__inner">
+                  <div class="portrait__face portrait__face--front">
+                    <img
+                      src="/assets/img/portrait2.png"
+                      alt="Al-Raji Theng"
+                      width="800"
+                      height="1000"
+                    />
 
-                <div class="portrait__mark" aria-hidden="true">AT</div>
-                <p class="portrait__tag">
-                  <b>Zamboanga City, Philippines</b>
-                  BS Computer Engineering · Universidad de Zamboanga
-                </p>
+                    <div class="portrait__mark" aria-hidden="true">AT</div>
+                    <p class="portrait__tag">
+                      <b>Zamboanga City, Philippines</b>
+                      BS Computer Engineering · Universidad de Zamboanga
+                    </p>
+                  </div>
+                  <div class="portrait__face portrait__face--back" aria-hidden="true">
+                    <span class="portrait__back-mark" aria-hidden="true">AT</span>
+                    <p class="portrait__back-title">Computer Engineer</p>
+                    <p class="portrait__back-copy">
+                      Building thoughtful digital experiences across web, mobile,
+                      embedded systems, and computer vision.
+                    </p>
+                    <span class="portrait__back-hint">Tap to return</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
