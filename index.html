@@ -59,10 +59,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://images.credly.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Pixelify+Sans:wght@700&family=Sora:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=7" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=8" />
 
     <!-- Entry fades only exist when scripting does. Without this class the .reveal
      rule never applies, so the page renders fully rather than staying blank. -->
@@ -192,18 +192,159 @@
     </div>
 
     <main id="main">
-      <!-- ═══════════════════════════ 1 · hero ═══════════════════════════ -->
-      <section class="hero" id="home">
-        <div class="wrap">
-          <div class="hero__grid">
-            <div>
-              <!-- EDIT: remove this pill once you're no longer looking. -->
-              <!-- <p class="pill">
-                <span class="dot" aria-hidden="true"></span>Open to work
-              </p> -->
+      <!-- ═══════════════════════════ 1 · hero ═══════════════════════════
+           The name, set huge, sits behind the photo; the chips float in front
+           of both. The backdrop is the same stage as the closing scene,
+           mirrored, so the page opens and closes on one composition. -->
+      <section
+        class="hero stage stage--mirror"
+        id="home"
+        data-vanish-y=".44"
+        data-calm=".2"
+      >
+        <div class="stage__scene stage__scene--bottom" aria-hidden="true">
+          <div class="stage__glow stage__glow--a"></div>
+          <div class="stage__glow stage__glow--b"></div>
+          <div class="stage__glow stage__glow--c"></div>
 
-              <h1 class="hero__name">Al-Raji<br /><em>Theng</em></h1>
+          <!-- Dark folds with lit rims. Stretched to the stage rather than
+               cropped, so the edges stay in frame on a phone; the rims use
+               non-scaling strokes so they stay hairlines either way. -->
+          <svg
+            class="stage__fold stage__fold--left"
+            viewBox="0 0 1600 1000"
+            preserveAspectRatio="none"
+            focusable="false"
+          >
+            <defs>
+              <linearGradient id="heroSheetL" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
+                <stop offset="1" class="stage__stop-fold" stop-opacity=".42" />
+              </linearGradient>
+              <linearGradient id="heroRimL" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" class="stage__stop-rim" stop-opacity="0" />
+                <stop offset=".5" class="stage__stop-rim" stop-opacity=".95" />
+                <stop offset="1" class="stage__stop-rim" stop-opacity=".15" />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#heroSheetL)"
+              d="M-80-80H390C300 120 540 270 430 480 330 670 150 720 270 1080H-80Z"
+            />
+            <path
+              class="stage__rim stage__rim--halo"
+              stroke="url(#heroRimL)"
+              d="M390-80C300 120 540 270 430 480 330 670 150 720 270 1080"
+            />
+            <path
+              class="stage__rim"
+              stroke="url(#heroRimL)"
+              d="M390-80C300 120 540 270 430 480 330 670 150 720 270 1080"
+            />
+            <path
+              class="stage__rim stage__rim--faint"
+              stroke="url(#heroRimL)"
+              d="M300-80C220 150 440 300 345 500 260 690 70 780 165 1080"
+            />
+          </svg>
 
+          <svg
+            class="stage__fold stage__fold--right"
+            viewBox="0 0 1600 1000"
+            preserveAspectRatio="none"
+            focusable="false"
+          >
+            <defs>
+              <linearGradient id="heroSheetR" x1="1" y1="0" x2="0" y2="0">
+                <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
+                <stop offset="1" class="stage__stop-fold" stop-opacity=".4" />
+              </linearGradient>
+              <linearGradient id="heroRimR" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0" class="stage__stop-rim" stop-opacity=".1" />
+                <stop offset=".42" class="stage__stop-rim" stop-opacity=".9" />
+                <stop offset="1" class="stage__stop-rim" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#heroSheetR)"
+              d="M1680-80V1080H1290C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80Z"
+            />
+            <path
+              class="stage__rim stage__rim--halo"
+              stroke="url(#heroRimR)"
+              d="M1290 1080C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80"
+            />
+            <path
+              class="stage__rim"
+              stroke="url(#heroRimR)"
+              d="M1290 1080C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80"
+            />
+            <path
+              class="stage__rim stage__rim--faint"
+              stroke="url(#heroRimR)"
+              d="M1390 1080C1290 880 1520 720 1390 540 1270 370 1290 150 1440-80"
+            />
+          </svg>
+
+          <svg
+            class="stage__fold stage__fold--edges"
+            viewBox="0 0 1600 1000"
+            preserveAspectRatio="none"
+            focusable="false"
+          >
+            <defs>
+              <linearGradient id="heroSheetT" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" class="stage__stop-fold" stop-opacity=".95" />
+                <stop offset="1" class="stage__stop-fold" stop-opacity=".5" />
+              </linearGradient>
+              <linearGradient id="heroSheetB" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
+                <stop offset="1" class="stage__stop-fold" stop-opacity=".45" />
+              </linearGradient>
+              <linearGradient id="heroRimH" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" class="stage__stop-rim" stop-opacity="0" />
+                <stop offset=".5" class="stage__stop-rim" stop-opacity=".85" />
+                <stop offset="1" class="stage__stop-rim" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#heroSheetT)"
+              d="M430-80C530 110 710 230 870 170 1010 120 1080 20 1250-80Z"
+            />
+            <path
+              class="stage__rim"
+              stroke="url(#heroRimH)"
+              d="M430-80C530 110 710 230 870 170 1010 120 1080 20 1250-80"
+            />
+            <path
+              fill="url(#heroSheetB)"
+              d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790V1080H-80Z"
+            />
+            <path
+              class="stage__rim stage__rim--halo"
+              stroke="url(#heroRimH)"
+              d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790"
+            />
+            <path
+              class="stage__rim"
+              stroke="url(#heroRimH)"
+              d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790"
+            />
+          </svg>
+
+          <canvas class="stage__particles"></canvas>
+        </div>
+
+        <div class="wrap hero__frame">
+          <div class="hero__copy">
+            <!-- EDIT: restore this pill while you're looking for work. -->
+            <!-- <p class="pill">
+              <span class="dot" aria-hidden="true"></span>Open to work
+            </p> -->
+
+            <h1 class="hero__name"><span>Al-Raji</span> <span>Theng</span></h1>
+
+            <div class="hero__lead">
               <p class="roles">
                 <span>computer engineer &mdash;</span>
                 <!-- Slot and caret are grouped so they stay on one line when
@@ -221,21 +362,12 @@
               </p>
 
               <div class="hero__actions">
-                <a class="btn btn--primary" href="#projects">
-                  See the work
-                  <svg
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    aria-hidden="true"
-                  >
-                    <path d="M3 8h10M9 4l4 4-4 4" />
-                  </svg>
+                <a class="btn btn--primary hero__cta" href="#contact">
+                  Get in touch
+                  <span class="eyes" aria-hidden="true"
+                    ><i class="eyes__ball"></i><i class="eyes__ball"></i
+                  ></span>
                 </a>
-                <a class="btn btn--ghost" href="mailto:alrajitheng@gmail.com"
-                  >Email me</a
-                >
                 <a
                   class="btn btn--ghost"
                   href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
@@ -245,75 +377,58 @@
                   View my resume
                 </a>
               </div>
-
-              <p class="hero__social">
-                <a
-                  href="https://github.com/rjtng"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >GitHub</a
-                >
-                <a
-                  href="https://linkedin.com/in/rjtg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >LinkedIn</a
-                >
-                <a
-                  href="https://credly.com/users/rjt"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Credly</a
-                >
-                <a
-                  href="https://g.dev/teg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Google Dev</a
-                >
-              </p>
             </div>
+          </div>
 
-            <div class="hero__portrait">
-              <!-- <div class="hero__chip">
-                <b>60</b>
-                <span>Verified credentials</span>
-              </div> -->
+          <div class="hero__visual">
+            <img
+              class="hero__photo"
+              src="/assets/img/portrait-cutout.webp"
+              alt="Al-Raji Theng in a navy blazer"
+              width="651"
+              height="900"
+              fetchpriority="high"
+            />
 
-              <div
-                class="portrait"
-                role="button"
-                tabindex="0"
-                aria-pressed="false"
-                aria-label="Show more about Al-Raji Theng"
-              >
-                <div class="portrait__inner">
-                  <div class="portrait__face portrait__face--front">
-                    <img
-                      src="/assets/img/portrait2.png"
-                      alt="Al-Raji Theng"
-                      width="800"
-                      height="1000"
-                    />
-
-                    <div class="portrait__mark" aria-hidden="true">AT</div>
-                    <p class="portrait__tag">
-                      <b>Zamboanga City, Philippines</b>
-                      BS Computer Engineering · Universidad de Zamboanga
-                    </p>
-                  </div>
-                  <div class="portrait__face portrait__face--back" aria-hidden="true">
-                    <span class="portrait__back-mark" aria-hidden="true">AT</span>
-                    <p class="portrait__back-title">Computer Engineer</p>
-                    <p class="portrait__back-copy">
-                      Building thoughtful digital experiences across web, mobile,
-                      embedded systems, and computer vision.
-                    </p>
-                    <span class="portrait__back-hint">Tap to return</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- Each chip is placed relative to the photo, and the leftmost
+                 reach back over the name. --x and --y set the position, --t
+                 the bob's period so the five never move in step. -->
+            <ul class="hero__chips" aria-label="At a glance">
+              <li class="hero__chip" style="--x: -57%; --y: 5%; --t: 7s">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="7" y="7" width="10" height="10" rx="1.5" />
+                  <path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4" />
+                </svg>
+                Computer Engineer
+              </li>
+              <li class="hero__chip" style="--x: -16%; --y: 21%; --t: 8.5s">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1Z" />
+                  <path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12" />
+                </svg>
+                ICpEP.SE UZ President
+              </li>
+              <li class="hero__chip" style="--x: -78%; --y: 41%; --t: 9s">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="9" r="6" />
+                  <path d="M8.5 14.2 7 22l5-2.5 5 2.5-1.5-7.8" />
+                </svg>
+                <span><b data-cert-count>60</b> Verified Credentials</span>
+              </li>
+              <li class="hero__chip" style="--x: 68%; --y: 34%; --t: 7.6s">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" />
+                </svg>
+                DICT Web Dev Intern
+              </li>
+              <li class="hero__chip" style="--x: 66%; --y: 70%; --t: 8s">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" />
+                  <circle cx="12" cy="9.5" r="2.5" />
+                </svg>
+                Zamboanga City, PH
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -662,22 +777,43 @@
         </div>
       </div>
 
-      <!-- ═══════════════════════════ 2 · about ═══════════════════════════ -->
-      <section class="section" id="about">
+      <!-- ═══════════════════════════ 2 · about ═══════════════════════════
+           A dark panel over a slowly drifting wall of project screens. main.js
+           builds the wall from the mock screens on the project cards, so it
+           always shows the real project list; without scripting the panel
+           simply has no wall behind it. -->
+      <section class="section section--wall" id="about">
+        <div class="wall" aria-hidden="true">
+          <div class="wall__plane" data-project-wall></div>
+        </div>
+
         <div class="wrap">
           <div class="head">
             <p class="head__index">01 / About</p>
             <div class="head__rule"></div>
           </div>
 
-          <div class="about">
-            <div class="prose reveal">
-              <p class="prose__lead">
-                I'm a computer engineer who spends equal amounts of time
-                figuring out hardware, writing code, and occasionally wondering
-                why it worked yesterday but not today. Argh! >_<
-              </p>
-            </div>
+          <div class="bio reveal">
+            <h2 class="bio__name">Al-Raji Theng</h2>
+            <p class="bio__title">Computer Engineer</p>
+            <p class="bio__meta">
+              BS Computer Engineering | <em>Universidad de Zamboanga</em><br />
+              President, ICpEP.SE &ndash; UZ Chapter
+            </p>
+
+            <p class="bio__text">
+              I'm a <mark>computer engineer</mark> who spends equal amounts of
+              time figuring out hardware, writing code, and occasionally
+              wondering why it worked yesterday but not today. Argh! &gt;_&lt;
+            </p>
+
+            <!-- Filled by main.js from the featured credentials in
+                 data-certs.js, each linking to its Credly verification. -->
+            <ul
+              class="bio__badges"
+              data-featured-badges
+              aria-label="Featured credentials"
+            ></ul>
           </div>
         </div>
       </section>
@@ -1730,30 +1866,36 @@
          instead of a card and a strip beneath it. Everything inside
          .finale__scene is decoration: drawn in CSS and SVG, with the particle
          canvas animated by main.js. -->
-    <footer class="finale" id="contact">
-      <div class="finale__scene" aria-hidden="true">
-        <div class="finale__glow finale__glow--a"></div>
-        <div class="finale__glow finale__glow--b"></div>
-        <div class="finale__glow finale__glow--c"></div>
+    <footer
+      class="finale stage"
+      id="contact"
+      data-vanish-y=".46"
+      data-calm=".36"
+      data-foot="130"
+    >
+      <div class="stage__scene stage__scene--top" aria-hidden="true">
+        <div class="stage__glow stage__glow--a"></div>
+        <div class="stage__glow stage__glow--b"></div>
+        <div class="stage__glow stage__glow--c"></div>
 
         <!-- Dark folds with lit rims. Stretched to the stage rather than
              cropped, so the edges stay in frame on a phone; the rims use
              non-scaling strokes so they stay hairlines either way. -->
         <svg
-          class="finale__fold finale__fold--left"
+          class="stage__fold stage__fold--left"
           viewBox="0 0 1600 1000"
           preserveAspectRatio="none"
           focusable="false"
         >
           <defs>
             <linearGradient id="finaleSheetL" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" class="finale__stop-fold" stop-opacity=".97" />
-              <stop offset="1" class="finale__stop-fold" stop-opacity=".42" />
+              <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
+              <stop offset="1" class="stage__stop-fold" stop-opacity=".42" />
             </linearGradient>
             <linearGradient id="finaleRimL" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" class="finale__stop-rim" stop-opacity="0" />
-              <stop offset=".5" class="finale__stop-rim" stop-opacity=".95" />
-              <stop offset="1" class="finale__stop-rim" stop-opacity=".15" />
+              <stop offset="0" class="stage__stop-rim" stop-opacity="0" />
+              <stop offset=".5" class="stage__stop-rim" stop-opacity=".95" />
+              <stop offset="1" class="stage__stop-rim" stop-opacity=".15" />
             </linearGradient>
           </defs>
           <path
@@ -1761,37 +1903,37 @@
             d="M-80-80H390C300 120 540 270 430 480 330 670 150 720 270 1080H-80Z"
           />
           <path
-            class="finale__rim finale__rim--halo"
+            class="stage__rim stage__rim--halo"
             stroke="url(#finaleRimL)"
             d="M390-80C300 120 540 270 430 480 330 670 150 720 270 1080"
           />
           <path
-            class="finale__rim"
+            class="stage__rim"
             stroke="url(#finaleRimL)"
             d="M390-80C300 120 540 270 430 480 330 670 150 720 270 1080"
           />
           <path
-            class="finale__rim finale__rim--faint"
+            class="stage__rim stage__rim--faint"
             stroke="url(#finaleRimL)"
             d="M300-80C220 150 440 300 345 500 260 690 70 780 165 1080"
           />
         </svg>
 
         <svg
-          class="finale__fold finale__fold--right"
+          class="stage__fold stage__fold--right"
           viewBox="0 0 1600 1000"
           preserveAspectRatio="none"
           focusable="false"
         >
           <defs>
             <linearGradient id="finaleSheetR" x1="1" y1="0" x2="0" y2="0">
-              <stop offset="0" class="finale__stop-fold" stop-opacity=".97" />
-              <stop offset="1" class="finale__stop-fold" stop-opacity=".4" />
+              <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
+              <stop offset="1" class="stage__stop-fold" stop-opacity=".4" />
             </linearGradient>
             <linearGradient id="finaleRimR" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0" class="finale__stop-rim" stop-opacity=".1" />
-              <stop offset=".42" class="finale__stop-rim" stop-opacity=".9" />
-              <stop offset="1" class="finale__stop-rim" stop-opacity="0" />
+              <stop offset="0" class="stage__stop-rim" stop-opacity=".1" />
+              <stop offset=".42" class="stage__stop-rim" stop-opacity=".9" />
+              <stop offset="1" class="stage__stop-rim" stop-opacity="0" />
             </linearGradient>
           </defs>
           <path
@@ -1799,41 +1941,41 @@
             d="M1680-80V1080H1290C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80Z"
           />
           <path
-            class="finale__rim finale__rim--halo"
+            class="stage__rim stage__rim--halo"
             stroke="url(#finaleRimR)"
             d="M1290 1080C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80"
           />
           <path
-            class="finale__rim"
+            class="stage__rim"
             stroke="url(#finaleRimR)"
             d="M1290 1080C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80"
           />
           <path
-            class="finale__rim finale__rim--faint"
+            class="stage__rim stage__rim--faint"
             stroke="url(#finaleRimR)"
             d="M1390 1080C1290 880 1520 720 1390 540 1270 370 1290 150 1440-80"
           />
         </svg>
 
         <svg
-          class="finale__fold finale__fold--edges"
+          class="stage__fold stage__fold--edges"
           viewBox="0 0 1600 1000"
           preserveAspectRatio="none"
           focusable="false"
         >
           <defs>
             <linearGradient id="finaleSheetT" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" class="finale__stop-fold" stop-opacity=".95" />
-              <stop offset="1" class="finale__stop-fold" stop-opacity=".5" />
+              <stop offset="0" class="stage__stop-fold" stop-opacity=".95" />
+              <stop offset="1" class="stage__stop-fold" stop-opacity=".5" />
             </linearGradient>
             <linearGradient id="finaleSheetB" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0" class="finale__stop-fold" stop-opacity=".97" />
-              <stop offset="1" class="finale__stop-fold" stop-opacity=".45" />
+              <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
+              <stop offset="1" class="stage__stop-fold" stop-opacity=".45" />
             </linearGradient>
             <linearGradient id="finaleRimH" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" class="finale__stop-rim" stop-opacity="0" />
-              <stop offset=".5" class="finale__stop-rim" stop-opacity=".85" />
-              <stop offset="1" class="finale__stop-rim" stop-opacity="0" />
+              <stop offset="0" class="stage__stop-rim" stop-opacity="0" />
+              <stop offset=".5" class="stage__stop-rim" stop-opacity=".85" />
+              <stop offset="1" class="stage__stop-rim" stop-opacity="0" />
             </linearGradient>
           </defs>
           <path
@@ -1841,7 +1983,7 @@
             d="M430-80C530 110 710 230 870 170 1010 120 1080 20 1250-80Z"
           />
           <path
-            class="finale__rim"
+            class="stage__rim"
             stroke="url(#finaleRimH)"
             d="M430-80C530 110 710 230 870 170 1010 120 1080 20 1250-80"
           />
@@ -1850,18 +1992,18 @@
             d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790V1080H-80Z"
           />
           <path
-            class="finale__rim finale__rim--halo"
+            class="stage__rim stage__rim--halo"
             stroke="url(#finaleRimH)"
             d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790"
           />
           <path
-            class="finale__rim"
+            class="stage__rim"
             stroke="url(#finaleRimH)"
             d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790"
           />
         </svg>
 
-        <canvas class="finale__particles" id="finaleParticles"></canvas>
+        <canvas class="stage__particles"></canvas>
       </div>
 
       <div class="wrap finale__inner reveal">
@@ -1989,6 +2131,6 @@
     </footer>
 
     <script src="/assets/js/data-certs.js?v=5"></script>
-    <script src="/assets/js/main.js?v=7"></script>
+    <script src="/assets/js/main.js?v=8"></script>
   </body>
 </html>
