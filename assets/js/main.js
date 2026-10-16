@@ -12,6 +12,7 @@
   /* --- theme --------------------------------------------------------------- */
   var themeButtons = $$('[data-theme-toggle]');
   var themeRoot = document.documentElement;
+  var themeListeners = [];
   function setTheme(theme) {
     var light = theme === 'light';
     themeRoot.toggleAttribute('data-theme', light);
@@ -24,6 +25,7 @@
     var themeColor = $('meta[name="theme-color"]');
     if (themeColor) { themeColor.setAttribute('content', light ? '#F3F7FC' : '#050A16'); }
     try { localStorage.setItem('portfolio-theme', light ? 'light' : 'dark'); } catch (error) {}
+    themeListeners.forEach(function (listener) { listener(light); });
   }
   setTheme(themeRoot.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
   themeButtons.forEach(function (button) {
@@ -126,7 +128,7 @@
     });
   }
 
-  var backToTop = $('.foot__top');
+  var backToTop = $('.finale__top');
   if (backToTop) {
     backToTop.addEventListener('click', function (event) {
       event.preventDefault();
@@ -457,6 +459,168 @@
     carousel.classList.add('is-ready');
     positionProjects();
     window.addEventListener('resize', positionProjects);
+  }
+
+  /* --- closing scene: particle field -----------------------------------------
+     Light drifting toward the viewer, drawn as streaks so it reads as motion
+     even in a still frame. Each particle sits at a depth z and is projected
+     through one vanishing point; its streak runs from where it was half a
+     second ago to where it is now. Nearer particles therefore travel faster
+     and draw longer and thicker, which gives the field depth without a blur
+     filter.
+
+     It animates only while the stage is on screen, and under
+     prefers-reduced-motion it draws one still frame. */
+  var finale = $('.finale');
+  var field  = $('#finaleParticles');
+  if (finale && field && field.getContext) {
+    var fieldContext = field.getContext('2d');
+    // Weighted toward the lighter tones, which separate best from the glow.
+    // Both lists are indexed by the same p.tone, so keep them the same length.
+    var FIELD_DARK  = ['99,205,255', '169,224,255', '99,205,255', '124,156,255', '44,123,242'];
+    var FIELD_LIGHT = ['33,104,213', '20,122,168', '33,104,213', '74,141,235', '23,77,167'];
+    var specks = [];
+    var fieldWidth = 0, fieldHeight = 0;
+    var vanishX = 0, vanishY = 0, aimX = 0, aimY = 0;
+    var fieldLive = false, fieldFrame = 0, fieldLast = 0;
+
+    // Drops a particle at depth z over a random point of the stage, so new
+    // ones spread evenly rather than bunching at the vanishing point.
+    function placeSpeck(p, z) {
+      p.z = z;
+      p.x = (Math.random() - .5) * fieldWidth * z;
+      p.y = (Math.random() - .5) * fieldHeight * z;
+      p.speed = .045 + Math.random() * .045;
+      p.size = .7 + Math.random() * 1.5;
+      p.alpha = .35 + Math.random() * .6;
+      p.tone = Math.floor(Math.random() * FIELD_DARK.length);
+      return p;
+    }
+
+    function sizeField() {
+      var rect = finale.getBoundingClientRect();
+      if (!rect.width || !rect.height) { return; }
+      if (rect.width === fieldWidth && rect.height === fieldHeight) { return; }
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      fieldWidth = rect.width;
+      fieldHeight = rect.height;
+      field.width = Math.round(fieldWidth * dpr);
+      field.height = Math.round(fieldHeight * dpr);
+      fieldContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var count = Math.round(Math.min(150, Math.max(56, fieldWidth * fieldHeight / 9500)));
+      specks = [];
+      for (var i = 0; i < count; i++) { specks.push(placeSpeck({}, .18 + Math.random() * .82)); }
+    }
+
+    function streak(x1, y1, x2, y2) {
+      fieldContext.beginPath();
+      fieldContext.moveTo(x1, y1);
+      fieldContext.lineTo(x2, y2);
+      fieldContext.stroke();
+    }
+
+    function drawField(dt) {
+      var light = themeRoot.getAttribute('data-theme') === 'light';
+      var tones = light ? FIELD_LIGHT : FIELD_DARK;
+      fieldContext.clearRect(0, 0, fieldWidth, fieldHeight);
+      fieldContext.globalCompositeOperation = light ? 'source-over' : 'lighter';
+      fieldContext.lineCap = 'round';
+
+      vanishX += (aimX - vanishX) * .04;
+      vanishY += (aimY - vanishY) * .04;
+      var cx = fieldWidth / 2 + vanishX;
+      var cy = fieldHeight * .46 + vanishY;
+      // Quieter in the middle and along the foot, so the headline, the address
+      // and the small copyright line stay legible.
+      var calm = Math.min(fieldWidth, fieldHeight) * .36;
+      var foot = fieldHeight - 130;
+
+      for (var i = 0; i < specks.length; i++) {
+        var p = specks[i];
+        p.z -= p.speed * dt;
+        var hx = cx + p.x / p.z;
+        var hy = cy + p.y / p.z;
+        if (p.z < .14 || hx < -80 || hx > fieldWidth + 80 || hy < -80 || hy > fieldHeight + 80) {
+          placeSpeck(p, .9 + Math.random() * .1);
+          continue;
+        }
+
+        var near = 1 - p.z;
+        var width = p.size * (.6 + near * near * 3.4);
+        var tz = p.z + p.speed * .55;
+        var dx = hx - (cx + p.x / tz);
+        var dy = hy - (cy + p.y / tz);
+        var travel = Math.sqrt(dx * dx + dy * dy);
+        // At least a short dash, so even distant specks read as moving.
+        var span = Math.max(width * 1.8, Math.min(travel, 130));
+        var tx = travel ? hx - dx / travel * span : hx;
+        var ty = travel ? hy - dy / travel * span : hy;
+
+        var a = p.alpha * Math.min(1, near / .14);              // fade in from far
+        if (p.z < .3) { a *= .5 + (p.z - .14) / .32; }           // soften the nearest
+        var off = Math.sqrt((hx - cx) * (hx - cx) + (hy - cy) * (hy - cy));
+        if (off < calm) { a *= .3 + .7 * off / calm; }
+        if (hy > foot) { a *= Math.max(.15, 1 - (hy - foot) / 130); }
+        if (light) { a *= .7; }
+
+        var tone = tones[p.tone];
+        fieldContext.strokeStyle = 'rgba(' + tone + ',' + (a * .2).toFixed(3) + ')';
+        fieldContext.lineWidth = width * 3.6;
+        streak(tx, ty, hx, hy);
+        fieldContext.strokeStyle = 'rgba(' + tone + ',' + a.toFixed(3) + ')';
+        fieldContext.lineWidth = width;
+        streak(tx, ty, hx, hy);
+      }
+    }
+
+    function fieldTick(now) {
+      var dt = fieldLast ? Math.min((now - fieldLast) / 1000, .05) : 0;
+      fieldLast = now;
+      drawField(dt);
+      fieldFrame = fieldLive ? window.requestAnimationFrame(fieldTick) : 0;
+    }
+    function startField() {
+      finale.classList.add('is-live');
+      if (still) { drawField(0); return; }
+      if (fieldLive) { return; }
+      fieldLive = true;
+      fieldLast = 0;
+      fieldFrame = window.requestAnimationFrame(fieldTick);
+    }
+    function stopField() {
+      finale.classList.remove('is-live');
+      fieldLive = false;
+      if (fieldFrame) { window.cancelAnimationFrame(fieldFrame); fieldFrame = 0; }
+    }
+
+    function refitField() {
+      sizeField();
+      if (!fieldLive) { drawField(0); }
+    }
+    sizeField();
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(refitField).observe(finale);
+    } else {
+      window.addEventListener('resize', refitField);
+    }
+    // A still frame keeps the old palette until it is redrawn.
+    themeListeners.push(function () { if (!fieldLive) { drawField(0); } });
+
+    // The vanishing point leans away from the pointer, a little parallax.
+    window.addEventListener('pointermove', function (e) {
+      if (!fieldLive) { return; }
+      var rect = finale.getBoundingClientRect();
+      aimX = (e.clientX - rect.left - rect.width / 2) * -.05;
+      aimY = (e.clientY - rect.top - rect.height / 2) * -.05;
+    }, { passive: true });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { startField(); } else { stopField(); }
+      }).observe(finale);
+    } else {
+      startField();
+    }
   }
 
   /* =========================================================================

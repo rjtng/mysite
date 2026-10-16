@@ -6,7 +6,7 @@ framework, no build step, no dependencies. Around 100 KB before the webfonts.
 ```
 index.html                 the whole page
 assets/css/styles.css      all styles
-assets/js/main.js          nav, mobile sheet, reveals, credential rendering
+assets/js/main.js          nav, mobile sheet, reveals, credentials, closing scene
 assets/js/data-certs.js    generated — 60 Credly credentials
 assets/img/favicon.svg     tab icon
 assets/img/og-cover.png    1200x630 social card
@@ -230,6 +230,17 @@ head, so a browser without JavaScript gets the full page rather than a blank
 one. There is also a 2.6 second timer that reveals everything regardless, in
 case the intersection observer never fires — which happens in embedded webviews
 and tabs that are never painted.
+
+The page ends on a full-height closing scene, modelled on
+aishie-design.framer.website and recoloured to this palette. The invitation,
+the email address, the links and the copyright share one stage, which is the
+page `<footer>`. Behind them sit three drifting glows, dark folds with lit rims
+drawn in inline SVG, and a canvas of light streaks drifting toward the viewer.
+The stage fades in from the page at its top edge, so Experience runs into it
+without a seam. The particles quieten behind the text, and everything there
+animates only while the stage is on screen. The fold, rim and glow colours are
+custom properties on `.finale`, and the light-mode set sits with the other light
+overrides.
 
 `prefers-reduced-motion` disables all of it, and a print stylesheet strips the
 chrome and prints the content as a plain document.
