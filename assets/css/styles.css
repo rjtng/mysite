@@ -487,37 +487,183 @@ main { position: relative; z-index: 3; }
 .sheet__mail a { font: inherit; padding: 0; border: 0; color: var(--sky-pale); }
 
 /* =============================================================================
-   1 — Hero
+   Stage — the backdrop shared by the hero and the closing scene
+   Back to front: a ground gradient, three drifting glows, dark folds with lit
+   rims (inline SVG, stretched to the stage), and the particle canvas that
+   main.js drives. Each scene fades into the page along one edge, so neither
+   end of the page has a seam: the hero fades out at its foot, the closing
+   scene in at its top.
    ========================================================================== */
-.hero {
+.stage {
+  --stage-ground: radial-gradient(ellipse 85% 75% at 50% 56%, #0d2459 0%, #071431 46%, #040816 100%);
+  --stage-fold:   #02060f;
+  --stage-rim:    #8ad6ff;
+  --stage-glow-a: rgba(44,123,242,.62);
+  --stage-glow-b: rgba(99,205,255,.3);
+  --stage-glow-c: rgba(52,82,226,.55);
+  --stage-blend:  screen;
+
   position: relative;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  padding-top: 132px;
-  padding-bottom: 56px;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.hero__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr);
-  gap: clamp(36px, 5vw, 72px);
-  align-items: center;
+.stage__scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--stage-ground);
+}
+.stage__scene--top {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 clamp(140px, 24%, 260px));
+  mask-image: linear-gradient(to bottom, transparent, #000 clamp(140px, 24%, 260px));
+}
+.stage__scene--bottom {
+  -webkit-mask-image: linear-gradient(to top, transparent, #000 clamp(110px, 18%, 220px));
+  mask-image: linear-gradient(to top, transparent, #000 clamp(110px, 18%, 220px));
+}
+
+/* Radial fills that fade to nothing on their own, so they need no blur filter
+   and the compositor only ever moves them. */
+.stage__glow {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: var(--stage-blend);
+  will-change: transform;
+  animation: stage-drift 24s ease-in-out infinite alternate;
+}
+.stage__glow--a {
+  width: 66vmax; height: 46vmax;
+  left: 50%; top: 54%;
+  margin: -23vmax 0 0 -33vmax;
+  background: radial-gradient(closest-side, var(--stage-glow-a), transparent);
+}
+.stage__glow--b {
+  width: 46vmax; height: 46vmax;
+  right: -14vmax; top: -4vmax;
+  background: radial-gradient(closest-side, var(--stage-glow-b), transparent);
+  animation-duration: 29s;
+  animation-direction: alternate-reverse;
+}
+.stage__glow--c {
+  width: 52vmax; height: 38vmax;
+  left: -16vmax; bottom: -12vmax;
+  background: radial-gradient(closest-side, var(--stage-glow-c), transparent);
+  animation-duration: 33s;
+}
+@keyframes stage-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(7%, -5%, 0) scale(1.12); }
+  100% { transform: translate3d(-5%, 4%, 0) scale(.94); }
+}
+
+/* Oversized so the slow sway never pulls an edge into view. max-width undoes
+   the global svg cap, which would otherwise hold these to the stage width. */
+.stage__fold {
+  position: absolute;
+  left: -6%; top: -6%;
+  width: 112%; height: 112%;
+  max-width: none;
+  overflow: visible;
+  will-change: transform;
+  animation: stage-sway-left 19s ease-in-out infinite;
+}
+.stage__fold--left  { transform-origin: 0 50%; }
+.stage__fold--right { transform-origin: 100% 50%; animation-name: stage-sway-right; animation-duration: 23s; }
+.stage__fold--edges { transform-origin: 50% 100%; animation-name: stage-sway-edges; animation-duration: 27s; }
+@keyframes stage-sway-left {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50%      { transform: translate3d(2.5%, -2%, 0) rotate(2.2deg) scale(1.05); }
+}
+@keyframes stage-sway-right {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50%      { transform: translate3d(-2.5%, 2%, 0) rotate(-2deg) scale(1.04); }
+}
+@keyframes stage-sway-edges {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1, 1); }
+  50%      { transform: translate3d(0, -1.5%, 0) scale(1.05, 1.03); }
+}
+/* The hero mirrors its folds so the two ends of the page are not twins. The
+   individual scale property composes with the animated transform instead of
+   being overwritten by it. It flips about the transform origin, and the side
+   folds sway from their outer edge, so the origin moves to the centre here;
+   mirrored about an edge they would land outside the stage. */
+.stage--mirror .stage__fold { scale: -1 1; transform-origin: 50% 50%; }
+
+/* stop-color is a CSS property, so the folds follow the theme with the rest. */
+.stage__stop-fold { stop-color: var(--stage-fold); }
+.stage__stop-rim  { stop-color: var(--stage-rim); }
+.stage__rim {
+  fill: none;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.stage__rim--halo  { stroke-width: 7; opacity: .2; }
+.stage__rim--faint { opacity: .38; }
+
+.stage__particles {
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
+}
+
+/* Everything that moves rests while its stage is off screen; main.js flags
+   the stage live while it is in view. */
+.js .stage:not(.is-live) .stage__glow,
+.js .stage:not(.is-live) .stage__fold,
+.js .stage:not(.is-live) .hero__chip,
+.js .stage:not(.is-live) .eyes__ball,
+.js .stage:not(.is-live) .finale__mail::after { animation-play-state: paused; }
+
+/* =============================================================================
+   1 — Hero
+   The name is set huge in a pixel face and sits behind the photo; the chips
+   float in front of both; the role line and the actions sit above it all.
+   That is the z-index ladder below, and it only works while the copy and the
+   visual share one stacking context, which is why neither is a .reveal: an
+   element mid-fade gets a stacking context of its own.
+   ========================================================================== */
+.hero {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.hero__frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-top: 112px;
+  padding-bottom: clamp(40px, 8vh, 90px);
 }
 
 .hero__name {
-  font-size: clamp(52px, 11.5vw, 128px);
-  line-height: .92;
-  letter-spacing: -0.055em;
-  margin: 22px 0 0;
-}
-.hero__name em {
-  font-style: normal;
-  background: var(--grad-text);
+  position: relative;
+  z-index: 1;
+  width: fit-content;
+  margin: 0;
+  font-family: "Pixelify Sans", var(--display);
+  font-size: clamp(60px, min(11vw, 26svh), 168px);
+  font-weight: 700;
+  line-height: .86;
+  letter-spacing: 0;
+  /* White fading to steel across the name, as in the reference. fit-content
+     above keeps the gradient on the letters rather than the full column. */
+  background: linear-gradient(100deg, #fff 0%, #fff 36%, #c4d6ef 66%, #86a3cd 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+.hero__name span { display: block; white-space: nowrap; }
+
+.hero__lead {
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(18px, 3.6vh, 36px);
 }
 
 /* The rotating role line. One slot, the words swap inside it.
@@ -529,22 +675,23 @@ main { position: relative; z-index: 3; }
    the rotating word about 7px. Centring two boxes of equal line height puts
    the two runs of text on the same optical line instead. */
 .roles {
-  --roles-line: 1.6em;
+  --roles-line: 1.4em;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  font-family: var(--mono);
-  font-size: clamp(13px, 1.5vw, 15.5px);
+  gap: .4em;
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(17px, 1.7vw, 23px);
+  font-weight: 600;
   line-height: var(--roles-line);
-  letter-spacing: .02em;
-  color: var(--muted);
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 /* Keeps the caret with the word when the line wraps on a narrow screen. */
 .roles__run {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: .3em;
   min-width: 0;
 }
 .roles__slot {
@@ -569,7 +716,7 @@ main { position: relative; z-index: 3; }
      are handled by max-width on the slot instead. */
   width: max-content;
   line-height: var(--roles-line);   /* match the slot, so glyphs sit centred */
-  font-weight: 500;
+  font-weight: 600;
   color: var(--sky-pale);
   opacity: 0;
   transform: translateY(90%);
@@ -577,231 +724,106 @@ main { position: relative; z-index: 3; }
 }
 .roles__slot b.on { opacity: 1; transform: none; }
 .roles__slot b.off { opacity: 0; transform: translateY(-90%); }
+/* A block caret, the typed-terminal kind. */
 .caret {
   display: block;
   flex: none;
-  width: 8px; height: 1.05em;
+  width: .42em; height: 1em;
   background: var(--sky);
   animation: blink 1.15s steps(1) infinite;
 }
 @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 
-.hero__intro {
-  max-width: 52ch;
-  margin-top: 26px;
-  color: var(--muted);
-  font-size: clamp(15.5px, 1.55vw, 18px);
-  line-height: 1.68;
-}
-.hero__intro strong { color: var(--text); font-weight: 500; }
-
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 34px;
+  margin-top: clamp(20px, 3.4vh, 30px);
 }
 
-.hero__social {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 22px;
-  margin-top: 34px;
-  font: 400 13px/1 var(--mono);
-  letter-spacing: .04em;
-  color: var(--dim);
-}
-.hero__social a {
+/* The call to action looks back at you: the pupils follow the pointer
+   (main.js sets --look) and blink every few seconds. */
+.hero__cta { gap: 12px; padding-right: 14px; }
+.eyes { display: inline-flex; gap: 3px; }
+.eyes__ball {
   position: relative;
-  padding-bottom: 3px;
-  transition: color .2s var(--ease);
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: inset 0 -2px 3px rgba(4,12,30,.28);
+  animation: eye-blink 6s ease-in-out infinite;
 }
-.hero__social a::after {
+.eyes__ball + .eyes__ball { animation-delay: .04s; }
+.eyes__ball::after {
   content: "";
   position: absolute;
-  left: 0; bottom: 0;
-  width: 100%; height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .3s var(--ease);
+  left: 50%; top: 50%;
+  width: 10px; height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #061234;
+  translate: var(--look, 2px 0);
+  transition: translate .12s linear;
 }
-.hero__social a:hover { color: var(--sky); }
-.hero__social a:hover::after { transform: scaleX(1); }
+@keyframes eye-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(.1); }
+}
 
-/* Portrait panel ----------------------------------------------------------- */
-.portrait {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  border-radius: var(--r-xl);
-  border: 1px solid var(--line-strong);
-  background: transparent;
-  cursor: pointer;
-  perspective: 1200px;
-  touch-action: manipulation;
+/* The photo stands on the hero's foot, framed head to chest so it reads at
+   the reference's scale. Its height follows the hero, capped by the width
+   and outright, so on a wide screen it never runs into the end of the name. */
+.hero__visual {
+  position: absolute;
+  z-index: 2;
+  left: 46%;
+  bottom: 0;
+  height: min(calc(100% - 84px), 46vw, 820px);
+  aspect-ratio: 651 / 680;
 }
-.portrait__inner {
-  position: relative;
+.hero__photo {
   width: 100%;
   height: 100%;
-  border-radius: inherit;
-  transform-style: preserve-3d;
-  transition: transform .78s var(--ease);
-}
-.portrait[aria-pressed="true"] .portrait__inner { transform: rotateY(180deg); }
-.portrait__face {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: inherit;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  background: var(--grad-soft), var(--surface);
-  isolation: isolate;
-}
-.portrait__face--back {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: clamp(26px, 5vw, 54px);
-  transform: rotateY(180deg);
-  background:
-    radial-gradient(circle at 80% 15%, rgba(99,205,255,.22), transparent 34%),
-    linear-gradient(150deg, var(--surface-2), var(--bg-2));
-  color: var(--text);
-}
-.portrait__back-mark {
-  margin-bottom: 28px;
-  color: var(--sky);
-  font: 600 clamp(48px, 8vw, 82px)/.9 var(--display);
-  letter-spacing: -.08em;
-}
-.portrait__back-title {
-  margin: 0 0 12px;
-  color: var(--text);
-  font: 600 clamp(19px, 2vw, 26px)/1.15 var(--display);
-  letter-spacing: -.04em;
-}
-.portrait__back-copy {
-  max-width: 25ch;
-  margin: 0;
-  color: var(--muted);
-  font-size: clamp(13px, 1.5vw, 16px);
-  line-height: 1.6;
-}
-.portrait__back-hint {
-  margin-top: auto;
-  color: var(--sky-pale);
-  font: 400 11px/1.3 var(--mono);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.portrait img {
-  position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
   object-fit: cover;
-  z-index: 2;
-}
-/* Shown when no photo has been dropped in yet. */
-.portrait__mark {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  font-family: var(--display);
-  font-size: clamp(80px, 13vw, 150px);
-  font-weight: 600;
-  letter-spacing: -0.06em;
-  color: rgba(233,241,252,.14);
-}
-.portrait__face--front::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background: linear-gradient(to top, rgba(5,10,22,.88) 2%, transparent 46%);
-}
-.portrait__tag {
-  position: absolute;
-  left: 20px; bottom: 20px;
-  z-index: 4;
-  font: 400 12px/1.5 var(--mono);
-  color: var(--sky-pale);
-  letter-spacing: .04em;
-}
-.portrait__tag b {
-  display: block;
-  font-family: var(--display);
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--text);
+  object-position: top;
+  filter: drop-shadow(0 0 30px rgba(44,123,242,.35));
+  -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent);
+  mask-image: linear-gradient(to bottom, #000 74%, transparent);
 }
 
-/* A small stat card that overlaps the portrait's top-left corner. */
+.hero__chips { position: absolute; inset: 0; pointer-events: none; }
 .hero__chip {
   position: absolute;
-  top: 26px; left: -34px;
-  z-index: 5;
-  padding: 13px 18px;
-  border-radius: 16px;
-  border: 1px solid var(--line-strong);
-  background: rgba(7,18,35,.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 18px 44px -24px rgba(0,0,0,.95);
+  left: var(--x); top: var(--y);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 11px;
+  border: 1px solid rgba(169,224,255,.38);
+  border-radius: var(--pill);
+  background: rgba(5,12,30,.52);
+  backdrop-filter: blur(8px) saturate(1.3);
+  -webkit-backdrop-filter: blur(8px) saturate(1.3);
+  box-shadow: 0 12px 30px -16px rgba(0,0,0,.9);
+  color: var(--text);
+  font: 600 13px/1.2 var(--display);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  animation: chip-bob var(--t, 8s) ease-in-out infinite;
 }
-.hero__chip b {
-  display: block;
-  font-family: var(--display);
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  font-variant-numeric: tabular-nums;
-  background: var(--grad-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.hero__chip svg {
+  width: 15px; height: 15px;
+  flex: none;
+  fill: none;
+  stroke: var(--sky);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
-.hero__chip span {
-  font: 400 11px/1.3 var(--mono);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--dim);
-}
-
-.hero__portrait { position: relative; }
-
-/* Facts strip below the hero ---------------------------------------------- */
-.facts {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  margin-top: clamp(46px, 6vw, 78px);
-  border-top: 1px solid var(--line);
-  background: var(--line);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.facts div {
-  background: var(--bg);
-  padding: 22px 20px 4px;
-}
-.facts dt {
-  font: 400 11px/1 var(--mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--dim);
-  margin-bottom: 9px;
-}
-.facts dd {
-  font-family: var(--display);
-  font-size: clamp(15px, 1.7vw, 19px);
-  font-weight: 500;
-  letter-spacing: -0.025em;
+.hero__chip b { font-weight: 700; color: var(--sky-pale); }
+@keyframes chip-bob {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -9px; }
 }
 
 /* =============================================================================
@@ -895,88 +917,154 @@ main { position: relative; z-index: 3; }
 
 /* =============================================================================
    2 — About
+   A dark panel over a wall of project screens, tilted back and drifting in
+   alternate directions. The screens are greyed and dimmed, and a shade that
+   is heaviest behind the copy keeps the wall reading as texture.
    ========================================================================== */
-/* One column by default, two only when the profile card is actually present.
+.section--wall {
+  overflow: hidden;
+  isolation: isolate;
+  padding-block: clamp(96px, 12vw, 170px);
+}
 
-   The card is optional and is currently commented out. With a hard-coded
-   340px first column, removing it left the prose stranded in that narrow rail
-   with the wide column empty. Defaulting to one column and letting :has()
-   promote it means either state reads correctly, and a browser without :has()
-   falls back to the single column rather than the broken one. */
-.about {
+.wall {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+}
+.wall::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(5,10,22,.95) 0%, rgba(5,10,22,.86) 46%, rgba(5,10,22,.58) 100%);
+}
+.wall__plane {
+  position: absolute;
+  left: 50%; top: 50%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(32px, 4.5vw, 64px);
-  align-items: start;
+  gap: 26px;
+  transform: translate(-50%, -50%) perspective(1600px) rotateX(20deg) rotateZ(-6deg);
 }
-.about:has(> .profile) {
-  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
-}
-
-.profile {
-  position: sticky;
-  top: 108px;
-  padding: 26px;
-  border-radius: var(--r-lg);
-}
-.profile dl > div {
+/* Each row holds its tiles twice, and the tiles carry their spacing as a
+   right margin rather than a flex gap, so -50% is exactly one set and the
+   loop has no seam. */
+.wall__row {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line);
+  width: max-content;
+  will-change: transform;
+  animation: wall-slide 110s linear infinite;
 }
-.profile dl > div:last-child { border-bottom: 0; padding-bottom: 0; }
-.profile dl > div:first-child { padding-top: 0; }
-.profile dt {
-  font: 400 11px/1 var(--mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--dim);
+.wall__row[data-dir="right"] { animation-direction: reverse; animation-duration: 130s; }
+@keyframes wall-slide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
-.profile dd { font-size: 15.5px; font-weight: 500; }
-.profile dd small { display: block; color: var(--muted); font-size: 13.5px; font-weight: 400; }
+.js .section--wall:not(.is-live) .wall__row { animation-play-state: paused; }
 
-/* Capped so the measure stays readable when the prose has the full width to
-   itself; without the card it would otherwise run past 100 characters a line. */
-.prose {
-  max-width: 60ch;
-  font-size: clamp(16px, 1.5vw, 18px);
-  color: var(--muted);
-  line-height: 1.72;
+.wall__tile {
+  flex: none;
+  width: 300px;
+  margin-right: 26px;
+  filter: grayscale(1) brightness(.72) contrast(1.05);
 }
-.prose__lead {
-  font-family: var(--display);
-  font-size: clamp(20px, 2.5vw, 27px);
-  font-weight: 500;
-  line-height: 1.34;
+.wall__shot {
+  height: 196px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  background: #0b1428;
+}
+/* The mock screens are borrowed from the project cards; undo the tilt and
+   the card sizing they carry there. */
+.wall__shot .project-preview {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+}
+.wall__label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 10px 2px 0;
+  font: 500 11px/1.3 var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(233,241,252,.62);
+}
+.wall__label span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bio { max-width: 780px; }
+.bio__name {
+  width: fit-content;
+  font-family: "Pixelify Sans", var(--display);
+  font-size: clamp(44px, 7vw, 96px);
+  font-weight: 700;
+  line-height: .92;
+  letter-spacing: 0;
+  background: linear-gradient(100deg, #fff 0%, #fff 40%, #c4d6ef 72%, #86a3cd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.bio__title {
+  margin-top: 14px;
+  font: 600 clamp(22px, 2.6vw, 32px)/1.15 var(--display);
   letter-spacing: -0.03em;
   color: var(--text);
-  margin-bottom: 1.1em;
 }
-.prose strong { color: var(--text); font-weight: 500; }
-.prose em { color: var(--sky-pale); font-style: normal; }
-
-.now {
-  margin-top: 38px;
-  border-top: 1px solid var(--line);
-  padding-top: 10px;
+.bio__meta {
+  margin-top: 14px;
+  font: 500 clamp(16px, 1.7vw, 21px)/1.4 var(--display);
+  letter-spacing: -0.02em;
+  color: var(--muted);
 }
-.now li {
-  display: grid;
-  grid-template-columns: 108px 1fr;
-  gap: 16px;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 15.5px;
+.bio__meta em { font-style: italic; color: var(--text); }
+.bio__text {
+  max-width: 62ch;
+  margin-top: clamp(24px, 3vw, 34px);
+  font-size: clamp(17px, 1.75vw, 21px);
+  line-height: 1.62;
   color: var(--text);
 }
-.now li:last-child { border-bottom: 0; }
-.now li span {
-  font: 400 11px/1.7 var(--mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--sky);
+/* The reference's inverted highlight: the phrase on a solid pill. */
+.bio__text mark {
+  padding: .04em .32em;
+  border-radius: 7px;
+  background: var(--text);
+  color: var(--bg);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.bio__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(14px, 2vw, 26px);
+  margin-top: clamp(30px, 4vw, 46px);
+}
+.bio__badges a {
+  display: block;
+  width: clamp(64px, 7vw, 88px);
+  transition: transform .25s var(--ease);
+}
+.bio__badges a:hover,
+.bio__badges a:focus-visible { transform: translateY(-4px); }
+.bio__badges img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.45));
 }
 
 /* =============================================================================
@@ -1620,127 +1708,21 @@ main { position: relative; z-index: 3; }
 /* =============================================================================
    7 — Contact: the closing scene
    One full-height stage holds the invitation, the links and the copyright, so
-   the page ends on a single composition. Back to front: a ground gradient,
-   three drifting glows, dark folds with lit rims, and the particle canvas
-   that main.js drives. The stage fades in from the page at its top edge, so
-   there is no seam where Experience ends.
+   the page ends on a single composition. The backdrop is the shared .stage,
+   fading in from the page at its top edge, so there is no seam where
+   Experience ends.
    ========================================================================== */
 .finale {
-  --finale-ground: radial-gradient(ellipse 85% 75% at 50% 56%, #0d2459 0%, #071431 46%, #040816 100%);
-  --finale-fold:   #02060f;
-  --finale-rim:    #8ad6ff;
-  --finale-glow-a: rgba(44,123,242,.62);
-  --finale-glow-b: rgba(99,205,255,.3);
-  --finale-glow-c: rgba(52,82,226,.55);
-  --finale-blend:  screen;
-  --finale-ink:    rgba(233,241,252,.74);
+  --finale-ink: rgba(233,241,252,.74);
 
-  position: relative;
   z-index: 3;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
   padding: clamp(120px, 17vh, 190px) 0 clamp(24px, 4vh, 38px);
-  overflow: hidden;
   text-align: center;
 }
-
-.finale__scene {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  background: var(--finale-ground);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 clamp(140px, 24%, 260px));
-  mask-image: linear-gradient(to bottom, transparent, #000 clamp(140px, 24%, 260px));
-}
-
-/* Radial fills that fade to nothing on their own, so they need no blur filter
-   and the compositor only ever moves them. */
-.finale__glow {
-  position: absolute;
-  border-radius: 50%;
-  mix-blend-mode: var(--finale-blend);
-  will-change: transform;
-  animation: finale-drift 24s ease-in-out infinite alternate;
-}
-.finale__glow--a {
-  width: 66vmax; height: 46vmax;
-  left: 50%; top: 54%;
-  margin: -23vmax 0 0 -33vmax;
-  background: radial-gradient(closest-side, var(--finale-glow-a), transparent);
-}
-.finale__glow--b {
-  width: 46vmax; height: 46vmax;
-  right: -14vmax; top: -4vmax;
-  background: radial-gradient(closest-side, var(--finale-glow-b), transparent);
-  animation-duration: 29s;
-  animation-direction: alternate-reverse;
-}
-.finale__glow--c {
-  width: 52vmax; height: 38vmax;
-  left: -16vmax; bottom: -12vmax;
-  background: radial-gradient(closest-side, var(--finale-glow-c), transparent);
-  animation-duration: 33s;
-}
-@keyframes finale-drift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(7%, -5%, 0) scale(1.12); }
-  100% { transform: translate3d(-5%, 4%, 0) scale(.94); }
-}
-
-/* Oversized so the slow sway never pulls an edge into view. max-width undoes
-   the global svg cap, which would otherwise hold these to the stage width. */
-.finale__fold {
-  position: absolute;
-  left: -6%; top: -6%;
-  width: 112%; height: 112%;
-  max-width: none;
-  overflow: visible;
-  will-change: transform;
-  animation: finale-sway-left 19s ease-in-out infinite;
-}
-.finale__fold--left  { transform-origin: 0 50%; }
-.finale__fold--right { transform-origin: 100% 50%; animation-name: finale-sway-right; animation-duration: 23s; }
-.finale__fold--edges { transform-origin: 50% 100%; animation-name: finale-sway-edges; animation-duration: 27s; }
-@keyframes finale-sway-left {
-  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50%      { transform: translate3d(2.5%, -2%, 0) rotate(2.2deg) scale(1.05); }
-}
-@keyframes finale-sway-right {
-  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50%      { transform: translate3d(-2.5%, 2%, 0) rotate(-2deg) scale(1.04); }
-}
-@keyframes finale-sway-edges {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1, 1); }
-  50%      { transform: translate3d(0, -1.5%, 0) scale(1.05, 1.03); }
-}
-
-/* stop-color is a CSS property, so the folds follow the theme with the rest. */
-.finale__stop-fold { stop-color: var(--finale-fold); }
-.finale__stop-rim  { stop-color: var(--finale-rim); }
-.finale__rim {
-  fill: none;
-  stroke-width: 1.3;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-.finale__rim--halo  { stroke-width: 7; opacity: .2; }
-.finale__rim--faint { opacity: .38; }
-
-.finale__particles {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* Animations rest while the stage is off screen; main.js flags it live. */
-.js .finale:not(.is-live) .finale__glow,
-.js .finale:not(.is-live) .finale__fold,
-.js .finale:not(.is-live) .finale__mail::after { animation-play-state: paused; }
 
 /* Content ------------------------------------------------------------------ */
 .finale__inner {
@@ -1910,16 +1892,26 @@ main { position: relative; z-index: 3; }
 [data-theme="light"] .credly-badge { background: linear-gradient(160deg, rgba(255,255,255,.94), rgba(232,240,250,.88)); box-shadow: 0 22px 60px rgba(19,57,103,.1); }
 [data-theme="light"] .btn--ghost,
 [data-theme="light"] .carousel-button { background: rgba(255,255,255,.68); }
-[data-theme="light"] .finale {
-  --finale-ground: radial-gradient(ellipse 85% 75% at 50% 56%, #ffffff 0%, #e9f2fd 48%, #d6e5f7 100%);
-  --finale-fold:   #ffffff;
-  --finale-rim:    #2c7bf2;
-  --finale-glow-a: rgba(44,123,242,.24);
-  --finale-glow-b: rgba(99,205,255,.34);
-  --finale-glow-c: rgba(23,77,167,.18);
-  --finale-blend:  normal;
-  --finale-ink:    rgba(16,36,66,.74);
+[data-theme="light"] .stage {
+  --stage-ground: radial-gradient(ellipse 85% 75% at 50% 56%, #ffffff 0%, #e9f2fd 48%, #d6e5f7 100%);
+  --stage-fold:   #ffffff;
+  --stage-rim:    #2c7bf2;
+  --stage-glow-a: rgba(44,123,242,.24);
+  --stage-glow-b: rgba(99,205,255,.34);
+  --stage-glow-c: rgba(23,77,167,.18);
+  --stage-blend:  normal;
 }
+[data-theme="light"] .finale { --finale-ink: rgba(16,36,66,.74); }
+[data-theme="light"] .hero__name,
+[data-theme="light"] .bio__name { background-image: linear-gradient(100deg, var(--text) 0%, var(--text) 36%, var(--blue-deep) 72%, var(--blue) 100%); }
+[data-theme="light"] .hero__photo { filter: drop-shadow(0 18px 40px rgba(19,57,103,.22)); }
+[data-theme="light"] .hero__chip { background: rgba(255,255,255,.74); border-color: rgba(44,123,242,.3); box-shadow: 0 12px 30px -18px rgba(19,57,103,.5); }
+[data-theme="light"] .hero__chip svg { stroke: var(--blue); }
+[data-theme="light"] .hero__chip b { color: var(--blue-deep); }
+[data-theme="light"] .wall::after { background: linear-gradient(90deg, rgba(243,247,252,.96) 0%, rgba(243,247,252,.88) 46%, rgba(243,247,252,.6) 100%); }
+[data-theme="light"] .wall__tile { filter: grayscale(1) contrast(.95); }
+[data-theme="light"] .wall__label { color: rgba(16,36,66,.6); }
+[data-theme="light"] .bio__badges img { filter: drop-shadow(0 10px 18px rgba(19,57,103,.22)); }
 [data-theme="light"] .finale__mail { background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(232,240,250,.86)); box-shadow: 0 26px 60px -30px rgba(19,57,103,.45), 0 0 46px -14px rgba(44,123,242,.35); }
 [data-theme="light"] .finale__mail::before { background: linear-gradient(180deg, rgba(44,123,242,.55), rgba(44,123,242,.1) 55%, rgba(20,122,168,.45)); }
 [data-theme="light"] .finale__mail::after { background: linear-gradient(100deg, transparent, rgba(255,255,255,.85) 50%, transparent); }
@@ -1935,11 +1927,6 @@ main { position: relative; z-index: 3; }
    Responsive
    ========================================================================== */
 @media (max-width: 1040px) {
-  .hero__grid { grid-template-columns: 1fr; gap: 46px; }
-  .hero__portrait { max-width: 380px; }
-  .hero__chip { left: auto; right: -16px; top: 20px; }
-  .about { grid-template-columns: 1fr; }
-  .profile { position: static; }
   .repos li a { grid-template-columns: minmax(0, 180px) minmax(0, 1fr) auto; }
   .repos__tech { display: none; }
 }
@@ -1959,7 +1946,6 @@ main { position: relative; z-index: 3; }
   .nav__burger { display: grid; }
   .nav { padding: 8px 8px 8px 16px; gap: 8px; }
 
-  .facts { grid-template-columns: repeat(2, 1fr); }
   .case { grid-template-columns: 1fr; }
   .case--flip .case__art { order: 0; }
   .case__art { min-height: 190px; }
@@ -1973,29 +1959,43 @@ main { position: relative; z-index: 3; }
   .timeline__where::before { content: " · "; }
 }
 
+@media (max-width: 720px), (max-aspect-ratio: 3/4) {
+  .hero__frame {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 108px;
+    padding-bottom: 0;
+    text-align: center;
+  }
+  .hero__name { margin-inline: auto; font-size: clamp(54px, 19vw, 120px); }
+  .hero__name span + span { margin-left: 0; }
+  .hero__actions { justify-content: center; }
+  .hero__visual {
+    position: relative;
+    left: auto; bottom: auto;
+    width: min(80vw, 480px);
+    height: auto;
+    margin-top: 20px;
+    aspect-ratio: 651 / 900;
+  }
+  .hero__photo { object-fit: contain; object-position: bottom; }
+  .hero__chip { font-size: 12px; padding: 6px 12px 6px 9px; }
+  .hero__chip:nth-child(1) { left: -8%;  top: 9%; }
+  .hero__chip:nth-child(2) { left: 50%;  top: 24%; }
+  .hero__chip:nth-child(3) { left: -12%; top: 47%; }
+  .hero__chip:nth-child(4) { left: 52%;  top: 63%; }
+  .hero__chip:nth-child(5) { display: none; }
+}
+
 @media (max-width: 620px) {
   body { font-size: 16px; }
-  .hero { padding-top: 118px; min-height: auto; }
-  .hero__portrait { max-width: none; }
-  .hero__chip { top: 14px; right: 14px; padding: 10px 14px; }
-  .hero__chip b { font-size: 21px; }
-
-  /* Hero text centres on phones. At this width the column is narrow enough
-     that a left rag reads as an off-centre block rather than as alignment,
-     and the portrait below is full-bleed, so a centred axis lines the two up.
-     Everything above 620px keeps the left rag, where the text sits beside
-     the portrait and has a column edge to align to. */
-  .hero__grid > :first-child { text-align: center; }
-  .hero__actions,
-  .hero__social { justify-content: center; }
-  /* The caption follows, or it reads as a stray left edge under a centred
-     column. Pinned both sides so the centre is the card's, not the text's. */
-  .portrait__tag { left: 20px; right: 20px; text-align: center; }
   /* Two rows, both centred: this is a cross-axis rule, and the cross axis is
      horizontal once the line becomes a column. */
   .roles { flex-direction: column; align-items: center; gap: 2px; }
   .roles__slot { min-width: 0; flex: 1 1 auto; }
-  .now li { grid-template-columns: 1fr; gap: 3px; }
+  .wall__tile { width: 220px; margin-right: 18px; }
+  .wall__shot { height: 148px; }
+  .wall::after { background: rgba(5,10,22,.86); }
   .repos li a { grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
   .repos__desc { display: none; }
   .record__list a { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; }
@@ -2038,19 +2038,20 @@ main { position: relative; z-index: 3; }
   .js .reveal { opacity: 1; transform: none; }
   .band__track[data-ready] { animation: none; }
   .credly-row__track[data-ready] { animation: none; }
+  .wall__row { animation: none; }
   .atmos { animation: none; }
   .constellations { opacity: .38; }
 }
 
 @media print {
   .nav, .sheet, .atmos, .constellations, .grain, .band, .hero__actions, .skip,
-  .finale__scene, .finale__top { display: none !important; }
+  .stage__scene, .hero__chips, .wall, .finale__top { display: none !important; }
   body { background: #fff; color: #000; }
   .card, .case { border-color: #bbb; background: none; }
   .finale { min-height: 0; padding-block: 40px; color: #000; }
   .finale__mail { box-shadow: none; background: none; }
   a { color: #000; }
-  .hero__name em, .counts b, .finale__title em, .hero__chip b {
+  .hero__name, .bio__name, .finale__title em {
     -webkit-text-fill-color: #000; color: #000; background: none;
   }
 }

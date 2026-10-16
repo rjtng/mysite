@@ -6,14 +6,16 @@ framework, no build step, no dependencies. Around 100 KB before the webfonts.
 ```
 index.html                 the whole page
 assets/css/styles.css      all styles
-assets/js/main.js          nav, mobile sheet, reveals, credentials, closing scene
+assets/js/main.js          nav, mobile sheet, reveals, credentials, stages, wall
 assets/js/data-certs.js    generated — 60 Credly credentials
 assets/img/favicon.svg     tab icon
 assets/img/og-cover.png    1200x630 social card
+assets/img/portrait-cutout.webp  generated — the hero photo, background removed
 assets/img/tech-sprite.svg generated — 42 brand marks
 tools/fetch-credly.ps1     regenerates data-certs.js from Credly
 tools/fetch-logos.py       regenerates tech-sprite.svg, marquee and chips
 tools/make-og.py           regenerates og-cover.png
+tools/make-cutout.py       regenerates portrait-cutout.webp
 vercel.json                headers and caching
 ```
 
@@ -59,17 +61,24 @@ Universidad de Zamboanga.
 
 ---
 
-## Adding your photo
+## The hero photo
 
-The hero shows an "AT" monogram on a gradient until you add a picture. Save one
-as `assets/img/portrait.jpg` — portrait crop, roughly 4:5, 800px wide is
-plenty — then find the `EDIT:` comment in the hero of `index.html` and delete
-the two comment markers around the `<img>` line just below it. The photo sits
-on top of the monogram.
+The hero shows `assets/img/portrait-cutout.webp`: `portrait2.png` with its
+white studio backdrop removed, so you stand in front of the backdrop scene
+rather than in a white box. To use a different photo, shoot or pick one on a
+plain white background and run:
 
-It is commented out rather than always present so the page never requests a
-file that is not there. A missing portrait would otherwise log a 404 on every
-visit, which is the sort of thing someone notices if they open devtools.
+```bash
+python tools/make-cutout.py path/to/photo.png
+```
+
+It needs Pillow and numpy, and writes the cutout in place. Only white that
+touches the edge of the frame is removed, so a white shirt under a jacket
+survives. A busy or coloured background will not cut out cleanly with it.
+
+The five chips floating around the photo are taken from elsewhere on the page —
+the Experience section, the credential count (kept current from
+`data-certs.js`) and the location. Edit them in the hero of `index.html`.
 
 ---
 
@@ -213,7 +222,8 @@ rest of the page uses.
 
 ## Notes on the design
 
-Sora for display type, Inter for body text, JetBrains Mono for labels and
+Pixelify Sans for your name in the hero and About, a pixel face as in the
+reference design. Sora for display type, Inter for body text, JetBrains Mono for labels and
 metadata. The palette runs deep navy through blue to sky and is defined once at
 the top of `styles.css` — change `--navy`, `--blue` and `--sky` in `:root` and
 the whole page follows, including the gradients and the two background glows.
@@ -230,6 +240,18 @@ head, so a browser without JavaScript gets the full page rather than a blank
 one. There is also a 2.6 second timer that reveals everything regardless, in
 case the intersection observer never fires — which happens in embedded webviews
 and tabs that are never painted.
+
+The hero and About follow the same reference. The hero sets the name huge in
+the pixel face, puts the photo over its end, floats the chips in front of both,
+and keeps the rotating role line as the typed tagline. The "Get in touch"
+button has eyes that follow the pointer. About is a dark panel over a tilted
+wall of project screens; `main.js` builds the wall by copying the mock screens
+from the project cards, so adding a project adds it to the wall. The featured
+badges under the bio are the first six `featured` credentials in
+`data-certs.js` that Credly serves in resized form.
+
+The hero and the closing scene share one backdrop, the `.stage` block in
+`styles.css`; the hero mirrors its folds so the two ends are not identical.
 
 The page ends on a full-height closing scene, modelled on
 aishie-design.framer.website and recoloured to this palette. The invitation,

@@ -1,6 +1,6 @@
 # tools
 
-Three generators. None of them run at deploy time — the site is served as static
+Four generators. None of them run at deploy time — the site is served as static
 files — so run them by hand when the source data changes and commit the result.
 
 ## fetch-credly.ps1
@@ -63,3 +63,16 @@ Needs Pillow. On first run it downloads Sora, Inter and JetBrains Mono into
 `tools/.fonts/` and caches them there; that folder is gitignored. Keep the
 colours in the script in step with the palette at the top of
 `assets/css/styles.css`.
+
+## make-cutout.py
+
+Regenerates `assets/img/portrait-cutout.webp`, the hero photo with its white
+backdrop removed.
+
+    python tools/make-cutout.py [source] [output] [height] [keep]
+
+Defaults to `assets/img/portrait2.png`, 1200px tall, keeping the top 0.75 of the
+frame. Needs Pillow and numpy. The background is the near-white region that
+touches the frame's edge, so enclosed white — a shirt under a blazer — is kept.
+Edge pixels fade by their distance from white and the outermost ring is
+feathered, which keeps a pale halo off the dark hero.

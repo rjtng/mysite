@@ -109,25 +109,6 @@
     window.requestAnimationFrame(drawConstellations);
   }
 
-  /* --- portrait flip ------------------------------------------------------ */
-  var portrait = $('.portrait');
-  if (portrait) {
-    function flipPortrait() {
-      var flipped = portrait.getAttribute('aria-pressed') === 'true';
-      portrait.setAttribute('aria-pressed', String(!flipped));
-      portrait.setAttribute('aria-label', flipped ? 'Show more about Al-Raji Theng' : 'Show portrait of Al-Raji Theng');
-      var back = $('.portrait__face--back', portrait);
-      if (back) { back.setAttribute('aria-hidden', String(flipped)); }
-    }
-    portrait.addEventListener('click', flipPortrait);
-    portrait.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        flipPortrait();
-      }
-    });
-  }
-
   var backToTop = $('.finale__top');
   if (backToTop) {
     backToTop.addEventListener('click', function (event) {
@@ -461,7 +442,7 @@
     window.addEventListener('resize', positionProjects);
   }
 
-  /* --- closing scene: particle field -----------------------------------------
+  /* --- stages: particle field -----------------------------------------------
      Light drifting toward the viewer, drawn as streaks so it reads as motion
      even in a still frame. Each particle sits at a depth z and is projected
      through one vanishing point; its streak runs from where it was half a
@@ -469,16 +450,23 @@
      and draw longer and thicker, which gives the field depth without a blur
      filter.
 
-     It animates only while the stage is on screen, and under
-     prefers-reduced-motion it draws one still frame. */
-  var finale = $('.finale');
-  var field  = $('#finaleParticles');
-  if (finale && field && field.getContext) {
+     Every .stage (the hero and the closing scene) gets its own field.
+     data-vanish-y places the vanishing point, data-calm sizes the quiet zone
+     around it, and data-foot quietens a strip along the bottom, so the text
+     over each stage stays legible. A field animates only while its stage is
+     on screen, and under prefers-reduced-motion it draws one still frame. */
+  // Weighted toward the lighter tones, which separate best from the glow.
+  // Both lists are indexed by the same p.tone, so keep them the same length.
+  var FIELD_DARK  = ['99,205,255', '169,224,255', '99,205,255', '124,156,255', '44,123,242'];
+  var FIELD_LIGHT = ['33,104,213', '20,122,168', '33,104,213', '74,141,235', '23,77,167'];
+
+  function particleStage(stage) {
+    var field = $('.stage__particles', stage);
+    if (!field || !field.getContext) { return; }
     var fieldContext = field.getContext('2d');
-    // Weighted toward the lighter tones, which separate best from the glow.
-    // Both lists are indexed by the same p.tone, so keep them the same length.
-    var FIELD_DARK  = ['99,205,255', '169,224,255', '99,205,255', '124,156,255', '44,123,242'];
-    var FIELD_LIGHT = ['33,104,213', '20,122,168', '33,104,213', '74,141,235', '23,77,167'];
+    var vanishAt = parseFloat(stage.getAttribute('data-vanish-y')) || .46;
+    var calmBy = parseFloat(stage.getAttribute('data-calm')) || 0;
+    var footBy = parseFloat(stage.getAttribute('data-foot')) || 0;
     var specks = [];
     var fieldWidth = 0, fieldHeight = 0;
     var vanishX = 0, vanishY = 0, aimX = 0, aimY = 0;
@@ -498,7 +486,7 @@
     }
 
     function sizeField() {
-      var rect = finale.getBoundingClientRect();
+      var rect = stage.getBoundingClientRect();
       if (!rect.width || !rect.height) { return; }
       if (rect.width === fieldWidth && rect.height === fieldHeight) { return; }
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -529,11 +517,9 @@
       vanishX += (aimX - vanishX) * .04;
       vanishY += (aimY - vanishY) * .04;
       var cx = fieldWidth / 2 + vanishX;
-      var cy = fieldHeight * .46 + vanishY;
-      // Quieter in the middle and along the foot, so the headline, the address
-      // and the small copyright line stay legible.
-      var calm = Math.min(fieldWidth, fieldHeight) * .36;
-      var foot = fieldHeight - 130;
+      var cy = fieldHeight * vanishAt + vanishY;
+      var calm = Math.min(fieldWidth, fieldHeight) * calmBy;
+      var foot = footBy ? fieldHeight - footBy : Infinity;
 
       for (var i = 0; i < specks.length; i++) {
         var p = specks[i];
@@ -560,7 +546,7 @@
         if (p.z < .3) { a *= .5 + (p.z - .14) / .32; }           // soften the nearest
         var off = Math.sqrt((hx - cx) * (hx - cx) + (hy - cy) * (hy - cy));
         if (off < calm) { a *= .3 + .7 * off / calm; }
-        if (hy > foot) { a *= Math.max(.15, 1 - (hy - foot) / 130); }
+        if (hy > foot) { a *= Math.max(.15, 1 - (hy - foot) / footBy); }
         if (light) { a *= .7; }
 
         var tone = tones[p.tone];
@@ -580,7 +566,7 @@
       fieldFrame = fieldLive ? window.requestAnimationFrame(fieldTick) : 0;
     }
     function startField() {
-      finale.classList.add('is-live');
+      stage.classList.add('is-live');
       if (still) { drawField(0); return; }
       if (fieldLive) { return; }
       fieldLive = true;
@@ -588,7 +574,7 @@
       fieldFrame = window.requestAnimationFrame(fieldTick);
     }
     function stopField() {
-      finale.classList.remove('is-live');
+      stage.classList.remove('is-live');
       fieldLive = false;
       if (fieldFrame) { window.cancelAnimationFrame(fieldFrame); fieldFrame = 0; }
     }
@@ -599,7 +585,7 @@
     }
     sizeField();
     if ('ResizeObserver' in window) {
-      new ResizeObserver(refitField).observe(finale);
+      new ResizeObserver(refitField).observe(stage);
     } else {
       window.addEventListener('resize', refitField);
     }
@@ -609,17 +595,85 @@
     // The vanishing point leans away from the pointer, a little parallax.
     window.addEventListener('pointermove', function (e) {
       if (!fieldLive) { return; }
-      var rect = finale.getBoundingClientRect();
+      var rect = stage.getBoundingClientRect();
       aimX = (e.clientX - rect.left - rect.width / 2) * -.05;
       aimY = (e.clientY - rect.top - rect.height / 2) * -.05;
     }, { passive: true });
 
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        if (entries[0].isIntersecting) { startField(); } else { stopField(); }
-      }).observe(finale);
-    } else {
-      startField();
+    watchLive(stage, startField, stopField);
+  }
+
+  // Calls on() while el is on screen and off() once it leaves. Without an
+  // observer it simply stays on.
+  function watchLive(el, on, off) {
+    if (!('IntersectionObserver' in window)) { on(); return; }
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { on(); } else { off(); }
+    }).observe(el);
+  }
+
+  $$('.stage').forEach(particleStage);
+
+  /* --- hero: the call to action looks back -----------------------------------
+     The pupils follow the pointer. Positions are read once per animation
+     frame, however fast the pointer events arrive. */
+  var eyeBalls = $$('.eyes__ball');
+  if (eyeBalls.length) {
+    var lookX = 0, lookY = 0, lookQueued = false;
+    var look = function () {
+      lookQueued = false;
+      eyeBalls.forEach(function (ball) {
+        var r = ball.getBoundingClientRect();
+        var dx = lookX - (r.left + r.width / 2);
+        var dy = lookY - (r.top + r.height / 2);
+        var d = Math.sqrt(dx * dx + dy * dy) || 1;
+        var reach = Math.min(1, d / 120) * r.width * .22;
+        ball.style.setProperty('--look', (dx / d * reach).toFixed(2) + 'px ' + (dy / d * reach).toFixed(2) + 'px');
+      });
+    };
+    window.addEventListener('pointermove', function (e) {
+      lookX = e.clientX;
+      lookY = e.clientY;
+      if (!lookQueued) { lookQueued = true; window.requestAnimationFrame(look); }
+    }, { passive: true });
+  }
+
+  /* --- about: the wall of project screens ------------------------------------
+     Built from the mock screens already drawn on the project cards, so the
+     wall always shows the real project list. Three rows, each holding its
+     tiles twice so the drift loops without a seam. */
+  var wall = $('[data-project-wall]');
+  if (wall) {
+    var screens = $$('#projects .project-card').map(function (card, i) {
+      var preview = $('.project-preview', card);
+      var title = $('.project-card__body h3', card);
+      if (!preview || !title) { return null; }
+      var shot = preview.cloneNode(true);
+      shot.removeAttribute('role');
+      shot.removeAttribute('aria-label');
+      return '<li class="wall__tile"><div class="wall__shot">' + shot.outerHTML + '</div>' +
+        '<p class="wall__label"><span>' + esc(title.textContent.trim()) + '</span>' +
+        '<span>' + (i < 9 ? '0' : '') + (i + 1) + '</span></p></li>';
+    }).filter(Boolean);
+
+    if (screens.length) {
+      var wallRows = '';
+      for (var r = 0; r < 3; r++) {
+        var set = '';
+        // Enough tiles to outrun the widest screen, offset per row so the
+        // same project never stacks straight above itself.
+        for (var k = 0; k < Math.max(8, screens.length); k++) {
+          set += screens[(k + r * 2) % screens.length];
+        }
+        wallRows += '<ul class="wall__row" data-dir="' + (r % 2 ? 'right' : 'left') + '">' + set + set + '</ul>';
+      }
+      wall.innerHTML = wallRows;
+      var wallSection = wall.closest('section');
+      if (wallSection) {
+        watchLive(wallSection,
+          function () { wallSection.classList.add('is-live'); },
+          function () { wallSection.classList.remove('is-live'); });
+      }
     }
   }
 
@@ -637,6 +691,25 @@
   function thumb(url, size) {
     if (!/^https:\/\/images\.credly\.com\/images\//.test(url) || /\/blob$/.test(url)) { return url; }
     return url.replace('/images/', '/size/' + size + '/images/');
+  }
+
+  /* --- hero and about: credential count and featured badges ----------------
+     Both come from the generated data, so they stay right whenever the
+     credentials are refreshed. A featured badge whose image is a /blob URL is
+     skipped: those exist only as the 1200px original, around 400 KB each,
+     for an 88px slot. */
+  $$('[data-cert-count]').forEach(function (el) { el.textContent = String(CERTS.length); });
+
+  var badgeRow = $('[data-featured-badges]');
+  if (badgeRow) {
+    badgeRow.innerHTML = CERTS.filter(function (c) {
+      return c.featured && thumb(c.img, '220x220') !== c.img;
+    }).slice(0, 6).map(function (c) {
+      return '<li><a href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer"' +
+        ' title="' + esc(c.name) + '" aria-label="Verify ' + esc(c.name) + ' on Credly">' +
+        '<img src="' + esc(thumb(c.img, '220x220')) + '" alt="" loading="lazy" decoding="async"' +
+        ' width="88" height="88"></a></li>';
+    }).join('');
   }
 
   var marquee = $('#credlyMarquee');
