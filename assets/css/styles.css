@@ -1618,131 +1618,285 @@ main { position: relative; z-index: 3; }
 }
 
 /* =============================================================================
-   7 — Contact
+   7 — Contact: the closing scene
+   One full-height stage holds the invitation, the links and the copyright, so
+   the page ends on a single composition. Back to front: a ground gradient,
+   three drifting glows, dark folds with lit rims, and the particle canvas
+   that main.js drives. The stage fades in from the page at its top edge, so
+   there is no seam where Experience ends.
    ========================================================================== */
-.contact {
+.finale {
+  --finale-ground: radial-gradient(ellipse 85% 75% at 50% 56%, #0d2459 0%, #071431 46%, #040816 100%);
+  --finale-fold:   #02060f;
+  --finale-rim:    #8ad6ff;
+  --finale-glow-a: rgba(44,123,242,.62);
+  --finale-glow-b: rgba(99,205,255,.3);
+  --finale-glow-c: rgba(52,82,226,.55);
+  --finale-blend:  screen;
+  --finale-ink:    rgba(233,241,252,.74);
+
   position: relative;
-  padding: clamp(38px, 6vw, 76px);
-  border-radius: var(--r-xl);
-  border: 1px solid var(--line-strong);
-  background:
-    radial-gradient(120% 150% at 12% 0%, rgba(44,123,242,.3), transparent 58%),
-    radial-gradient(100% 140% at 96% 100%, rgba(99,205,255,.2), transparent 60%),
-    linear-gradient(160deg, rgba(10,42,99,.5), rgba(6,14,30,.75));
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(120px, 17vh, 190px) 0 clamp(24px, 4vh, 38px);
   overflow: hidden;
+  text-align: center;
 }
-.contact::before {
-  content: "";
+
+.finale__scene {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(169,224,255,.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(169,224,255,.055) 1px, transparent 1px);
-  background-size: 46px 46px;
-  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000, transparent 78%);
-  mask-image: radial-gradient(ellipse at 50% 40%, #000, transparent 78%);
+  z-index: -1;
+  overflow: hidden;
   pointer-events: none;
+  background: var(--finale-ground);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 clamp(140px, 24%, 260px));
+  mask-image: linear-gradient(to bottom, transparent, #000 clamp(140px, 24%, 260px));
 }
-.contact > * { position: relative; }
 
-.contact__index {
+/* Radial fills that fade to nothing on their own, so they need no blur filter
+   and the compositor only ever moves them. */
+.finale__glow {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: var(--finale-blend);
+  will-change: transform;
+  animation: finale-drift 24s ease-in-out infinite alternate;
+}
+.finale__glow--a {
+  width: 66vmax; height: 46vmax;
+  left: 50%; top: 54%;
+  margin: -23vmax 0 0 -33vmax;
+  background: radial-gradient(closest-side, var(--finale-glow-a), transparent);
+}
+.finale__glow--b {
+  width: 46vmax; height: 46vmax;
+  right: -14vmax; top: -4vmax;
+  background: radial-gradient(closest-side, var(--finale-glow-b), transparent);
+  animation-duration: 29s;
+  animation-direction: alternate-reverse;
+}
+.finale__glow--c {
+  width: 52vmax; height: 38vmax;
+  left: -16vmax; bottom: -12vmax;
+  background: radial-gradient(closest-side, var(--finale-glow-c), transparent);
+  animation-duration: 33s;
+}
+@keyframes finale-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(7%, -5%, 0) scale(1.12); }
+  100% { transform: translate3d(-5%, 4%, 0) scale(.94); }
+}
+
+/* Oversized so the slow sway never pulls an edge into view. max-width undoes
+   the global svg cap, which would otherwise hold these to the stage width. */
+.finale__fold {
+  position: absolute;
+  left: -6%; top: -6%;
+  width: 112%; height: 112%;
+  max-width: none;
+  overflow: visible;
+  will-change: transform;
+  animation: finale-sway-left 19s ease-in-out infinite;
+}
+.finale__fold--left  { transform-origin: 0 50%; }
+.finale__fold--right { transform-origin: 100% 50%; animation-name: finale-sway-right; animation-duration: 23s; }
+.finale__fold--edges { transform-origin: 50% 100%; animation-name: finale-sway-edges; animation-duration: 27s; }
+@keyframes finale-sway-left {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50%      { transform: translate3d(2.5%, -2%, 0) rotate(2.2deg) scale(1.05); }
+}
+@keyframes finale-sway-right {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50%      { transform: translate3d(-2.5%, 2%, 0) rotate(-2deg) scale(1.04); }
+}
+@keyframes finale-sway-edges {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1, 1); }
+  50%      { transform: translate3d(0, -1.5%, 0) scale(1.05, 1.03); }
+}
+
+/* stop-color is a CSS property, so the folds follow the theme with the rest. */
+.finale__stop-fold { stop-color: var(--finale-fold); }
+.finale__stop-rim  { stop-color: var(--finale-rim); }
+.finale__rim {
+  fill: none;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.finale__rim--halo  { stroke-width: 7; opacity: .2; }
+.finale__rim--faint { opacity: .38; }
+
+.finale__particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Animations rest while the stage is off screen; main.js flags it live. */
+.js .finale:not(.is-live) .finale__glow,
+.js .finale:not(.is-live) .finale__fold,
+.js .finale:not(.is-live) .finale__mail::after { animation-play-state: paused; }
+
+/* Content ------------------------------------------------------------------ */
+.finale__inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.finale__index {
   font: 500 12px/1 var(--mono);
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--sky);
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
-.contact h2 {
-  font-size: clamp(30px, 5.4vw, 58px);
-  max-width: 16ch;
+.finale__title {
+  font-size: clamp(26px, 3vw, 42px);
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: -0.03em;
+  color: var(--finale-ink);
 }
-.contact p {
-  max-width: 50ch;
-  margin-top: 20px;
-  color: var(--muted);
-  font-size: clamp(15.5px, 1.5vw, 17.5px);
-}
-
-.contact__mail {
-  display: inline-block;
-  margin-top: 34px;
-  font-family: var(--display);
-  font-size: clamp(19px, 3.4vw, 36px);
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  word-break: break-word;
+.finale__title em {
+  font-style: normal;
+  font-weight: 700;
   background: var(--grad-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  position: relative;
-  padding-bottom: 6px;
 }
-.contact__mail::after {
-  content: "";
-  position: absolute;
-  left: 0; bottom: 0;
-  width: 100%; height: 2px;
-  background: var(--grad-text);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .38s var(--ease);
-}
-.contact__mail:hover::after { transform: scaleX(1); }
+.finale__title span { display: block; margin-top: .1em; }
 
-.social {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 10px;
-  margin-top: clamp(36px, 4.5vw, 52px);
-}
-.social a {
-  display: flex;
+/* The address as a glass pill: a lit rim drawn with a masked gradient border,
+   and a sheen that crosses it every few seconds. */
+.finale__mail {
+  position: relative;
+  display: inline-flex;
   align-items: center;
   gap: 14px;
-  padding: 17px 19px;
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  background: rgba(5,12,26,.5);
-  transition: border-color .25s var(--ease), transform .25s var(--ease), background .25s var(--ease);
+  max-width: 100%;
+  margin-top: clamp(28px, 4vh, 40px);
+  padding: 17px 30px 17px 24px;
+  border-radius: var(--pill);
+  background: linear-gradient(180deg, rgba(14,32,67,.74), rgba(4,9,22,.86));
+  box-shadow: 0 26px 60px -26px rgba(0,0,0,.95), 0 0 46px -12px rgba(44,123,242,.45);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  color: var(--text);
+  font: 600 clamp(16px, 1.9vw, 22px)/1.2 var(--display);
+  letter-spacing: -0.02em;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
 }
-.social a:hover {
-  border-color: rgba(99,205,255,.45);
-  background: rgba(14,32,67,.6);
-  transform: translateY(-3px);
+.finale__mail::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(169,224,255,.6), rgba(99,205,255,.08) 55%, rgba(44,123,242,.45));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
-.social svg { width: 19px; height: 19px; flex: none; color: var(--sky); }
-.social b { display: block; font-size: 14.5px; font-weight: 500; }
-.social span { font: 400 11.5px/1.4 var(--mono); color: var(--dim); }
+.finale__mail::after {
+  content: "";
+  position: absolute;
+  top: -2px; bottom: -2px; left: 0;
+  width: 38%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.26) 50%, transparent);
+  transform: translateX(-140%) skewX(-18deg);
+  animation: finale-sheen 6s var(--ease) infinite;
+  pointer-events: none;
+}
+@keyframes finale-sheen {
+  0%, 62% { transform: translateX(-140%) skewX(-18deg); }
+  100%    { transform: translateX(300%) skewX(-18deg); }
+}
+.finale__mail:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 6px rgba(99,205,255,.08), 0 26px 56px -22px rgba(44,123,242,.85), 0 0 60px -10px rgba(44,123,242,.55);
+}
+.finale__mail svg { width: 21px; height: 21px; flex: none; color: var(--sky); }
+.finale__mail span { min-width: 0; overflow-wrap: anywhere; }
 
-/* =============================================================================
-   Footer
-   ========================================================================== */
-.foot {
-  position: relative;
-  z-index: 2;
-  border-top: 1px solid var(--line);
-  margin-top: clamp(70px, 9vw, 120px);
-  padding-block: 30px 38px;
+.finale__base {
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  margin-top: clamp(48px, 9vh, 96px);
 }
-.foot__inner {
+
+.finale__social { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.finale__social a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 50px; height: 50px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: rgba(5,10,22,.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--sky-pale);
+  transition: color .22s var(--ease), border-color .22s var(--ease), background .22s var(--ease),
+              transform .22s var(--ease), box-shadow .22s var(--ease);
+}
+.finale__social a:hover,
+.finale__social a:focus-visible {
+  color: #fff;
+  border-color: var(--sky);
+  background: rgba(44,123,242,.24);
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 4px rgba(99,205,255,.08), 0 14px 30px -14px rgba(44,123,242,.95);
+}
+.finale__social svg { width: 21px; height: 21px; }
+/* Name tag on hover and focus. The link already carries the same text as its
+   aria-label, so this is for sighted pointer and keyboard users only. */
+.finale__social a::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  padding: 6px 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--pill);
+  background: rgba(5,10,22,.92);
+  color: var(--sky-pale);
+  font: 400 11px/1 var(--mono);
+  letter-spacing: .06em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition: opacity .2s var(--ease), transform .2s var(--ease);
+  pointer-events: none;
+}
+.finale__social a:hover::after,
+.finale__social a:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
+
+.finale__legal {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  justify-content: center;
+  gap: 6px 22px;
   font: 400 12.5px/1.7 var(--mono);
-  color: var(--dim);
   letter-spacing: .02em;
+  color: var(--dim);
 }
-.foot__top {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: color .2s var(--ease);
-}
-.foot__top:hover { color: var(--sky); }
-.foot__top svg { width: 13px; height: 13px; }
+.finale__legal > span { text-wrap: balance; }
+.finale__legal b { color: var(--text); font-weight: 500; white-space: nowrap; }
+.finale__top { transition: color .2s var(--ease); }
+.finale__top:hover { color: var(--sky); }
 
 /* Light mode keeps the same blue accent system while replacing dark glass
    surfaces with readable, slightly translucent panels. */
@@ -1756,8 +1910,23 @@ main { position: relative; z-index: 3; }
 [data-theme="light"] .credly-badge { background: linear-gradient(160deg, rgba(255,255,255,.94), rgba(232,240,250,.88)); box-shadow: 0 22px 60px rgba(19,57,103,.1); }
 [data-theme="light"] .btn--ghost,
 [data-theme="light"] .carousel-button { background: rgba(255,255,255,.68); }
-[data-theme="light"] .social a { background: rgba(255,255,255,.62); }
-[data-theme="light"] .contact { background: linear-gradient(160deg, rgba(218,235,255,.92), rgba(245,250,255,.94)); }
+[data-theme="light"] .finale {
+  --finale-ground: radial-gradient(ellipse 85% 75% at 50% 56%, #ffffff 0%, #e9f2fd 48%, #d6e5f7 100%);
+  --finale-fold:   #ffffff;
+  --finale-rim:    #2c7bf2;
+  --finale-glow-a: rgba(44,123,242,.24);
+  --finale-glow-b: rgba(99,205,255,.34);
+  --finale-glow-c: rgba(23,77,167,.18);
+  --finale-blend:  normal;
+  --finale-ink:    rgba(16,36,66,.74);
+}
+[data-theme="light"] .finale__mail { background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(232,240,250,.86)); box-shadow: 0 26px 60px -30px rgba(19,57,103,.45), 0 0 46px -14px rgba(44,123,242,.35); }
+[data-theme="light"] .finale__mail::before { background: linear-gradient(180deg, rgba(44,123,242,.55), rgba(44,123,242,.1) 55%, rgba(20,122,168,.45)); }
+[data-theme="light"] .finale__mail::after { background: linear-gradient(100deg, transparent, rgba(255,255,255,.85) 50%, transparent); }
+[data-theme="light"] .finale__social a { background: rgba(255,255,255,.72); color: var(--blue); }
+[data-theme="light"] .finale__social a:hover,
+[data-theme="light"] .finale__social a:focus-visible { background: var(--blue); color: #fff; }
+[data-theme="light"] .finale__social a::after { background: rgba(255,255,255,.96); color: var(--blue-deep); }
 [data-theme="light"] .project-image-placeholder { border-color: rgba(255,255,255,.8); background: rgba(20,76,145,.12); color: rgba(16,36,66,.78); }
 [data-theme="light"] .grain { opacity: .025; mix-blend-mode: multiply; }
 [data-theme="light"] .constellations { opacity: .34; }
@@ -1849,6 +2018,11 @@ main { position: relative; z-index: 3; }
   .preview__content > strong { font-size: 15px; }
   .project-card__description { font-size: 14px; }
   .project-card__tech { gap: 11px; }
+  .finale { padding-top: 112px; }
+  .finale__mail { gap: 10px; padding: 14px 22px 14px 18px; }
+  .finale__social { gap: 10px; }
+  .finale__social a { width: 46px; height: 46px; }
+  .finale__legal { flex-direction: column; gap: 2px; }
 }
 
 /* =============================================================================
@@ -1869,11 +2043,14 @@ main { position: relative; z-index: 3; }
 }
 
 @media print {
-  .nav, .sheet, .atmos, .constellations, .grain, .band, .hero__actions, .skip { display: none !important; }
+  .nav, .sheet, .atmos, .constellations, .grain, .band, .hero__actions, .skip,
+  .finale__scene, .finale__top { display: none !important; }
   body { background: #fff; color: #000; }
-  .card, .contact, .case { border-color: #bbb; background: none; }
+  .card, .case { border-color: #bbb; background: none; }
+  .finale { min-height: 0; padding-block: 40px; color: #000; }
+  .finale__mail { box-shadow: none; background: none; }
   a { color: #000; }
-  .hero__name em, .counts b, .contact__mail, .hero__chip b {
+  .hero__name em, .counts b, .finale__title em, .hero__chip b {
     -webkit-text-fill-color: #000; color: #000; background: none;
   }
 }
