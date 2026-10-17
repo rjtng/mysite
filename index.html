@@ -344,6 +344,14 @@
 
             <h1 class="hero__name"><span>Al-Raji</span> <span>Theng</span></h1>
 
+            <!-- EDIT: the tagline is a placeholder in the reference's pattern;
+                 change both copies of the sentence together. main.js types it
+                 out once; screen readers get the plain copy. -->
+            <p class="hero__tagline">
+              <span class="visually-hidden">Apps that don&rsquo;t just look good &mdash; they&nbsp;work.</span>
+              <span class="hero__typed" aria-hidden="true">Apps that don&rsquo;t just look good &mdash; they&nbsp;work.</span><span class="caret" aria-hidden="true"></span>
+            </p>
+
             <div class="hero__actions">
               <a class="btn btn--primary hero__cta" href="#contact">
                 Get in touch
@@ -360,47 +368,54 @@
                 View my resume
               </a>
             </div>
+
+            <!-- Labels over the name: --x and --y are in name-ems from the
+                 name's top-left corner, so they keep their place over the
+                 same letters at any size. -->
+            <ul class="hero__chips hero__chips--name" aria-label="Roles">
+              <li class="hero__chip" style="--x: .55; --y: -.24; --t: 7s">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" />
+                </svg>
+                Full-Stack Developer
+              </li>
+              <li class="hero__chip" style="--x: 1.8; --y: .08; --t: 8.5s">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 20l4-1L19 8l-3-3L5 16l-1 4Z" />
+                  <path d="m14 7 3 3" />
+                </svg>
+                UI/UX &amp; Graphic Designer
+              </li>
+              <li class="hero__chip" style="--x: .18; --y: .76; --t: 8s">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="9" y="3" width="6" height="5" rx="1" />
+                  <rect x="3" y="16" width="6" height="5" rx="1" />
+                  <rect x="15" y="16" width="6" height="5" rx="1" />
+                  <path d="M12 8v4M6 16v-2h12v2" />
+                </svg>
+                Network Technician
+              </li>
+            </ul>
           </div>
 
-          <!-- On wide screens the area starts just right of the name, so the
-               photo and its labels can never reach it; on narrow ones it
-               follows the copy. -->
+          <!-- On wide screens the area starts short of the end of the name
+               (--photo-start), so the photo stands over it as in the
+               reference; on narrow ones it follows the copy. -->
           <div class="hero__area">
             <div class="hero__visual">
-              <!-- The labels sit in the empty space either side of the head:
-                   --x and --y place each one as a share of the photo, --t sets
-                   its bob so the five never move in step. -->
-              <ul class="hero__chips" aria-label="Roles">
-                <li class="hero__chip" style="--x: 2%; --y: 7%; --t: 7s">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" />
-                  </svg>
-                  Full-Stack Developer
-                </li>
-                <li class="hero__chip" style="--x: 67%; --y: 12%; --t: 8.5s">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4 20l4-1L19 8l-3-3L5 16l-1 4Z" />
-                    <path d="m14 7 3 3" />
-                  </svg>
-                  UI/UX &amp; Graphic Designer
-                </li>
-                <li class="hero__chip" style="--x: 3%; --y: 21%; --t: 8s">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="9" y="3" width="6" height="5" rx="1" />
-                    <rect x="3" y="16" width="6" height="5" rx="1" />
-                    <rect x="15" y="16" width="6" height="5" rx="1" />
-                    <path d="M12 8v4M6 16v-2h12v2" />
-                  </svg>
-                  Network Technician
-                </li>
-                <li class="hero__chip" style="--x: 67%; --y: 27%; --t: 7.6s">
+              <!-- Labels over the photo: --x and --y are shares of the photo, so
+                   they keep their place beside the face; --t sets each bob so
+                   no two move in step. The ones over the name are with the
+                   copy, sized from the name. -->
+              <ul class="hero__chips" aria-label="More roles">
+                <li class="hero__chip" style="--x: 68%; --y: 24%; --t: 7.6s">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
                   Computer Vision Tinkerer
                 </li>
-                <li class="hero__chip" style="--x: 1%; --y: 35%; --t: 9s">
+                <li class="hero__chip" style="--x: 66%; --y: 52%; --t: 9s">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="7" y="2.5" width="10" height="19" rx="2.5" />
                     <path d="M11 18.5h2" />

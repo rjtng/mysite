@@ -77,12 +77,19 @@ It needs Pillow and numpy, and writes the cutout in place. Only white that
 touches the edge of the frame is removed, so the white collar under the hood
 survives. A busy or coloured background will not cut out cleanly with it.
 
-The five role labels float in the empty space either side of your head. Each
-is placed as a share of the photo (`--x` and `--y` in the hero of
-`index.html`), so they scale with it and stay clear of the name, the photo, the
-nav and the buttons at every width. On phones and tall screens they become a
-centred cluster above the photo instead. If you change to a photo framed
-differently, recheck where they land.
+As in the reference, the photo stands over the end of your name and your five
+roles float over both. The three over the name are placed in name-ems from its
+top-left corner, so they stay over the same letters at any size; the two over
+the photo are placed as shares of the photo, so they stay beside your face.
+Both are `--x` and `--y` on the labels in the hero of `index.html`. They are
+checked clear of the tagline, the buttons, the nav and each other from phone
+to 2560px wide. On phones and tall screens they become a centred cluster
+above the photo. If you change to a photo framed differently, recheck where
+they land.
+
+The tagline under the name, "Apps that don't just look good — they work.", is
+a placeholder in the reference's pattern. It is in the hero twice (a plain copy
+for screen readers and the one that is typed out); change both.
 
 ---
 
@@ -254,9 +261,9 @@ case the intersection observer never fires — which happens in embedded webview
 and tabs that are never painted.
 
 The hero and About follow the same reference. The hero sets the name huge in
-the pixel face, stands the photo to its right, and floats your five roles in
-the space either side of your head. The "Get in touch"
-button has eyes that follow the pointer. About is a dark panel over a tilted
+the pixel face, stands the photo over its end, floats your five roles over
+both, and types a one-line tagline out under it. The "Get in touch"
+button has eyes that follow the pointer. About is a black panel over a tilted
 wall of project screens; `main.js` builds the wall by copying the mock screens
 from the project cards, so adding a project adds it to the wall. The badges
 under the bio are the top ten described above.

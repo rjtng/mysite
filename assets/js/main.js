@@ -596,6 +596,33 @@
     }, { passive: true });
   }
 
+  /* --- hero: type the tagline out -------------------------------------------
+     The sentence is in the page in full, so without scripting, or with reduced
+     motion, it simply shows. Otherwise it is cleared and typed back once, with
+     the line's height held meanwhile so the buttons below never jump when the
+     sentence wraps. It waits for the webfonts so that height is the final one. */
+  var typed = $('.hero__typed');
+  if (typed && !still) {
+    var sentence = typed.textContent;
+    var typeLine = typed.parentElement;
+    var typeFrom = function () {
+      typeLine.style.minHeight = typeLine.offsetHeight + 'px';
+      typed.textContent = '';
+      var shown = 0;
+      var typeNext = function () {
+        shown++;
+        typed.textContent = sentence.slice(0, shown);
+        if (shown < sentence.length) {
+          setTimeout(typeNext, sentence.charAt(shown - 1) === ' ' ? 75 : 42);
+        } else {
+          typeLine.style.minHeight = '';
+        }
+      };
+      setTimeout(typeNext, 450);
+    };
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(typeFrom); } else { typeFrom(); }
+  }
+
   /* --- about: the wall of project screens ------------------------------------
      Built from the mock screens already drawn on the project cards, so the
      wall always shows the real project list. Three rows, each holding its
