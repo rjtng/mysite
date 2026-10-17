@@ -681,19 +681,13 @@
   /* --- top certifications ----------------------------------------------------
      Hand-picked and in order. Each entry looks for its badge in the generated
      Credly data by name, which supplies the badge art and, unless the entry
-     carries its own link, the verification URL. Entries with no Credly badge
-     show a drawn tile and link to their Coursera record instead; if a badge for
-     one is claimed on Credly later, the next run of tools/fetch-credly.ps1
-     brings it in and the art switches over on its own. */
+     carries its own link, the verification URL. An entry with no Credly badge
+     yet shows a drawn tile instead; once the badge is claimed on Credly, the
+     next run of tools/fetch-credly.ps1 brings it in and the art switches over
+     on its own. */
   var TOP_CERTS = [
     { title: 'IBM Full Stack Software Developer Professional Certificate', issuer: 'IBM',
       short: 'Full Stack Software Developer', match: /^IBM Full Stack Software Developer Professional Certificate/ },
-    { title: 'IBM DevOps and Software Engineering', issuer: 'IBM',
-      short: 'DevOps and Software Engineering', match: /DevOps and Software Engineering/i,
-      url: 'https://www.coursera.org/account/accomplishments/specialization/0WBW5H35WJ6Z' },
-    { title: 'IBM iOS and Android Mobile App Developer', issuer: 'IBM',
-      short: 'iOS and Android Mobile App Developer', match: /iOS and Android Mobile App Developer/i,
-      url: 'https://www.coursera.org/account/accomplishments/specialization/O1M3S36HZAI3' },
     { title: 'IBM AI Developer Professional Certificate', issuer: 'IBM',
       short: 'AI Developer', match: /^IBM AI Developer Professional Certificate/ },
     { title: 'IBM Data Engineering Professional Certificate', issuer: 'IBM',
@@ -702,12 +696,6 @@
       short: 'Data Analytics with Excel and R', match: /^IBM Data Analytics with Excel and R/ },
     { title: 'IBM Cybersecurity Analyst Professional Certificate', issuer: 'IBM',
       short: 'Cybersecurity Analyst', match: /^IBM Cybersecurity Analyst Professional Certificate/ },
-    { title: 'Akamai Network Engineering', issuer: 'Akamai',
-      short: 'Network Engineering', match: /Akamai Network Engineering/i,
-      url: 'https://www.coursera.org/account/accomplishments/specialization/XT2SPB1CKIB0' },
-    { title: 'Hands-on Internet of Things', issuer: 'Coursera',
-      short: 'Hands-on Internet of Things', match: /Hands-on Internet of Things/i,
-      url: 'https://www.coursera.org/account/accomplishments/specialization/4F3MLFX4DZ3C' },
     { title: 'Google UX Design Professional Certificate', issuer: 'Google',
       short: 'UX Design', match: /^Google UX Design Professional Certificate/ }
   ];
@@ -762,7 +750,7 @@
     return credentialLink(c, 'credly-badge', '<span class="credly-badge__image">' + credentialArt(c, '220x220') + '</span>');
   }
 
-  // Each row opens with its share of the top ten, in order, then its share of
+  // Each row opens with its share of the top six, in order, then its share of
   // everything else, newest first. Both rows show their first badges at the
   // left edge on load, whichever way they drift.
   var rows = $$('[data-credly-track]', marquee);

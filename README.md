@@ -177,13 +177,13 @@ The script reads every page of your public Credly feed, sorts by issue date,
 tags each badge with an issuer, and writes the file. The certifications section
 uses the complete generated list across its two scrolling rows.
 
-Your top ten are chosen by hand, in `TOP_CERTS` near the end of `main.js`. They
-fill the badge row in About and open the two certification rows, five each.
+Your top six are chosen by hand, in `TOP_CERTS` near the end of `main.js`. They
+fill the badge row in About and open the two certification rows, three each.
 Each entry finds its Credly badge by name, which gives it its art and its
-verification link; an entry with its own `url` (the Coursera ones) links there
-instead. An entry with no Credly badge yet is drawn as a tile with the issuer
-and title. Claim the Credly badge, rerun the script, and the real art replaces
-the tile with no other change.
+verification link; an entry with its own `url` links there instead. An entry
+with no Credly badge yet is drawn as a tile with the issuer and title. Claim
+the Credly badge, rerun the script, and the real art replaces the tile with no
+other change.
 
 The badge images and verification URLs all derive from that one file, so the
 showcase stays correct on its own. Projects, skills and the experience timeline
@@ -266,7 +266,7 @@ both, and types a one-line tagline out under it. The "Get in touch"
 button has eyes that follow the pointer. About is a black panel over a tilted
 wall of project screens; `main.js` builds the wall by copying the mock screens
 from the project cards, so adding a project adds it to the wall. The badges
-under the bio are the top ten described above.
+under the bio are the top six described above.
 
 The hero and the closing scene share one backdrop, the `.stage` block in
 `styles.css`; the hero mirrors its folds so the two ends are not identical.

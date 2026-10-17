@@ -14,7 +14,7 @@ Run it from the project root with Windows PowerShell:
 
 It re-reads every page of the public badge feed, classifies each badge by brand
 and domain, and rewrites the data file. The marquee uses the complete generated
-list across its two scrolling rows, after the hand-picked top ten (`TOP_CERTS`
+list across its two scrolling rows, after the hand-picked top six (`TOP_CERTS`
 in `main.js`), which find their badges in this file by name.
 
 The badge images and verification URLs in the marquee are all derived from that

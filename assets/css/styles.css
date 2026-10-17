@@ -1062,12 +1062,12 @@ main { position: relative; z-index: 3; }
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
-/* The top ten in one row, as the reference sets its badges; five to a row
-   once the column is too narrow for ten. */
+/* The top six in one row, as the reference sets its badges; three to a row
+   once the column is too narrow for six. */
 .bio__badges {
-  --badge: clamp(54px, 6vw, 82px);
+  --badge: clamp(54px, 9vw, 82px);
   display: grid;
-  grid-template-columns: repeat(10, var(--badge));
+  grid-template-columns: repeat(6, var(--badge));
   gap: clamp(12px, 1.6vw, 20px);
   margin-top: clamp(30px, 4vw, 46px);
 }
@@ -1990,10 +1990,6 @@ a.bio__badge:focus-visible { transform: translateY(-4px); }
   .repos__tech { display: none; }
 }
 
-@media (max-width: 1000px) {
-  .bio__badges { --badge: clamp(54px, 9vw, 82px); grid-template-columns: repeat(5, var(--badge)); }
-}
-
 @media (max-width: 860px) {
   .nav__links, .nav__actions .nav__cta { display: none; }
   .nav__resume { display: inline-flex; }
@@ -2113,6 +2109,11 @@ a.bio__badge:focus-visible { transform: translateY(-4px); }
   .finale__social { gap: 10px; }
   .finale__social a { width: 46px; height: 46px; }
   .finale__legal { flex-direction: column; gap: 2px; }
+}
+
+/* Six badges stop fitting one row near 424px; split them three and three. */
+@media (max-width: 460px) {
+  .bio__badges { --badge: clamp(64px, 21vw, 82px); grid-template-columns: repeat(3, var(--badge)); }
 }
 
 /* =============================================================================
