@@ -1,6 +1,6 @@
 # tools
 
-Four generators. None of them run at deploy time — the site is served as static
+Five generators. None of them run at deploy time — the site is served as static
 files — so run them by hand when the source data changes and commit the result.
 
 ## fetch-credly.ps1
@@ -14,7 +14,8 @@ Run it from the project root with Windows PowerShell:
 
 It re-reads every page of the public badge feed, classifies each badge by brand
 and domain, and rewrites the data file. The marquee uses the complete generated
-list and alternates badges between its two scrolling rows.
+list across its two scrolling rows, after the hand-picked top ten (`TOP_CERTS`
+in `main.js`), which find their badges in this file by name.
 
 The badge images and verification URLs in the marquee are all derived from that
 one file, so the showcase stays current after regeneration.
@@ -71,8 +72,22 @@ backdrop removed.
 
     python tools/make-cutout.py [source] [output] [height] [keep]
 
-Defaults to `assets/img/portrait2.png`, 1200px tall, keeping the top 0.75 of the
-frame. Needs Pillow and numpy. The background is the near-white region that
-touches the frame's edge, so enclosed white — a shirt under a blazer — is kept.
+Defaults to `assets/img/portrait.png`, the graduation photo, 1100px tall,
+keeping the top 0.88 of the frame. Needs Pillow and numpy. The background is the
+near-white region that touches the frame's edge, so enclosed white — the collar
+under the hood — is kept.
 Edge pixels fade by their distance from white and the outermost ring is
 feathered, which keeps a pale halo off the dark hero.
+
+## fetch-badge-art.py
+
+Downloads the Credly badge art for the top certifications into
+`assets/img/badges/`, so the page can serve its own copies.
+
+    python tools/fetch-badge-art.py
+
+`BADGES` at the top maps each file name to the badge's name exactly as it
+appears in `assets/js/data-certs.js`, which is where the image URLs come from:
+run `fetch-credly.ps1` first when the badges change. Each badge is saved as a
+220px WebP for 1x screens and a 440px one for 2x. Needs Pillow and network
+access to `images.credly.com`.

@@ -63,8 +63,9 @@ Universidad de Zamboanga.
 
 ## The hero photo
 
-The hero shows `assets/img/portrait-cutout.webp`: `portrait2.png` with its
-white studio backdrop removed, so you stand in front of the backdrop scene
+The hero shows `assets/img/portrait-cutout.webp`: your graduation photo,
+`portrait.png`, with its white studio backdrop removed, so you stand in front
+of the backdrop scene
 rather than in a white box. To use a different photo, shoot or pick one on a
 plain white background and run:
 
@@ -73,12 +74,22 @@ python tools/make-cutout.py path/to/photo.png
 ```
 
 It needs Pillow and numpy, and writes the cutout in place. Only white that
-touches the edge of the frame is removed, so a white shirt under a jacket
+touches the edge of the frame is removed, so the white collar under the hood
 survives. A busy or coloured background will not cut out cleanly with it.
 
-The five chips floating around the photo are taken from elsewhere on the page —
-the Experience section, the credential count (kept current from
-`data-certs.js`) and the location. Edit them in the hero of `index.html`.
+As in the reference, the photo stands over the end of your name and your five
+roles float over both. The three over the name are placed in name-ems from its
+top-left corner, so they stay over the same letters at any size; the two over
+the photo are placed as shares of the photo, so they stay beside your face.
+Both are `--x` and `--y` on the labels in the hero of `index.html`. They are
+checked clear of the tagline, the buttons, the nav and each other from phone
+to 2560px wide. On phones and tall screens they become a centred cluster
+above the photo. If you change to a photo framed differently, recheck where
+they land.
+
+The tagline under the name, "Apps that don't just look good — they work.", is
+a placeholder in the reference's pattern. It is in the hero twice (a plain copy
+for screen readers and the one that is typed out); change both.
 
 ---
 
@@ -164,7 +175,15 @@ powershell -ExecutionPolicy Bypass -File tools/fetch-credly.ps1
 
 The script reads every page of your public Credly feed, sorts by issue date,
 tags each badge with an issuer, and writes the file. The certifications section
-uses the complete generated list, alternating badges between two scrolling rows.
+uses the complete generated list across its two scrolling rows.
+
+Your top ten are chosen by hand, in `TOP_CERTS` near the end of `main.js`. They
+fill the badge row in About and open the two certification rows, five each.
+Each entry finds its Credly badge by name, which gives it its art and its
+verification link; an entry with its own `url` (the Coursera ones) links there
+instead. An entry with no Credly badge yet is drawn as a tile with the issuer
+and title. Claim the Credly badge, rerun the script, and the real art replaces
+the tile with no other change.
 
 The badge images and verification URLs all derive from that one file, so the
 showcase stays correct on its own. Projects, skills and the experience timeline
@@ -242,13 +261,12 @@ case the intersection observer never fires — which happens in embedded webview
 and tabs that are never painted.
 
 The hero and About follow the same reference. The hero sets the name huge in
-the pixel face, puts the photo over its end, floats the chips in front of both,
-and keeps the rotating role line as the typed tagline. The "Get in touch"
-button has eyes that follow the pointer. About is a dark panel over a tilted
+the pixel face, stands the photo over its end, floats your five roles over
+both, and types a one-line tagline out under it. The "Get in touch"
+button has eyes that follow the pointer. About is a black panel over a tilted
 wall of project screens; `main.js` builds the wall by copying the mock screens
-from the project cards, so adding a project adds it to the wall. The featured
-badges under the bio are the first six `featured` credentials in
-`data-certs.js` that Credly serves in resized form.
+from the project cards, so adding a project adds it to the wall. The badges
+under the bio are the top ten described above.
 
 The hero and the closing scene share one backdrop, the `.stage` block in
 `styles.css`; the hero mirrors its folds so the two ends are not identical.

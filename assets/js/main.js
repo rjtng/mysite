@@ -210,48 +210,6 @@
     }, 2600);
   }
 
-  /* --- hero: rotate the role words ------------------------------------------ */
-  var slot = $('#roles');
-  if (slot) {
-    var words = $$('b', slot);
-    var at = 0;
-
-    // Size the slot to the visible word so the caret sits right after it.
-    // The words are absolutely positioned at width:max-content, so offsetWidth
-    // is the text width rather than the slot's.
-    function fitSlot(el) {
-      if (el && el.offsetWidth) { slot.style.width = el.offsetWidth + 'px'; }
-    }
-    fitSlot(words[0]);
-    // The label is webfont text, so it is wider once JetBrains Mono arrives.
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { fitSlot(words[at]); });
-    }
-
-    if (words.length > 1 && !still) {
-      setInterval(function () {
-        var prev = words[at];
-        at = (at + 1) % words.length;
-        var next = words[at];
-
-        prev.classList.remove('on');
-        prev.classList.add('off');
-        next.classList.remove('off');
-
-        // Force a reflow so the browser registers the start position before
-        // the transition. This used to be a requestAnimationFrame callback,
-        // but rAF does not run in a background or unpainted tab, so the
-        // interval would strip 'on' from the old word and never add it to the
-        // new one — leaving the line blank until the tab was looked at again.
-        void next.offsetWidth;
-        next.classList.add('on');
-        fitSlot(next);
-
-        setTimeout(function () { prev.classList.remove('off'); }, 500);
-      }, 2600);
-    }
-  }
-
   /* --- marquee ---------------------------------------------------------------
      Two identical copies so the loop is seamless, paced off the measured width
      so the strip always travels at the same speed. Adding a technology then
@@ -638,6 +596,33 @@
     }, { passive: true });
   }
 
+  /* --- hero: type the tagline out -------------------------------------------
+     The sentence is in the page in full, so without scripting, or with reduced
+     motion, it simply shows. Otherwise it is cleared and typed back once, with
+     the line's height held meanwhile so the buttons below never jump when the
+     sentence wraps. It waits for the webfonts so that height is the final one. */
+  var typed = $('.hero__typed');
+  if (typed && !still) {
+    var sentence = typed.textContent;
+    var typeLine = typed.parentElement;
+    var typeFrom = function () {
+      typeLine.style.minHeight = typeLine.offsetHeight + 'px';
+      typed.textContent = '';
+      var shown = 0;
+      var typeNext = function () {
+        shown++;
+        typed.textContent = sentence.slice(0, shown);
+        if (shown < sentence.length) {
+          setTimeout(typeNext, sentence.charAt(shown - 1) === ' ' ? 75 : 42);
+        } else {
+          typeLine.style.minHeight = '';
+        }
+      };
+      setTimeout(typeNext, 450);
+    };
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(typeFrom); } else { typeFrom(); }
+  }
+
   /* --- about: the wall of project screens ------------------------------------
      Built from the mock screens already drawn on the project cards, so the
      wall always shows the real project list. Three rows, each holding its
@@ -693,22 +678,80 @@
     return url.replace('/images/', '/size/' + size + '/images/');
   }
 
-  /* --- hero and about: credential count and featured badges ----------------
-     Both come from the generated data, so they stay right whenever the
-     credentials are refreshed. A featured badge whose image is a /blob URL is
-     skipped: those exist only as the 1200px original, around 400 KB each,
-     for an 88px slot. */
-  $$('[data-cert-count]').forEach(function (el) { el.textContent = String(CERTS.length); });
+  /* --- top certifications ----------------------------------------------------
+     Hand-picked and in order. Each entry looks for its badge in the generated
+     Credly data by name, which supplies the badge art and, unless the entry
+     carries its own link, the verification URL. Entries with no Credly badge
+     show a drawn tile and link to their Coursera record instead; if a badge for
+     one is claimed on Credly later, the next run of tools/fetch-credly.ps1
+     brings it in and the art switches over on its own. */
+  var TOP_CERTS = [
+    { title: 'IBM Full Stack Software Developer Professional Certificate', issuer: 'IBM',
+      short: 'Full Stack Software Developer', match: /^IBM Full Stack Software Developer Professional Certificate/ },
+    { title: 'IBM DevOps and Software Engineering', issuer: 'IBM',
+      short: 'DevOps and Software Engineering', match: /DevOps and Software Engineering/i,
+      url: 'https://www.coursera.org/account/accomplishments/specialization/0WBW5H35WJ6Z' },
+    { title: 'IBM iOS and Android Mobile App Developer', issuer: 'IBM',
+      short: 'iOS and Android Mobile App Developer', match: /iOS and Android Mobile App Developer/i,
+      url: 'https://www.coursera.org/account/accomplishments/specialization/O1M3S36HZAI3' },
+    { title: 'IBM AI Developer Professional Certificate', issuer: 'IBM',
+      short: 'AI Developer', match: /^IBM AI Developer Professional Certificate/ },
+    { title: 'IBM Data Engineering Professional Certificate', issuer: 'IBM',
+      short: 'Data Engineering', match: /^IBM Data Engineering Professional Certificate/ },
+    { title: 'IBM Data Analytics with Excel and R Professional Certificate', issuer: 'IBM',
+      short: 'Data Analytics with Excel and R', match: /^IBM Data Analytics with Excel and R/ },
+    { title: 'IBM Cybersecurity Analyst Professional Certificate', issuer: 'IBM',
+      short: 'Cybersecurity Analyst', match: /^IBM Cybersecurity Analyst Professional Certificate/ },
+    { title: 'Akamai Network Engineering', issuer: 'Akamai',
+      short: 'Network Engineering', match: /Akamai Network Engineering/i,
+      url: 'https://www.coursera.org/account/accomplishments/specialization/XT2SPB1CKIB0' },
+    { title: 'Hands-on Internet of Things', issuer: 'Coursera',
+      short: 'Hands-on Internet of Things', match: /Hands-on Internet of Things/i,
+      url: 'https://www.coursera.org/account/accomplishments/specialization/4F3MLFX4DZ3C' },
+    { title: 'Google UX Design Professional Certificate', issuer: 'Google',
+      short: 'UX Design', match: /^Google UX Design Professional Certificate/ }
+  ];
+
+  // One shape for every credential the page shows, whichever list it is from.
+  function credential(title, img, url, tile) {
+    var site = /coursera\.org/.test(url) ? 'Coursera' : /credly\.com/.test(url) ? 'Credly' : '';
+    return { title: title, img: img || '', url: url || '', site: site, tile: tile };
+  }
+  var topClaimed = [];
+  var TOP = TOP_CERTS.map(function (t) {
+    var hit = null;
+    for (var i = 0; i < CERTS.length && !hit; i++) {
+      if (t.match.test(CERTS[i].name) && topClaimed.indexOf(CERTS[i]) < 0) { hit = CERTS[i]; }
+    }
+    if (hit) { topClaimed.push(hit); }
+    return credential(t.title, hit && hit.img, t.url || (hit && hit.url), { issuer: t.issuer, short: t.short });
+  });
+  var REST = CERTS.filter(function (c) { return topClaimed.indexOf(c) < 0; }).map(function (c) {
+    return credential(c.name, c.img, c.url, null);
+  });
+
+  // Badge art where there is some, otherwise the drawn tile.
+  function credentialArt(c, size) {
+    if (!c.img) {
+      return '<span class="cert-tile"><b>' + esc(c.tile.issuer) + '</b><span>' + esc(c.tile.short) + '</span></span>';
+    }
+    var src = thumb(c.img, size);
+    var x2 = thumb(c.img, size === '220x220' ? '440x440' : '220x220');
+    return '<img src="' + esc(src) + '"' + (x2 !== src && size === '220x220' ? ' srcset="' + esc(src) + ' 1x, ' + esc(x2) + ' 2x"' : '') +
+      ' alt="" loading="lazy" decoding="async" width="104" height="104">';
+  }
+  // A link to the credential's record where there is one, otherwise plain.
+  function credentialLink(c, cls, inner) {
+    var label = c.site ? (c.site === 'Credly' ? 'Verify ' : 'View ') + c.title + ' on ' + c.site : c.title;
+    if (!c.url) { return '<span class="' + cls + '" title="' + esc(c.title) + '">' + inner + '</span>'; }
+    return '<a class="' + cls + '" href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer"' +
+      ' title="' + esc(c.title) + '" aria-label="' + esc(label) + '">' + inner + '</a>';
+  }
 
   var badgeRow = $('[data-featured-badges]');
   if (badgeRow) {
-    badgeRow.innerHTML = CERTS.filter(function (c) {
-      return c.featured && thumb(c.img, '220x220') !== c.img;
-    }).slice(0, 6).map(function (c) {
-      return '<li><a href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer"' +
-        ' title="' + esc(c.name) + '" aria-label="Verify ' + esc(c.name) + ' on Credly">' +
-        '<img src="' + esc(thumb(c.img, '220x220')) + '" alt="" loading="lazy" decoding="async"' +
-        ' width="88" height="88"></a></li>';
+    badgeRow.innerHTML = TOP.map(function (c) {
+      return '<li>' + credentialLink(c, 'bio__badge', credentialArt(c, '220x220')) + '</li>';
     }).join('');
   }
 
@@ -716,20 +759,19 @@
   if (!marquee) { return; }
 
   function badgeMarkup(c) {
-    var src = thumb(c.img, '220x220');
-    var x2 = thumb(c.img, '440x440');
-    return '<a class="credly-badge" href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Verify ' + esc(c.name) + ' on Credly">' +
-      '<span class="credly-badge__image"><img src="' + esc(src) + '"' +
-        (x2 !== src ? ' srcset="' + esc(src) + ' 1x, ' + esc(x2) + ' 2x"' : '') +
-        ' alt="" loading="lazy" decoding="async" width="104" height="104"></span>' +
-      '</a>';
+    return credentialLink(c, 'credly-badge', '<span class="credly-badge__image">' + credentialArt(c, '220x220') + '</span>');
   }
 
+  // Each row opens with its share of the top ten, in order, then its share of
+  // everything else, newest first. Both rows show their first badges at the
+  // left edge on load, whichever way they drift.
   var rows = $$('[data-credly-track]', marquee);
-  var BADGES_PER_ROW = 30;
+  function share(list, rowIndex) {
+    var per = Math.ceil(list.length / rows.length);
+    return list.slice(rowIndex * per, rowIndex * per + per);
+  }
   rows.forEach(function (track, rowIndex) {
-    var rowStart = rowIndex * BADGES_PER_ROW;
-    var rowCerts = CERTS.slice(rowStart, rowStart + BADGES_PER_ROW);
+    var rowCerts = share(TOP, rowIndex).concat(share(REST, rowIndex));
     track.innerHTML = '<ul>' + rowCerts.map(badgeMarkup).join('') + '</ul>';
     track.appendChild(track.firstElementChild.cloneNode(true));
     track.setAttribute('data-ready', '');

@@ -132,6 +132,19 @@ li { list-style: none; }
 }
 .skip:focus { transform: none; }
 
+/* Read by screen readers, not drawn. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* =============================================================================
    Atmosphere — two blurred blobs and a fine grain, fixed so they sit under
    the content rather than scrolling with it.
@@ -617,6 +630,7 @@ main { position: relative; z-index: 3; }
 .js .stage:not(.is-live) .stage__fold,
 .js .stage:not(.is-live) .hero__chip,
 .js .stage:not(.is-live) .eyes__ball,
+.js .stage:not(.is-live) .caret,
 .js .stage:not(.is-live) .finale__mail::after { animation-play-state: paused; }
 
 /* =============================================================================
@@ -627,7 +641,13 @@ main { position: relative; z-index: 3; }
    visual share one stacking context, which is why neither is a .reveal: an
    element mid-fade gets a stacking context of its own.
    ========================================================================== */
+/* The name is the measure the rest of the hero works from. --photo-start is
+   where the photo's area begins, in name-ems from the name's left edge: short
+   of the end of both lines ("Al-Raji" is 3.22em, "Theng" 2.74em), so, as in
+   the reference, the photo stands over the end of the name. */
 .hero {
+  --name-size: clamp(60px, min(12vw, 27svh), 200px);
+  --photo-start: 1.9;
   display: flex;
   min-height: 100vh;
   min-height: 100svh;
@@ -647,7 +667,7 @@ main { position: relative; z-index: 3; }
   width: fit-content;
   margin: 0;
   font-family: "Pixelify Sans", var(--display);
-  font-size: clamp(60px, min(11vw, 26svh), 168px);
+  font-size: var(--name-size);
   font-weight: 700;
   line-height: .86;
   letter-spacing: 0;
@@ -660,85 +680,38 @@ main { position: relative; z-index: 3; }
 }
 .hero__name span { display: block; white-space: nowrap; }
 
-.hero__lead {
+/* The copy is the origin for the labels that float over the name. It is
+   positioned but sets no z-index, so it adds no stacking context and the
+   name, the photo and the labels still share the hero's. */
+.hero__copy { position: relative; }
+
+/* Typed out once by main.js, with a block caret, as in the reference. */
+.hero__tagline {
   position: relative;
   z-index: 3;
-  margin-top: clamp(18px, 3.6vh, 36px);
-}
-
-/* The rotating role line. One slot, the words swap inside it.
-
-   Cross-axis alignment is centre, not baseline, and that is deliberate. The
-   slot has overflow:hidden, and such a box takes its baseline from its bottom
-   margin edge rather than from the text inside it — so baseline alignment
-   dropped the slot's descender line onto the static text's baseline and lifted
-   the rotating word about 7px. Centring two boxes of equal line height puts
-   the two runs of text on the same optical line instead. */
-.roles {
-  --roles-line: 1.4em;
-  display: flex;
-  align-items: center;
-  gap: .4em;
-  margin: 0;
-  font-family: var(--display);
-  font-size: clamp(17px, 1.7vw, 23px);
-  font-weight: 600;
-  line-height: var(--roles-line);
+  margin: clamp(16px, 3vh, 28px) 0 0;
+  font: 600 clamp(17px, 1.65vw, 24px)/1.35 var(--display);
   letter-spacing: -0.02em;
   color: var(--text);
+  text-shadow: 0 2px 18px rgba(4,9,22,.8);
 }
-/* Keeps the caret with the word when the line wraps on a narrow screen. */
-.roles__run {
-  display: inline-flex;
-  align-items: center;
-  gap: .3em;
-  min-width: 0;
-}
-.roles__slot {
-  position: relative;
-  display: block;
-  height: var(--roles-line);
-  line-height: var(--roles-line);
-  overflow: hidden;
-  max-width: 100%;
-  /* Width tracks the active word, set by main.js, so the caret sits just after
-     the text instead of parking at the end of a fixed-width box. 24ch is the
-     widest label, used before the script runs and if it never does. */
-  width: 24ch;
-  transition: width .45s var(--ease);
-}
-.roles__slot b {
-  position: absolute;
-  left: 0; top: 0;
-  /* No max-width here. It would resolve against the slot, whose width is in
-     turn measured from this element — a circular constraint that pinned every
-     word to the first one's width and clipped the longest role. Narrow screens
-     are handled by max-width on the slot instead. */
-  width: max-content;
-  line-height: var(--roles-line);   /* match the slot, so glyphs sit centred */
-  font-weight: 600;
-  color: var(--sky-pale);
-  opacity: 0;
-  transform: translateY(90%);
-  transition: opacity .45s var(--ease), transform .45s var(--ease);
-}
-.roles__slot b.on { opacity: 1; transform: none; }
-.roles__slot b.off { opacity: 0; transform: translateY(-90%); }
-/* A block caret, the typed-terminal kind. */
 .caret {
-  display: block;
-  flex: none;
-  width: .42em; height: 1em;
+  display: inline-block;
+  width: .45em; height: 1em;
+  margin-left: .18em;
+  vertical-align: -.12em;
   background: var(--sky);
-  animation: blink 1.15s steps(1) infinite;
+  animation: blink 1.1s steps(1) infinite;
 }
 @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 
 .hero__actions {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: clamp(20px, 3.4vh, 30px);
+  margin-top: clamp(24px, 4.4vh, 42px);
 }
 
 /* The call to action looks back at you: the pupils follow the pointer
@@ -770,28 +743,49 @@ main { position: relative; z-index: 3; }
   95%           { transform: scaleY(.1); }
 }
 
-/* The photo stands on the hero's foot, framed head to chest so it reads at
-   the reference's scale. Its height follows the hero, capped by the width
-   and outright, so on a wide screen it never runs into the end of the name. */
-.hero__visual {
+/* The photo's area runs from --photo-start to near the edge of the viewport
+   (on a wide screen it may spill past the 1180px column), and from below the
+   nav to the hero's foot. The photo is the largest that fits, measured in
+   container units, and stands on the foot at the area's left edge. */
+.hero__area {
   position: absolute;
   z-index: 2;
-  left: 46%;
+  top: 96px;
   bottom: 0;
-  height: min(calc(100% - 84px), 46vw, 820px);
-  aspect-ratio: 651 / 680;
+  left: calc(var(--gutter) + var(--name-size) * var(--photo-start));
+  right: calc(min(0px, (var(--wrap) - 100vw) / 2) + 20px);
+  container-type: size;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  pointer-events: none;
+}
+.hero__visual {
+  position: relative;
+  width: min(100cqw, 100cqh * 1131 / 968, 1000px);
+  aspect-ratio: 1131 / 968;
 }
 .hero__photo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top;
+  object-fit: contain;
+  object-position: bottom;
   filter: drop-shadow(0 0 30px rgba(44,123,242,.35));
-  -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent);
-  mask-image: linear-gradient(to bottom, #000 74%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000 76%, transparent);
+  mask-image: linear-gradient(to bottom, #000 76%, transparent);
 }
 
-.hero__chips { position: absolute; inset: 0; pointer-events: none; }
+/* The labels share the photo's box, so they scale and move with it; the
+   ones with a negative --x reach back over the name. They sit above the name
+   and the photo, and below the tagline and the buttons. */
+.hero__chips {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
 .hero__chip {
   position: absolute;
   left: var(--x); top: var(--y);
@@ -820,10 +814,26 @@ main { position: relative; z-index: 3; }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.hero__chip b { font-weight: 700; color: var(--sky-pale); }
 @keyframes chip-bob {
   0%, 100% { translate: 0 0; }
-  50%      { translate: 0 -9px; }
+  50%      { translate: 0 -8px; }
+}
+/* Over the name: placed in name-ems from its top-left, and lifted above the
+   photo (which comes later in the page and would otherwise cover them). */
+.hero__chips--name { z-index: 3; }
+.hero__chips--name .hero__chip {
+  left: calc(var(--name-size) * var(--x));
+  top: calc(var(--name-size) * var(--y));
+}
+/* On a wide screen the photo grows faster than the name, so it starts a
+   little further left to keep its shoulder over the end of the name. */
+@media (min-width: 1600px) {
+  .hero { --photo-start: 1.6; }
+}
+
+/* On a narrow laptop the labels shrink a step with the photo. */
+@media (max-width: 1200px) {
+  .hero__chip { padding: 6px 12px 6px 9px; font-size: 12px; }
 }
 
 /* =============================================================================
@@ -921,10 +931,12 @@ main { position: relative; z-index: 3; }
    alternate directions. The screens are greyed and dimmed, and a shade that
    is heaviest behind the copy keeps the wall reading as texture.
    ========================================================================== */
+/* A black panel, as in the reference, fading into the page top and bottom. */
 .section--wall {
   overflow: hidden;
   isolation: isolate;
   padding-block: clamp(96px, 12vw, 170px);
+  background: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
 }
 
 .wall {
@@ -940,7 +952,9 @@ main { position: relative; z-index: 3; }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(5,10,22,.95) 0%, rgba(5,10,22,.86) 46%, rgba(5,10,22,.58) 100%);
+  background:
+    radial-gradient(ellipse 62% 52% at 32% 56%, rgba(0,0,0,.72), transparent 72%),
+    linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.52) 50%, rgba(0,0,0,.3) 100%);
 }
 .wall__plane {
   position: absolute;
@@ -969,7 +983,7 @@ main { position: relative; z-index: 3; }
   flex: none;
   width: 300px;
   margin-right: 26px;
-  filter: grayscale(1) brightness(.72) contrast(1.05);
+  filter: grayscale(1) brightness(.62) contrast(1.05);
 }
 .wall__shot {
   height: 196px;
@@ -1006,7 +1020,7 @@ main { position: relative; z-index: 3; }
   white-space: nowrap;
 }
 
-.bio { max-width: 780px; }
+.bio { max-width: none; }
 .bio__name {
   width: fit-content;
   font-family: "Pixelify Sans", var(--display);
@@ -1033,7 +1047,7 @@ main { position: relative; z-index: 3; }
 }
 .bio__meta em { font-style: italic; color: var(--text); }
 .bio__text {
-  max-width: 62ch;
+  max-width: 84ch;
   margin-top: clamp(24px, 3vw, 34px);
   font-size: clamp(17px, 1.75vw, 21px);
   line-height: 1.62;
@@ -1048,20 +1062,22 @@ main { position: relative; z-index: 3; }
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
+/* The top ten in one row, as the reference sets its badges; five to a row
+   once the column is too narrow for ten. */
 .bio__badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(14px, 2vw, 26px);
+  --badge: clamp(54px, 6vw, 82px);
+  display: grid;
+  grid-template-columns: repeat(10, var(--badge));
+  gap: clamp(12px, 1.6vw, 20px);
   margin-top: clamp(30px, 4vw, 46px);
 }
-.bio__badges a {
+.bio__badge {
   display: block;
-  width: clamp(64px, 7vw, 88px);
   transition: transform .25s var(--ease);
 }
-.bio__badges a:hover,
-.bio__badges a:focus-visible { transform: translateY(-4px); }
-.bio__badges img {
+a.bio__badge:hover,
+a.bio__badge:focus-visible { transform: translateY(-4px); }
+.bio__badge img {
   width: 100%;
   height: auto;
   filter: drop-shadow(0 10px 18px rgba(0,0,0,.45));
@@ -1533,6 +1549,46 @@ main { position: relative; z-index: 3; }
   object-fit: contain;
   filter: saturate(1.05);
 }
+
+/* A drawn stand-in for a credential that has no badge art: the issuer over
+   the title on a badge-shaped field, sized to sit where the art would. --tile
+   is its edge in each place it appears, and the type is set in ems from it.
+   (Container units would be neater, but on a size-contained tile Chromium
+   stopped painting the whole marquee row the tile sat in.) */
+.cert-tile {
+  --tile: 150px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  width: var(--tile);
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+  padding: calc(var(--tile) * .11);
+  border: 1px solid rgba(169,224,255,.4);
+  border-radius: 24%;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(99,205,255,.4), transparent 58%),
+    linear-gradient(150deg, var(--blue-deep), #0a2a63);
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,.06);
+  color: #fff;
+  font: 600 calc(var(--tile) * .105)/1.18 var(--display);
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+.cert-tile b {
+  margin-bottom: .45em;
+  font-size: 1.8em;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.cert-tile span {
+  color: rgba(233,241,252,.88);
+  text-wrap: balance;
+}
+.bio__badge .cert-tile    { --tile: var(--badge); }
+.credly-badge .cert-tile  { --tile: clamp(130px, calc(18vw - 28px), 168px); }
 .credly-marquee__hint {
   display: flex;
   justify-content: space-between;
@@ -1907,11 +1963,14 @@ main { position: relative; z-index: 3; }
 [data-theme="light"] .hero__photo { filter: drop-shadow(0 18px 40px rgba(19,57,103,.22)); }
 [data-theme="light"] .hero__chip { background: rgba(255,255,255,.74); border-color: rgba(44,123,242,.3); box-shadow: 0 12px 30px -18px rgba(19,57,103,.5); }
 [data-theme="light"] .hero__chip svg { stroke: var(--blue); }
-[data-theme="light"] .hero__chip b { color: var(--blue-deep); }
+[data-theme="light"] .section--wall { background: none; }
+/* The tagline's end can cross the dark gown; a white halo keeps the dark
+   type legible there in light mode. */
+[data-theme="light"] .hero__tagline { text-shadow: 0 0 1px #fff, 0 0 6px rgba(255,255,255,.95), 0 0 14px rgba(255,255,255,.9), 0 0 24px rgba(255,255,255,.7); }
 [data-theme="light"] .wall::after { background: linear-gradient(90deg, rgba(243,247,252,.96) 0%, rgba(243,247,252,.88) 46%, rgba(243,247,252,.6) 100%); }
 [data-theme="light"] .wall__tile { filter: grayscale(1) contrast(.95); }
 [data-theme="light"] .wall__label { color: rgba(16,36,66,.6); }
-[data-theme="light"] .bio__badges img { filter: drop-shadow(0 10px 18px rgba(19,57,103,.22)); }
+[data-theme="light"] .bio__badge img { filter: drop-shadow(0 10px 18px rgba(19,57,103,.22)); }
 [data-theme="light"] .finale__mail { background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(232,240,250,.86)); box-shadow: 0 26px 60px -30px rgba(19,57,103,.45), 0 0 46px -14px rgba(44,123,242,.35); }
 [data-theme="light"] .finale__mail::before { background: linear-gradient(180deg, rgba(44,123,242,.55), rgba(44,123,242,.1) 55%, rgba(20,122,168,.45)); }
 [data-theme="light"] .finale__mail::after { background: linear-gradient(100deg, transparent, rgba(255,255,255,.85) 50%, transparent); }
@@ -1929,6 +1988,10 @@ main { position: relative; z-index: 3; }
 @media (max-width: 1040px) {
   .repos li a { grid-template-columns: minmax(0, 180px) minmax(0, 1fr) auto; }
   .repos__tech { display: none; }
+}
+
+@media (max-width: 1000px) {
+  .bio__badges { --badge: clamp(54px, 9vw, 82px); grid-template-columns: repeat(5, var(--badge)); }
 }
 
 @media (max-width: 860px) {
@@ -1959,7 +2022,11 @@ main { position: relative; z-index: 3; }
   .timeline__where::before { content: " · "; }
 }
 
-@media (max-width: 720px), (max-aspect-ratio: 3/4) {
+/* Below desktop widths, and on tall screens, the hero stacks: the copy, then
+   the labels as a centred cluster, then the photo standing on the foot. The
+   side spaces beside the head are too narrow there to hold a label. */
+@media (max-width: 1040px), (max-aspect-ratio: 3/4) {
+  .hero { --name-size: clamp(54px, 19vw, 132px); }
   .hero__frame {
     flex-direction: column;
     justify-content: flex-start;
@@ -1967,35 +2034,57 @@ main { position: relative; z-index: 3; }
     padding-bottom: 0;
     text-align: center;
   }
-  .hero__name { margin-inline: auto; font-size: clamp(54px, 19vw, 120px); }
-  .hero__name span + span { margin-left: 0; }
+  .hero__name { margin-inline: auto; }
   .hero__actions { justify-content: center; }
-  .hero__visual {
-    position: relative;
-    left: auto; bottom: auto;
-    width: min(80vw, 480px);
-    height: auto;
-    margin-top: 20px;
-    aspect-ratio: 651 / 900;
+  .hero__area {
+    position: static;
+    display: block;
+    width: 100%;
+    margin-top: 12px;           /* the two label groups read as one cluster */
+    container-type: normal;
   }
-  .hero__photo { object-fit: contain; object-position: bottom; }
-  .hero__chip { font-size: 12px; padding: 6px 12px 6px 9px; }
-  .hero__chip:nth-child(1) { left: -8%;  top: 9%; }
-  .hero__chip:nth-child(2) { left: 50%;  top: 24%; }
-  .hero__chip:nth-child(3) { left: -12%; top: 47%; }
-  .hero__chip:nth-child(4) { left: 52%;  top: 63%; }
-  .hero__chip:nth-child(5) { display: none; }
+  .hero__visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    aspect-ratio: auto;
+  }
+  .hero__chips {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 10px;             /* rows clear the 8px bob */
+    max-width: 560px;
+    margin-bottom: 8px;
+  }
+  .hero__chips--name { margin: clamp(26px, 4vh, 40px) auto 0; }
+  .hero__chip,
+  .hero__chips--name .hero__chip {
+    position: relative;
+    left: auto; top: auto;
+    padding: 6px 12px 6px 9px;
+    font-size: 12px;
+  }
+  .hero__photo {
+    position: static;
+    width: min(100%, 560px);
+    height: auto;
+  }
 }
 
 @media (max-width: 620px) {
   body { font-size: 16px; }
-  /* Two rows, both centred: this is a cross-axis rule, and the cross axis is
-     horizontal once the line becomes a column. */
-  .roles { flex-direction: column; align-items: center; gap: 2px; }
-  .roles__slot { min-width: 0; flex: 1 1 auto; }
+  /* A step smaller, so the five labels pair up instead of stacking five deep
+     and pushing the photo off the first screen. */
+  .hero__chips { gap: 12px 8px; }
+  .hero__chip,
+  .hero__chips--name .hero__chip { gap: 5px; padding: 5px 10px 5px 8px; font-size: 11px; }
+  .hero__chip svg { width: 13px; height: 13px; }
   .wall__tile { width: 220px; margin-right: 18px; }
   .wall__shot { height: 148px; }
-  .wall::after { background: rgba(5,10,22,.86); }
+  .wall::after { background: rgba(0,0,0,.74); }
   .repos li a { grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
   .repos__desc { display: none; }
   .record__list a { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; }
@@ -2003,6 +2092,7 @@ main { position: relative; z-index: 3; }
   .credly-marquee { --badge-gap: 10px; gap: 16px; }
   .credly-row { min-height: 174px; }
   .credly-badge { flex-basis: 154px; padding: 11px; }
+  .credly-badge .cert-tile { --tile: 128px; }
   .credly-marquee__hint { align-items: flex-start; flex-direction: column; gap: 5px; }
   .projects-carousel__toolbar { align-items: flex-end; }
   .projects-carousel__hint span:first-child { display: none; }

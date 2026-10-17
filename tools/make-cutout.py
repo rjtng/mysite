@@ -2,11 +2,12 @@
 
     python tools/make-cutout.py [source] [output] [height] [keep]
 
-Defaults: assets/img/portrait2.png -> assets/img/portrait-cutout.webp, scaled
-to 1200px tall, keeping the top 0.75 of the frame (head to waist).
+Defaults: assets/img/portrait.png (the graduation photo) ->
+assets/img/portrait-cutout.webp, scaled to 1100px tall, keeping the top 0.88
+of the frame (head to just below the medal).
 
 Background is the near-white region connected to the image border, so white
-clothing enclosed by the subject (a shirt under a blazer) survives. Pixels
+clothing enclosed by the subject (a collar under the hood) survives. Pixels
 just inside that region fade by their distance from white, with the white
 bled out of their colour, and the outermost ring is feathered, so hair and
 shoulders do not carry a pale halo onto the dark hero.
@@ -19,10 +20,10 @@ import numpy as np
 from PIL import Image
 
 args = sys.argv[1:]
-src = args[0] if len(args) > 0 else "assets/img/portrait2.png"
+src = args[0] if len(args) > 0 else "assets/img/portrait.png"
 dst = args[1] if len(args) > 1 else "assets/img/portrait-cutout.webp"
-out_h = int(args[2]) if len(args) > 2 else 1200
-keep = float(args[3]) if len(args) > 3 else 0.75
+out_h = int(args[2]) if len(args) > 2 else 1100
+keep = float(args[3]) if len(args) > 3 else 0.88
 
 rgb = np.asarray(Image.open(src).convert("RGB")).astype(np.float32)
 h, w, _ = rgb.shape
