@@ -1,6 +1,6 @@
 # tools
 
-Four generators. None of them run at deploy time — the site is served as static
+Five generators. None of them run at deploy time — the site is served as static
 files — so run them by hand when the source data changes and commit the result.
 
 ## fetch-credly.ps1
@@ -78,3 +78,16 @@ near-white region that touches the frame's edge, so enclosed white — the colla
 under the hood — is kept.
 Edge pixels fade by their distance from white and the outermost ring is
 feathered, which keeps a pale halo off the dark hero.
+
+## fetch-badge-art.py
+
+Downloads the Credly badge art for the top certifications into
+`assets/img/badges/`, so the page can serve its own copies.
+
+    python tools/fetch-badge-art.py
+
+`BADGES` at the top maps each file name to the badge's name exactly as it
+appears in `assets/js/data-certs.js`, which is where the image URLs come from:
+run `fetch-credly.ps1` first when the badges change. Each badge is saved as a
+220px WebP for 1x screens and a 440px one for 2x. Needs Pillow and network
+access to `images.credly.com`.
