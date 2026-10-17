@@ -62,7 +62,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Pixelify+Sans:wght@700&family=Sora:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=8" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=9" />
 
     <!-- Entry fades only exist when scripting does. Without this class the .reveal
      rule never applies, so the page renders fully rather than staying blank. -->
@@ -344,91 +344,80 @@
 
             <h1 class="hero__name"><span>Al-Raji</span> <span>Theng</span></h1>
 
-            <div class="hero__lead">
-              <p class="roles">
-                <span>computer engineer &mdash;</span>
-                <!-- Slot and caret are grouped so they stay on one line when
-                     this wraps to two rows on a narrow screen. -->
-                <span class="roles__run">
-                  <span class="roles__slot" id="roles" aria-live="polite">
-                    <b class="on">full-stack developer</b>
-                    <b>mobile app developer</b>
-                    <b>ui/ux & graphic designer</b>
-                    <b>computer vision tinkerer</b>
-                    <b>network technician</b>
-                  </span>
-                  <span class="caret" aria-hidden="true"></span>
-                </span>
-              </p>
-
-              <div class="hero__actions">
-                <a class="btn btn--primary hero__cta" href="#contact">
-                  Get in touch
-                  <span class="eyes" aria-hidden="true"
-                    ><i class="eyes__ball"></i><i class="eyes__ball"></i
-                  ></span>
-                </a>
-                <a
-                  class="btn btn--ghost"
-                  href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View my resume
-                </a>
-              </div>
+            <div class="hero__actions">
+              <a class="btn btn--primary hero__cta" href="#contact">
+                Get in touch
+                <span class="eyes" aria-hidden="true"
+                  ><i class="eyes__ball"></i><i class="eyes__ball"></i
+                ></span>
+              </a>
+              <a
+                class="btn btn--ghost"
+                href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View my resume
+              </a>
             </div>
           </div>
 
-          <div class="hero__visual">
-            <img
-              class="hero__photo"
-              src="/assets/img/portrait-cutout.webp"
-              alt="Al-Raji Theng in a navy blazer"
-              width="651"
-              height="900"
-              fetchpriority="high"
-            />
+          <!-- On wide screens the area starts just right of the name, so the
+               photo and its labels can never reach it; on narrow ones it
+               follows the copy. -->
+          <div class="hero__area">
+            <div class="hero__visual">
+              <!-- The labels sit in the empty space either side of the head:
+                   --x and --y place each one as a share of the photo, --t sets
+                   its bob so the five never move in step. -->
+              <ul class="hero__chips" aria-label="Roles">
+                <li class="hero__chip" style="--x: 2%; --y: 7%; --t: 7s">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" />
+                  </svg>
+                  Full-Stack Developer
+                </li>
+                <li class="hero__chip" style="--x: 67%; --y: 12%; --t: 8.5s">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 20l4-1L19 8l-3-3L5 16l-1 4Z" />
+                    <path d="m14 7 3 3" />
+                  </svg>
+                  UI/UX &amp; Graphic Designer
+                </li>
+                <li class="hero__chip" style="--x: 3%; --y: 21%; --t: 8s">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="9" y="3" width="6" height="5" rx="1" />
+                    <rect x="3" y="16" width="6" height="5" rx="1" />
+                    <rect x="15" y="16" width="6" height="5" rx="1" />
+                    <path d="M12 8v4M6 16v-2h12v2" />
+                  </svg>
+                  Network Technician
+                </li>
+                <li class="hero__chip" style="--x: 67%; --y: 27%; --t: 7.6s">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  Computer Vision Tinkerer
+                </li>
+                <li class="hero__chip" style="--x: 1%; --y: 35%; --t: 9s">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="7" y="2.5" width="10" height="19" rx="2.5" />
+                    <path d="M11 18.5h2" />
+                  </svg>
+                  Mobile App Developer
+                </li>
+              </ul>
 
-            <!-- Each chip is placed relative to the photo, and the leftmost
-                 reach back over the name. --x and --y set the position, --t
-                 the bob's period so the five never move in step. -->
-            <ul class="hero__chips" aria-label="At a glance">
-              <li class="hero__chip" style="--x: -57%; --y: 5%; --t: 7s">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="7" y="7" width="10" height="10" rx="1.5" />
-                  <path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4" />
-                </svg>
-                Computer Engineer
-              </li>
-              <li class="hero__chip" style="--x: -16%; --y: 21%; --t: 8.5s">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1Z" />
-                  <path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12" />
-                </svg>
-                ICpEP.SE UZ President
-              </li>
-              <li class="hero__chip" style="--x: -78%; --y: 41%; --t: 9s">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="9" r="6" />
-                  <path d="M8.5 14.2 7 22l5-2.5 5 2.5-1.5-7.8" />
-                </svg>
-                <span><b data-cert-count>60</b> Verified Credentials</span>
-              </li>
-              <li class="hero__chip" style="--x: 68%; --y: 34%; --t: 7.6s">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" />
-                </svg>
-                DICT Web Dev Intern
-              </li>
-              <li class="hero__chip" style="--x: 66%; --y: 70%; --t: 8s">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" />
-                  <circle cx="12" cy="9.5" r="2.5" />
-                </svg>
-                Zamboanga City, PH
-              </li>
-            </ul>
+              <img
+                class="hero__photo"
+                src="/assets/img/portrait-cutout.webp?v=9"
+                alt="Al-Raji Theng in graduation regalia"
+                width="1131"
+                height="968"
+                fetchpriority="high"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -797,8 +786,7 @@
             <h2 class="bio__name">Al-Raji Theng</h2>
             <p class="bio__title">Computer Engineer</p>
             <p class="bio__meta">
-              BS Computer Engineering | <em>Universidad de Zamboanga</em><br />
-              President, ICpEP.SE &ndash; UZ Chapter
+              BS Computer Engineering | <em>Universidad de Zamboanga</em>
             </p>
 
             <p class="bio__text">
@@ -807,8 +795,8 @@
               wondering why it worked yesterday but not today. Argh! &gt;_&lt;
             </p>
 
-            <!-- Filled by main.js from the featured credentials in
-                 data-certs.js, each linking to its Credly verification. -->
+            <!-- Filled by main.js from TOP_CERTS, the hand-picked top ten,
+                 each linking to its Credly or Coursera record. -->
             <ul
               class="bio__badges"
               data-featured-badges
@@ -1739,7 +1727,7 @@
             <p class="head__sub">
               A living showcase of the credentials I have earned through
               deliberate study and hands-on practice. Every badge links to its
-              official Credly verification page.
+              official verification page on Credly or Coursera.
             </p>
           </div>
 
@@ -2131,6 +2119,6 @@
     </footer>
 
     <script src="/assets/js/data-certs.js?v=5"></script>
-    <script src="/assets/js/main.js?v=8"></script>
+    <script src="/assets/js/main.js?v=9"></script>
   </body>
 </html>

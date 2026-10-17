@@ -63,8 +63,9 @@ Universidad de Zamboanga.
 
 ## The hero photo
 
-The hero shows `assets/img/portrait-cutout.webp`: `portrait2.png` with its
-white studio backdrop removed, so you stand in front of the backdrop scene
+The hero shows `assets/img/portrait-cutout.webp`: your graduation photo,
+`portrait.png`, with its white studio backdrop removed, so you stand in front
+of the backdrop scene
 rather than in a white box. To use a different photo, shoot or pick one on a
 plain white background and run:
 
@@ -73,12 +74,15 @@ python tools/make-cutout.py path/to/photo.png
 ```
 
 It needs Pillow and numpy, and writes the cutout in place. Only white that
-touches the edge of the frame is removed, so a white shirt under a jacket
+touches the edge of the frame is removed, so the white collar under the hood
 survives. A busy or coloured background will not cut out cleanly with it.
 
-The five chips floating around the photo are taken from elsewhere on the page —
-the Experience section, the credential count (kept current from
-`data-certs.js`) and the location. Edit them in the hero of `index.html`.
+The five role labels float in the empty space either side of your head. Each
+is placed as a share of the photo (`--x` and `--y` in the hero of
+`index.html`), so they scale with it and stay clear of the name, the photo, the
+nav and the buttons at every width. On phones and tall screens they become a
+centred cluster above the photo instead. If you change to a photo framed
+differently, recheck where they land.
 
 ---
 
@@ -164,7 +168,15 @@ powershell -ExecutionPolicy Bypass -File tools/fetch-credly.ps1
 
 The script reads every page of your public Credly feed, sorts by issue date,
 tags each badge with an issuer, and writes the file. The certifications section
-uses the complete generated list, alternating badges between two scrolling rows.
+uses the complete generated list across its two scrolling rows.
+
+Your top ten are chosen by hand, in `TOP_CERTS` near the end of `main.js`. They
+fill the badge row in About and open the two certification rows, five each.
+Each entry finds its Credly badge by name, which gives it its art and its
+verification link; an entry with its own `url` (the Coursera ones) links there
+instead. An entry with no Credly badge yet is drawn as a tile with the issuer
+and title. Claim the Credly badge, rerun the script, and the real art replaces
+the tile with no other change.
 
 The badge images and verification URLs all derive from that one file, so the
 showcase stays correct on its own. Projects, skills and the experience timeline
@@ -242,13 +254,12 @@ case the intersection observer never fires — which happens in embedded webview
 and tabs that are never painted.
 
 The hero and About follow the same reference. The hero sets the name huge in
-the pixel face, puts the photo over its end, floats the chips in front of both,
-and keeps the rotating role line as the typed tagline. The "Get in touch"
+the pixel face, stands the photo to its right, and floats your five roles in
+the space either side of your head. The "Get in touch"
 button has eyes that follow the pointer. About is a dark panel over a tilted
 wall of project screens; `main.js` builds the wall by copying the mock screens
-from the project cards, so adding a project adds it to the wall. The featured
-badges under the bio are the first six `featured` credentials in
-`data-certs.js` that Credly serves in resized form.
+from the project cards, so adding a project adds it to the wall. The badges
+under the bio are the top ten described above.
 
 The hero and the closing scene share one backdrop, the `.stage` block in
 `styles.css`; the hero mirrors its folds so the two ends are not identical.
