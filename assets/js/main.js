@@ -661,4 +661,166 @@
       }
     }
   }
+
+  /* =========================================================================
+     Credly badge marquee. The data is generated from the public profile by
+     tools/fetch-credly.ps1, so every image and verification URL stays official.
+     ====================================================================== */
+  var CERTS = Array.isArray(window.CERTIFICATIONS) ? window.CERTIFICATIONS : [];
+  if (!CERTS.length) { return; }
+
+  /* Credly stores these as 1200px PNGs — around 400 KB each, for a badge slot.
+     It serves resized copies from /size/<w>x<h>/, but only when the URL ends in
+     a real filename; the older "/blob" ones just redirect back to the original,
+     so those are left alone. */
+  function thumb(url, size) {
+    if (!/^https:\/\/images\.credly\.com\/images\//.test(url) || /\/blob$/.test(url)) { return url; }
+    return url.replace('/images/', '/size/' + size + '/images/');
+  }
+
+  /* --- top certifications ----------------------------------------------------
+     Hand-picked and in order. Each entry looks for its badge in the generated
+     Credly data by name, which supplies the badge art and, unless the entry
+     carries its own link, the verification URL. Entries with no Credly badge
+     show a drawn tile and link to their Coursera record instead; if a badge for
+     one is claimed on Credly later, the next run of tools/fetch-credly.ps1
+     brings it in and the art switches over on its own. */
+  var TOP_CERTS = [
+    { title: 'IBM Full Stack Software Developer Professional Certificate', issuer: 'IBM',
+      short: 'Full Stack Software Developer', match: /^IBM Full Stack Software Developer Professional Certificate/ },
+    { title: 'IBM DevOps and Software Engineering', issuer: 'IBM',
+      short: 'DevOps and Software Engineering', match: /DevOps and Software Engineering/i,
+      url: 'https://www.coursera.org/account/accomplishments/specialization/0WBW5H35WJ6Z' },
+    { title: 'IBM iOS and Android Mobile App Developer', issuer: 'IBM',
+      short: 'iOS and Android Mobile App Developer', match: /iOS and Android Mobile App Developer/i,
+      url: 'https://www.coursera.org/account/accomplishments/specialization/O1M3S36HZAI3' },
+    { title: 'IBM AI Developer Professional Certificate', issuer: 'IBM',
+      short: 'AI Developer', match: /^IBM AI Developer Professional Certificate/ },
+    { title: 'IBM Data Engineering Professional Certificate', issuer: 'IBM',
+      short: 'Data Engineering', match: /^IBM Data Engineering Professional Certificate/ },
+    { title: 'IBM Data Analytics with Excel and R Professional Certificate', issuer: 'IBM',
+      short: 'Data Analytics with Excel and R', match: /^IBM Data Analytics with Excel and R/ },
+    { title: 'IBM Cybersecurity Analyst Professional Certificate', issuer: 'IBM',
+      short: 'Cybersecurity Analyst', match: /^IBM Cybersecurity Analyst Professional Certificate/ },
+    { title: 'Akamai Network Engineering', issuer: 'Akamai',
+      short: 'Network Engineering', match: /Akamai Network Engineering/i,
+      url: 'https://www.coursera.org/account/accomplishments/specialization/XT2SPB1CKIB0' },
+    { title: 'Hands-on Internet of Things', issuer: 'Coursera',
+      short: 'Hands-on Internet of Things', match: /Hands-on Internet of Things/i,
+      url: 'https://www.coursera.org/account/accomplishments/specialization/4F3MLFX4DZ3C' },
+    { title: 'Google UX Design Professional Certificate', issuer: 'Google',
+      short: 'UX Design', match: /^Google UX Design Professional Certificate/ }
+  ];
+
+  // One shape for every credential the page shows, whichever list it is from.
+  function credential(title, img, url, tile) {
+    var site = /coursera\.org/.test(url) ? 'Coursera' : /credly\.com/.test(url) ? 'Credly' : '';
+    return { title: title, img: img || '', url: url || '', site: site, tile: tile };
+  }
+  var topClaimed = [];
+  var TOP = TOP_CERTS.map(function (t) {
+    var hit = null;
+    for (var i = 0; i < CERTS.length && !hit; i++) {
+      if (t.match.test(CERTS[i].name) && topClaimed.indexOf(CERTS[i]) < 0) { hit = CERTS[i]; }
+    }
+    if (hit) { topClaimed.push(hit); }
+    return credential(t.title, hit && hit.img, t.url || (hit && hit.url), { issuer: t.issuer, short: t.short });
+  });
+  var REST = CERTS.filter(function (c) { return topClaimed.indexOf(c) < 0; }).map(function (c) {
+    return credential(c.name, c.img, c.url, null);
+  });
+
+  // Badge art where there is some, otherwise the drawn tile.
+  function credentialArt(c, size) {
+    if (!c.img) {
+      return '<span class="cert-tile"><b>' + esc(c.tile.issuer) + '</b><span>' + esc(c.tile.short) + '</span></span>';
+    }
+    var src = thumb(c.img, size);
+    var x2 = thumb(c.img, size === '220x220' ? '440x440' : '220x220');
+    return '<img src="' + esc(src) + '"' + (x2 !== src && size === '220x220' ? ' srcset="' + esc(src) + ' 1x, ' + esc(x2) + ' 2x"' : '') +
+      ' alt="" loading="lazy" decoding="async" width="104" height="104">';
+  }
+  // A link to the credential's record where there is one, otherwise plain.
+  function credentialLink(c, cls, inner) {
+    var label = c.site ? (c.site === 'Credly' ? 'Verify ' : 'View ') + c.title + ' on ' + c.site : c.title;
+    if (!c.url) { return '<span class="' + cls + '" title="' + esc(c.title) + '">' + inner + '</span>'; }
+    return '<a class="' + cls + '" href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer"' +
+      ' title="' + esc(c.title) + '" aria-label="' + esc(label) + '">' + inner + '</a>';
+  }
+
+  var badgeRow = $('[data-featured-badges]');
+  if (badgeRow) {
+    badgeRow.innerHTML = TOP.map(function (c) {
+      return '<li>' + credentialLink(c, 'bio__badge', credentialArt(c, '220x220')) + '</li>';
+    }).join('');
+  }
+
+  var marquee = $('#credlyMarquee');
+  if (!marquee) { return; }
+
+  function badgeMarkup(c) {
+    return credentialLink(c, 'credly-badge', '<span class="credly-badge__image">' + credentialArt(c, '220x220') + '</span>');
+  }
+
+  // Each row opens with its share of the top ten, in order, then its share of
+  // everything else, newest first. Both rows show their first badges at the
+  // left edge on load, whichever way they drift.
+  var rows = $$('[data-credly-track]', marquee);
+  function share(list, rowIndex) {
+    var per = Math.ceil(list.length / rows.length);
+    return list.slice(rowIndex * per, rowIndex * per + per);
+  }
+  rows.forEach(function (track, rowIndex) {
+    var rowCerts = share(TOP, rowIndex).concat(share(REST, rowIndex));
+    track.innerHTML = '<ul>' + rowCerts.map(badgeMarkup).join('') + '</ul>';
+    track.appendChild(track.firstElementChild.cloneNode(true));
+    track.setAttribute('data-ready', '');
+    var row = track.parentElement;
+    var pace = function () {
+      var width = track.firstElementChild.getBoundingClientRect().width;
+      var gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
+      var distance = width + gap;
+      if (width) {
+        track.style.setProperty('--credly-distance', distance + 'px');
+        track.style.setProperty('--credly-time', Math.max(32, Math.round(distance / 34)) + 's');
+      }
+    };
+    pace();
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(pace); }
+    window.addEventListener('resize', pace);
+
+    if (!window.PointerEvent) { return; }
+    var drag = row.parentElement;
+    var dragWrap = row;
+    var offset = 0, startX = 0, startOffset = 0, dragging = false, moved = false;
+    drag.addEventListener('pointerdown', function (e) {
+      if (e.button) { return; }
+      dragging = true; moved = false; startX = e.clientX; startOffset = offset;
+      drag.classList.add('is-dragging');
+      try { drag.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    drag.addEventListener('pointermove', function (e) {
+      if (!dragging) { return; }
+      moved = moved || Math.abs(e.clientX - startX) > 5;
+      offset = startOffset + (e.clientX - startX);
+      var period = track.firstElementChild.getBoundingClientRect().width;
+      var gap = parseFloat(window.getComputedStyle(track).columnGap) || 0;
+      period += gap;
+      if (period) { offset = offset % period; }
+      dragWrap.style.transform = 'translateX(' + offset + 'px)';
+    });
+    function endCredlyDrag(e) {
+      if (!dragging) { return; }
+      dragging = false; drag.classList.remove('is-dragging');
+      if (e && e.pointerId !== undefined) {
+        try { drag.releasePointerCapture(e.pointerId); } catch (err) {}
+      }
+    }
+    drag.addEventListener('pointerup', endCredlyDrag);
+    drag.addEventListener('pointercancel', endCredlyDrag);
+    drag.addEventListener('lostpointercapture', endCredlyDrag);
+    drag.addEventListener('click', function (e) {
+      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+  });
 })();

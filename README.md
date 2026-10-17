@@ -6,11 +6,13 @@ framework, no build step, no dependencies. Around 100 KB before the webfonts.
 ```
 index.html                 the whole page
 assets/css/styles.css      all styles
-assets/js/main.js          nav, mobile sheet, reveals, stages, wall
+assets/js/main.js          nav, mobile sheet, reveals, credentials, stages, wall
+assets/js/data-certs.js    generated — 60 Credly credentials
 assets/img/favicon.svg     tab icon
 assets/img/og-cover.png    1200x630 social card
 assets/img/portrait-cutout.webp  generated — the hero photo, background removed
 assets/img/tech-sprite.svg generated — 42 brand marks
+tools/fetch-credly.ps1     regenerates data-certs.js from Credly
 tools/fetch-logos.py       regenerates tech-sprite.svg, marquee and chips
 tools/make-og.py           regenerates og-cover.png
 tools/make-cutout.py       regenerates portrait-cutout.webp
@@ -53,8 +55,9 @@ invention. They are marked with `EDIT:` comments in `index.html`.
    front end and the server-side logic respectively. Both are forks on your
    GitHub, so I could not verify the split. Correct it if it is wrong.
 
-**Taken from your real profiles, safe as-is:** the six repositories, the skill
-lists, and Universidad de Zamboanga.
+**Taken from your real profiles, safe as-is:** all 60 credentials with their
+issue dates and verification links, the six repositories, the skill lists, and
+Universidad de Zamboanga.
 
 ---
 
@@ -132,10 +135,11 @@ a `?v=` token:
 
 ```html
 <link rel="stylesheet" href="/assets/css/styles.css?v=5" />
+<script src="/assets/js/data-certs.js?v=5"></script>
 <script src="/assets/js/main.js?v=5"></script>
 ```
 
-`main.js` uses the same token when it fetches the logo sprite. **Bump all three
+`main.js` uses the same token when it fetches the logo sprite. **Bump all four
 together** whenever you change the CSS or JS and want the change to reach people
 immediately rather than within the hour.
 
@@ -159,6 +163,35 @@ python -m http.server 5174
 Do not open `index.html` by double-clicking — the CSS and JS will not load.
 
 ---
+
+## Regenerating the credentials
+
+`assets/js/data-certs.js` is generated. When you earn new badges, regenerate it
+rather than editing by hand:
+
+```bash
+powershell -ExecutionPolicy Bypass -File tools/fetch-credly.ps1
+```
+
+The script reads every page of your public Credly feed, sorts by issue date,
+tags each badge with an issuer, and writes the file. The certifications section
+uses the complete generated list across its two scrolling rows.
+
+Your top ten are chosen by hand, in `TOP_CERTS` near the end of `main.js`. They
+fill the badge row in About and open the two certification rows, five each.
+Each entry finds its Credly badge by name, which gives it its art and its
+verification link; an entry with its own `url` (the Coursera ones) links there
+instead. An entry with no Credly badge yet is drawn as a tile with the issuer
+and title. Claim the Credly badge, rerun the script, and the real art replaces
+the tile with no other change.
+
+The badge images and verification URLs all derive from that one file, so the
+showcase stays correct on its own. Projects, skills and the experience timeline
+are hand-written in `index.html`.
+
+Credly stores badge art as 1200px PNGs. `main.js` rewrites those URLs to
+Credly's 220px and 440px variants for the responsive marquee. Older badges that
+use a `/blob` URL are left at their original source.
 
 ## Regenerating the technology strip
 
@@ -232,7 +265,8 @@ the pixel face, stands the photo over its end, floats your five roles over
 both, and types a one-line tagline out under it. The "Get in touch"
 button has eyes that follow the pointer. About is a black panel over a tilted
 wall of project screens; `main.js` builds the wall by copying the mock screens
-from the project cards, so adding a project adds it to the wall.
+from the project cards, so adding a project adds it to the wall. The badges
+under the bio are the top ten described above.
 
 The hero and the closing scene share one backdrop, the `.stage` block in
 `styles.css`; the hero mirrors its folds so the two ends are not identical.

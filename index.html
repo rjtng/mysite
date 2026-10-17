@@ -57,11 +57,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.credly.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Pixelify+Sans:wght@700&family=Sora:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=10" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=9" />
 
     <!-- Entry fades only exist when scripting does. Without this class the .reveal
      rule never applies, so the page renders fully rather than staying blank. -->
@@ -123,6 +124,7 @@
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
+        <a href="#certifications">Certifications</a>
         <a href="#experience">Experience</a>
       </nav>
 
@@ -180,8 +182,9 @@
         <a href="#about"><span>01</span>About</a>
         <a href="#skills"><span>02</span>Skills</a>
         <a href="#projects"><span>03</span>Projects</a>
-        <a href="#experience"><span>04</span>Experience</a>
-        <a href="#contact"><span>05</span>Contact</a>
+        <a href="#certifications"><span>04</span>Certifications</a>
+        <a href="#experience"><span>05</span>Experience</a>
+        <a href="#contact"><span>06</span>Contact</a>
       </nav>
       <p class="sheet__mail">
         <a href="mailto:alrajitheng@gmail.com">alrajitheng@gmail.com</a>
@@ -423,7 +426,7 @@
 
               <img
                 class="hero__photo"
-                src="/assets/img/portrait-cutout.webp?v=10"
+                src="/assets/img/portrait-cutout.webp?v=9"
                 alt="Al-Raji Theng in graduation regalia"
                 width="1131"
                 height="968"
@@ -806,6 +809,14 @@
               time figuring out hardware, writing code, and occasionally
               wondering why it worked yesterday but not today. Argh! &gt;_&lt;
             </p>
+
+            <!-- Filled by main.js from TOP_CERTS, the hand-picked top ten,
+                 each linking to its Credly or Coursera record. -->
+            <ul
+              class="bio__badges"
+              data-featured-badges
+              aria-label="Featured credentials"
+            ></ul>
           </div>
         </div>
       </section>
@@ -1721,11 +1732,62 @@
         </div>
       </section>
 
-      <!-- ═══════════════════════════ 5 · experience ═══════════════════════════ -->
+      <!-- ═══════════════════════════ 5 · certifications ═══════════════════════════ -->
+      <section class="section" id="certifications">
+        <div class="wrap">
+          <div class="head">
+            <p class="head__index">04 / Certifications &amp; Achievements</p>
+            <div class="head__rule"></div>
+            <h2 class="head__title">Badges that show the work</h2>
+            <p class="head__sub">
+              A living showcase of the credentials I have earned through
+              deliberate study and hands-on practice. Every badge links to its
+              official verification page on Credly or Coursera.
+            </p>
+          </div>
+
+          <div class="credly-marquee reveal" id="credlyMarquee">
+            <div class="credly-row" data-direction="left">
+              <div class="credly-row__drag">
+                <div class="credly-row__track" data-credly-track></div>
+              </div>
+            </div>
+            <div class="credly-row" data-direction="right">
+              <div class="credly-row__drag">
+                <div class="credly-row__track" data-credly-track></div>
+              </div>
+            </div>
+            <p class="credly-marquee__hint">
+              <span>Drag or swipe to explore</span>
+              <a
+                href="https://www.credly.com/users/rjt"
+                target="_blank"
+                rel="noopener noreferrer"
+                >View all on Credly <span aria-hidden="true">↗</span></a
+              >
+            </p>
+          </div>
+
+          <noscript>
+            <p class="outro">
+              The complete list, with issue dates and verification links, is
+              public at
+              <a
+                href="https://credly.com/users/rjt"
+                target="_blank"
+                rel="noopener noreferrer"
+                >credly.com/users/rjt</a
+              >.
+            </p>
+          </noscript>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════ 6 · experience ═══════════════════════════ -->
       <section class="section" id="experience">
         <div class="wrap">
           <div class="head">
-            <p class="head__index">04 / Experience</p>
+            <p class="head__index">05 / Experience</p>
             <div class="head__rule"></div>
             <h2 class="head__title">Professional experience</h2>
             <p class="head__sub">
@@ -1801,7 +1863,7 @@
       </section>
     </main>
 
-    <!-- ═══════════════════════════ 6 · contact ═══════════════════════════
+    <!-- ═══════════════════════════ 7 · contact ═══════════════════════════
          The closing scene. The invitation, the links and the copyright share
          one full-height stage, so the page ends on a single composition
          instead of a card and a strip beneath it. Everything inside
@@ -2071,6 +2133,7 @@
       </div>
     </footer>
 
-    <script src="/assets/js/main.js?v=10"></script>
+    <script src="/assets/js/data-certs.js?v=5"></script>
+    <script src="/assets/js/main.js?v=9"></script>
   </body>
 </html>
