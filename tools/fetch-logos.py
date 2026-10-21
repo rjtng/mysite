@@ -1,13 +1,13 @@
 """
-Builds the technology marks used by the hero marquee and the skills chips.
+Builds the technology marks used by the skills chips and the project Index.
 
     python tools/fetch-logos.py
 
 Downloads each brand mark once, folds them into a single sprite, and rewrites
-two things in index.html: the region between the `tech-marquee` markers, and
-the contents of every `<ul class="chips">` in the skills section. Both are
+the contents of every `<ul class="chips">` in the Skills volume. The chips are
 regenerated from scratch each run, so it is safe to run repeatedly. Do not
-hand-edit inside them.
+hand-edit inside them. The Index rows are hand-written; their marks are kept
+in the sprite because the script also reads every `tech__name` on the page.
 
 The chips rewrite reads the label already on the page and keeps the `key`
 class, so the skills list stays hand-authored — this only attaches marks to it.
@@ -34,7 +34,10 @@ SPRITE = os.path.join(ROOT, "assets", "img", "tech-sprite.svg")
 SI = "https://cdn.jsdelivr.net/npm/simple-icons@15"
 DEVICON = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest"
 
-PAGE_BG = (0x05, 0x0A, 0x16)
+# Marks show in colour only on dark ground: the dark theme and the brand-mark
+# cards on the wall. On the light page they stay ink, so this is the dark
+# theme's background rather than the paper.
+PAGE_BG = (0x13, 0x13, 0x12)
 MIN_CONTRAST = 4.5
 
 # Label as written on the page -> icon source. "si" is Simple Icons, "dev" is
@@ -93,19 +96,6 @@ ICONS = {
     "raspberry pi": "si:raspberrypi",
 }
 
-# The marquee, in the order it scrolls. Loosely grouped the way the skills
-# section is, rather than alphabetically.
-MARQUEE = [
-    "Flutter", "Dart", "Python", "JavaScript", "PHP", "Java", "C++", "C#",
-    "HTML5", "CSS3", "Tailwind CSS", "Bootstrap", "React", "Node.js",
-    "MySQL", "MariaDB", "XAMPP", "Firebase",
-    "OpenCV", "MediaPipe", "TensorFlow",
-    "Docker", "Kubernetes", "Google Cloud", "Vercel", "Linux", "GitHub",
-    "Cisco IOS", "Arduino", "Raspberry Pi", "Android Studio",
-    "Figma", "Canva",
-]
-
-
 def get(url):
     req = urllib.request.Request(url, headers={"User-Agent": "portfolio-build"})
     with urllib.request.urlopen(req, timeout=45) as r:
@@ -122,7 +112,7 @@ def ident_of(source):
     Deriving it from the label used to strip punctuation, which collapsed both
     "C++" and "C#" to "c" — one id for two logos, so C# rendered the C++ mark.
     Source slugs are unique, and keying on them also means a mark shared by the
-    marquee and the chips is stored once.
+    chips and the Index is stored once.
     """
     kind, slug = source.split(":", 1)
     base = slug.split("/")[0]
@@ -148,11 +138,11 @@ def contrast(a, b):
 def readable(hex_str):
     """Official colour, lightened only as far as it must be to stay legible.
 
-    These are shown at rest rather than only on hover, and they colour the
-    label as well as the mark, so the floor is the 4.5:1 WCAG AA minimum for
-    normal-size text rather than the 3:1 that would do for a graphic alone.
-    Each colour is walked toward white until it clears that, so it still reads
-    as itself: Flutter stays blue, GitHub stays grey.
+    On dark ground the marks are in colour: always on the wall's cards, and on
+    hover in the dark theme. The floor is kept at the 4.5:1 WCAG AA minimum
+    for text rather than the 3:1 a graphic needs, which leaves room for the
+    cards' lighter centres. Each colour is walked toward white until it clears
+    that, so it still reads as itself: Flutter stays blue, GitHub stays grey.
     """
     base = tuple(int(hex_str[i:i + 2], 16) for i in (0, 2, 4))
     rgb, step = base, 0.0
@@ -192,14 +182,16 @@ def main():
 
     html = open(INDEX, encoding="utf-8").read()
 
-    # Every label the page asks for a mark: the marquee plus the skills chips.
+    # Every label the page asks for a mark: the skills chips, plus the marks
+    # on the Index rows, which are written by hand but drawn from this sprite.
     chip_labels = []
     for block in re.findall(r'<ul class="chips">(.*?)</ul>', html, re.S):
         for inner in re.findall(r"<li[^>]*>(.*?)</li>", block, re.S):
             chip_labels.append(re.sub(r"<[^>]+>", "", inner).strip())
+    index_labels = re.findall(r'<span class="tech__name">(.*?)</span>', html)
 
     wanted = {}
-    for label in MARQUEE + chip_labels:
+    for label in chip_labels + index_labels:
         source = ICONS.get(key_of(label))
         if source:
             wanted[ident_of(source)] = source
@@ -239,23 +231,6 @@ def main():
             meta[ident],
         )
 
-    # --- marquee ----------------------------------------------------------
-    items = []
-    for label in MARQUEE:
-        svg, colour = mark(label, "band__logo", 20)
-        style = f' style="--brand:{colour}"' if colour else ""
-        items.append(f"<li{style}>{svg or ''}<span>{label}</span></li>")
-
-    block = "\n".join(" " * 12 + i for i in items)
-    pattern = re.compile(
-        r"([ \t]*<!-- tech-marquee:start -->).*?(<!-- tech-marquee:end -->)", re.S)
-    if not pattern.search(html):
-        raise SystemExit("marker pair tech-marquee not found in index.html")
-    html = pattern.sub(
-        lambda m: f"{' ' * 12}<!-- tech-marquee:start -->\n{block}\n"
-                  f"{' ' * 12}<!-- tech-marquee:end -->",
-        html, count=1)
-
     # --- skills chips -----------------------------------------------------
     chips_done = 0
     plain = []
@@ -284,7 +259,7 @@ def main():
     open(INDEX, "w", encoding="utf-8").write(html)
 
     print(f"\n{len(symbols)} symbols, sprite {os.path.getsize(SPRITE)} bytes")
-    print(f"{len(MARQUEE)} marquee items, {chips_done} chips across {n} lists")
+    print(f"{chips_done} chips across {n} lists")
     if plain:
         print(f"no mark available, left as text ({len(plain)}): {', '.join(sorted(set(plain)))}")
     if adjusted:

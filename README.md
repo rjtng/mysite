@@ -1,19 +1,24 @@
 # alrajitheng — personal portfolio
 
 A single-page portfolio for Al-Raji Theng. Plain HTML, CSS and JavaScript. No
-framework, no build step, no dependencies. Around 100 KB before the webfonts.
+framework, no build step, no dependencies. Around 133 KB of HTML, CSS and
+JavaScript before the webfonts and the credential data.
+
+The design follows aedwon.site: warm paper with a dot grid, near-black ink,
+and three rooms — a **Wall** of project screens, an **Index** of the projects,
+and a **shelf** of six volumes for About. See "Notes on the design" below.
 
 ```
 index.html                 the whole page
 assets/css/styles.css      all styles
-assets/js/main.js          nav, mobile sheet, reveals, credentials, stages, wall
+assets/js/main.js          theme, Index, wall, shelf, credentials
 assets/js/data-certs.js    generated — 60 Credly credentials
 assets/img/favicon.svg     tab icon
-assets/img/og-cover.png    1200x630 social card
-assets/img/portrait-cutout.webp  generated — the hero photo, background removed
+assets/img/og-cover.png    generated — 1200x630 social card
+assets/img/portrait-cutout.webp  generated — the $whoami photo, background removed
 assets/img/tech-sprite.svg generated — 42 brand marks
 tools/fetch-credly.ps1     regenerates data-certs.js from Credly
-tools/fetch-logos.py       regenerates tech-sprite.svg, marquee and chips
+tools/fetch-logos.py       regenerates tech-sprite.svg and the skills chips
 tools/make-og.py           regenerates og-cover.png
 tools/make-cutout.py       regenerates portrait-cutout.webp
 vercel.json                headers and caching
@@ -27,47 +32,35 @@ want it.
 
 ## Read this before you publish
 
-I wrote the copy from your public profiles: GitHub, Credly, and the g.dev link
+The copy comes from your public profiles: GitHub, Credly, and the g.dev link
 on your GitHub. **LinkedIn blocks automated access and g.dev requires a login,
-so nothing on this page came from either of them.** A few passages are my
-invention. They are marked with `EDIT:` comments in `index.html`.
+so nothing on this page came from either of them.** Passages that are a
+placeholder are marked with `EDIT:` comments in `index.html`.
 
-**Written by me, needs your confirmation:**
+**Written for the redesign, needs your confirmation:**
 
-1. **"Open to work"** in the hero, at line 107.
-2. **The third paragraph of each case study** in Projects, at line 407 — the
-   state rewrite in ReadySetHire, the design reasoning on Barangay Maganda.
-   Both are invented. They are there to show the shape a good case study takes.
-   Replace them with the problem you actually hit. Specific and slightly
-   awkward beats polished, because it is the part an interviewer asks about.
-3. **The Experience section** at line 563 covers study and personal projects
-   only, because I had no employment data. If you have had jobs, internships or
-   OJT, they go at the top of that list.
-4. **The About section's voice.** It says you learn from structured courses
-   because there is no senior developer nearby, and that you want to join a
-   team. Read it as if a stranger will judge you on it, and change anything
-   that is not you.
-5. **The "right now" list** in About, at line 267. These go stale fastest.
-6. **Location.** The page says Philippines, and the portrait card says
-   Zamboanga. Your GitHub only gives the country — narrow or widen it as you
-   prefer.
-7. **DICT FRCC and ReyCoin** are described as team projects where you did the
-   front end and the server-side logic respectively. Both are forks on your
-   GitHub, so I could not verify the split. Correct it if it is wrong.
+1. **The tagline under your name on the Wall**, "Apps that don't just look
+   good — they work." It is a placeholder (marked `EDIT:`); say it your way.
+2. **The project types in the Index.** DICT FRCC and Barangay Maganda MIS are
+   filed as government systems, RECYCOIN as a web app and ReadySetHire as a
+   mobile app. The filters and their counts come from these, in the
+   `data-type` on each row.
+3. **Location.** The Wall says "Zamboanga City, PH", and the clock under the
+   shelf runs on Philippine time.
 
 **Taken from your real profiles, safe as-is:** all 60 credentials with their
-issue dates and verification links, the six repositories, the skill lists, and
-Universidad de Zamboanga.
+issue dates and verification links, the four projects and their repositories,
+the skill lists, the experience and affiliation entries, and Universidad de
+Zamboanga.
 
 ---
 
-## The hero photo
+## The photo
 
-The hero shows `assets/img/portrait-cutout.webp`: your graduation photo,
-`portrait.png`, with its white studio backdrop removed, so you stand in front
-of the backdrop scene
-rather than in a white box. To use a different photo, shoot or pick one on a
-plain white background and run:
+Vol. 01, `$whoami`, shows `assets/img/portrait-cutout.webp`: your graduation
+photo, `portrait.png`, with its white studio backdrop removed, set on a soft
+paper-coloured ground and cropped to 4:5 from the top. To use a different
+photo, shoot or pick one on a plain white background and run:
 
 ```bash
 python tools/make-cutout.py path/to/photo.png
@@ -76,20 +69,6 @@ python tools/make-cutout.py path/to/photo.png
 It needs Pillow and numpy, and writes the cutout in place. Only white that
 touches the edge of the frame is removed, so the white collar under the hood
 survives. A busy or coloured background will not cut out cleanly with it.
-
-As in the reference, the photo stands over the end of your name and your five
-roles float over both. The three over the name are placed in name-ems from its
-top-left corner, so they stay over the same letters at any size; the two over
-the photo are placed as shares of the photo, so they stay beside your face.
-Both are `--x` and `--y` on the labels in the hero of `index.html`. They are
-checked clear of the tagline, the buttons, the nav and each other from phone
-to 2560px wide. On phones and tall screens they become a centred cluster
-above the photo. If you change to a photo framed differently, recheck where
-they land.
-
-The tagline under the name, "Apps that don't just look good — they work.", is
-a placeholder in the reference's pattern. It is in the hero twice (a plain copy
-for screen readers and the one that is typed out); change both.
 
 ---
 
@@ -134,13 +113,13 @@ expires. Only a different URL reaches them, so the stylesheet and scripts carry
 a `?v=` token:
 
 ```html
-<link rel="stylesheet" href="/assets/css/styles.css?v=5" />
+<link rel="stylesheet" href="/assets/css/styles.css?v=11" />
 <script src="/assets/js/data-certs.js?v=5"></script>
-<script src="/assets/js/main.js?v=5"></script>
+<script src="/assets/js/main.js?v=11"></script>
 ```
 
-`main.js` uses the same token when it fetches the logo sprite. **Bump all four
-together** whenever you change the CSS or JS and want the change to reach people
+`main.js` carries its own token for the logo sprite it fetches. **Bump the
+token on whichever file you change** when you want the change to reach people
 immediately rather than within the hour.
 
 ---
@@ -174,11 +153,11 @@ powershell -ExecutionPolicy Bypass -File tools/fetch-credly.ps1
 ```
 
 The script reads every page of your public Credly feed, sorts by issue date,
-tags each badge with an issuer, and writes the file. The certifications section
+tags each badge with an issuer, and writes the file. Vol. 03, Certifications,
 uses the complete generated list across its two scrolling rows.
 
 Your top six are chosen by hand, in `TOP_CERTS` near the end of `main.js`. They
-fill the badge row in About and open the two certification rows, three each.
+fill the badge row in Vol. 01 and open the two certification rows, three each.
 Each entry finds its Credly badge by name, which gives it its art and its
 verification link; an entry with its own `url` links there instead. An entry
 with no Credly badge yet is drawn as a tile with the issuer and title. Claim
@@ -186,45 +165,40 @@ the Credly badge, rerun the script, and the real art replaces the tile with no
 other change.
 
 The badge images and verification URLs all derive from that one file, so the
-showcase stays correct on its own. Projects, skills and the experience timeline
-are hand-written in `index.html`.
+showcase stays correct on its own. Projects, skills, experience and
+affiliations are hand-written in `index.html`.
 
 Credly stores badge art as 1200px PNGs. `main.js` rewrites those URLs to
 Credly's 220px and 440px variants for the responsive marquee. Older badges that
 use a `/blob` URL are left at their original source.
 
-## Regenerating the technology strip
+## Regenerating the brand marks
 
 ```bash
 python tools/fetch-logos.py
 ```
 
-This rebuilds three things: `assets/img/tech-sprite.svg`, the region between
-the `tech-marquee` markers in `index.html`, and the contents of every
-`<ul class="chips">` in the skills section. Do not hand-edit any of them.
+This rebuilds `assets/img/tech-sprite.svg` and the contents of every
+`<ul class="chips">` in Vol. 02, Skills. Do not hand-edit inside the chips.
 
-Two lists at the top of the script control it. `MARQUEE` is the strip, in
-scroll order. `ICONS` maps a label as written on the page to its brand mark, and
-is what the chips look themselves up in — so the skills list stays hand-written
-and this only attaches marks to it. Ten skills have no logo to attach, the
-networking list mostly, and stay as plain text.
+`ICONS` at the top of the script maps a label as written on the page to its
+brand mark, and is what the chips look themselves up in — so the skills list
+stays hand-written and this only attaches marks to it. Ten skills have no logo
+to attach, the networking list mostly, and stay as plain text. The marks on
+the Index rows are written by hand, but the script reads their labels too, so
+they always stay in the sprite.
 
-Marks and labels are shown in the official brand colour at rest. Because the
-colour carries the label and not just the mark, the script holds each one to the
-4.5:1 WCAG AA minimum for normal text, walking it toward white only as far as it
-must. Twenty-one need it; the script prints which. They stay recognisable —
-Flutter is still blue, GitHub still grey.
+On the paper the marks are ink, as in the reference. They take their brand
+colour on dark ground — always on the wall's brand-mark cards, and on hover in
+the dark theme — and on a hovered Index row, where the eight project colours
+all clear 3:1. The script lightens each colour only as far as it must to clear
+4.5:1 against the dark theme's background. They stay recognisable: Flutter is
+still blue, GitHub still grey.
 
 The sprite is fetched at run time and injected, rather than inlined into the
-HTML, so it is cached separately instead of adding roughly 22 KB to every HTML
-response. Until it arrives the marks stay hidden, so a blocked request leaves a
-clean text strip rather than a row of empty boxes.
-
-The marquee speed is set from the measured width of the row, so adding a
-technology makes the strip longer rather than faster. It can also be dragged:
-the auto-scroll is a CSS animation on the track and the drag offset lives on a
-wrapper around it, so the two compose instead of fighting. The offset wraps into
-one row width, which keeps the seam invisible however far it is dragged.
+HTML, so it is cached separately instead of adding roughly 60 KB to every HTML
+response. Until it arrives each mark shows as its name in mono, so a blocked
+request costs nothing.
 
 ## Regenerating the social card
 
@@ -232,59 +206,61 @@ one row width, which keeps the seam invisible however far it is dragged.
 python tools/make-og.py
 ```
 
-Needs Pillow. It downloads Sora, Inter and JetBrains Mono into `tools/.fonts/`
-on first run and caches them there. Facebook, LinkedIn and X will not render an
-SVG social card, which is why this is a real PNG rather than the vector the
-rest of the page uses.
+Needs Pillow. It downloads Inter and JetBrains Mono into `tools/.fonts/` on
+first run and caches them there. The card is your name on the dot-grid paper,
+with simplified copies of the project screens on a wall tipped back to the
+right, as on the landing page. Facebook, LinkedIn and X will not render an SVG
+social card, which is why this is a real PNG.
 
 ---
 
 ## Notes on the design
 
-Pixelify Sans for your name in the hero and About, a pixel face as in the
-reference design. Sora for display type, Inter for body text, JetBrains Mono for labels and
-metadata. The palette runs deep navy through blue to sky and is defined once at
-the top of `styles.css` — change `--navy`, `--blue` and `--sky` in `:root` and
-the whole page follows, including the gradients and the two background glows.
-Everything that is not blue is greyscale on purpose, so the blue reads as an
-accent rather than as wallpaper.
+The layout follows aedwon.site, rebuilt around your own work: nothing of
+theirs is copied, only the arrangement. The page has three rooms, which are
+the four words in the nav.
 
-Motion is deliberately restrained: a 14px fade on section entry, a slow
-technology marquee that pauses on hover, and the rotating job title in the
-hero. Nothing else moves. Elements resolve 220px before they scroll into view
-so a fast scroll never lands on a blank column.
+**Wall.** The landing screen is your project screens on a plane tipped away
+from the viewer, clipped to the column. `main.js` builds it from the Index:
+each project gets its screen (three phones for ReadySetHire), a close-up or a
+second screen, and a dark card of its brand marks, laid in staggered rows so no
+project sits above itself. Hovering a tile keeps that project in colour, washes
+the rest back to the paper, and swaps your name in the caption for "02 / 04",
+the project and its description. Clicking goes to its row in the Index. On a
+phone the first tap shows the caption and a second one goes. The wall drifts a
+little slower than the page as you scroll.
 
-The entry fades are scoped to a `.js` class set by an inline script in the
-head, so a browser without JavaScript gets the full page rather than a blank
-one. There is also a 2.6 second timer that reveals everything regardless, in
-case the intersection observer never fires — which happens in embedded webviews
-and tabs that are never painted.
+**Index.** One row per project: thumbnail, name, type, the marks it was built
+with, and a link to the repository. The filters along the top count each type;
+"type to find" searches names, roles, descriptions and technologies, and `/`
+jumps to it. On a wide screen the panel on the right previews whichever row
+the pointer is on; elsewhere the role and description sit under the row. Every
+copy of a project screen on the page — thumbnail, preview, wall tiles — is the
+one mock in that row's thumbnail, drawn in HTML at 480x300 and scaled, so a
+project added to the list turns up everywhere.
 
-The hero and About follow the same reference. The hero sets the name huge in
-the pixel face, stands the photo over its end, floats your five roles over
-both, and types a one-line tagline out under it. The "Get in touch"
-button has eyes that follow the pointer. About is a black panel over a tilted
-wall of project screens; `main.js` builds the wall by copying the mock screens
-from the project cards, so adding a project adds it to the wall. The badges
-under the bio are the top six described above.
+**About.** A shelf of six volumes: `$whoami`, Skills, Certifications,
+Experience, Affiliations and Contact Me. Clicking a spine pulls it out and
+opens that volume under the shelf; one is open at a time, `$whoami` first. The
+ids are the old section anchors, so links to `#skills`, `#experience`,
+`#certifications` and `#contact` from the previous design still open the right
+volume, and `#projects` and `#home` land on the Index and the Wall. The clock
+under the shelf is Zamboanga time. Every size on the shelf is a multiple of
+`--k`, so on a phone it scales down rather than reflowing.
 
-The hero and the closing scene share one backdrop, the `.stage` block in
-`styles.css`; the hero mirrors its folds so the two ends are not identical.
+Inter for everything you read, JetBrains Mono for labels and metadata. The
+palette is a handful of custom properties at the top of `styles.css` — paper,
+raised paper, ink, muted ink and hairlines — with a dark set under
+`[data-theme="dark"]`. The page is light unless a visitor picks dark with the
+moon; only that click is remembered.
 
-The page ends on a full-height closing scene, modelled on
-aishie-design.framer.website and recoloured to this palette. The invitation,
-the email address, the links and the copyright share one stage, which is the
-page `<footer>`. Behind them sit three drifting glows, dark folds with lit rims
-drawn in inline SVG, and a canvas of light streaks drifting toward the viewer.
-The stage fades in from the page at its top edge, so Experience runs into it
-without a seam. The particles quieten behind the text, and everything there
-animates only while the stage is on screen. The fold, rim and glow colours are
-custom properties on `.finale`, and the light-mode set sits with the other light
-overrides.
-
-`prefers-reduced-motion` disables all of it, and a print stylesheet strips the
-chrome and prints the content as a plain document.
+Without JavaScript the Wall is just your name and tagline, the Index is a plain
+list with every description showing, and the six volumes are printed one after
+another. `prefers-reduced-motion` stops the drift, the marquee and the
+transitions, and a print stylesheet prints the content as a plain document.
 
 Accessibility: semantic landmarks, a skip link, visible focus rings,
-`aria-expanded` on the mobile menu, Escape to close it, `aria-pressed` on the
-credential filters, and text that meets AA contrast on the dark background.
+`aria-pressed` on the filters and the theme switch, `aria-expanded` on the
+spines, a polite status line that reads out how many projects a filter or
+search leaves, and focus moved into a volume when it opens. Body and muted text
+clear AA contrast on both the paper and the dark theme.
