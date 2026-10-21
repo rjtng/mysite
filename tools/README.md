@@ -13,30 +13,31 @@ Run it from the project root with Windows PowerShell:
     powershell -ExecutionPolicy Bypass -File tools/fetch-credly.ps1
 
 It re-reads every page of the public badge feed, classifies each badge by brand
-and domain, and rewrites the data file. The marquee uses the complete generated
-list across its two scrolling rows, after the hand-picked top six (`TOP_CERTS`
-in `main.js`), which find their badges in this file by name.
+and domain, and rewrites the data file. The marquee in Vol. 03, Certifications,
+uses the complete generated list across its two scrolling rows, after the
+hand-picked top six (`TOP_CERTS` in `main.js`), which find their badges in this
+file by name.
 
 The badge images and verification URLs in the marquee are all derived from that
 one file, so the showcase stays current after regeneration.
 
 ## fetch-logos.py
 
-Rebuilds the brand marks used in two places: the hero marquee and the skills
-chips.
+Rebuilds the brand marks used by the skills chips and the project Index.
 
     python tools/fetch-logos.py
 
-It writes `assets/img/tech-sprite.svg`, the region between the `tech-marquee`
-markers in `index.html`, and the contents of every `<ul class="chips">`. All
-three are regenerated from scratch each run, so it is safe to re-run. Do not
-hand-edit inside them.
+It writes `assets/img/tech-sprite.svg` and the contents of every
+`<ul class="chips">`. Both are regenerated from scratch each run, so it is safe
+to re-run. Do not hand-edit inside the chips.
 
-`MARQUEE` at the top of the script is the strip, in scroll order. `ICONS` maps a
-label as written on the page to its mark. The chips rewrite reads the label
-already in the HTML and keeps the `key` class, so the skills list stays
-hand-authored; a label with no `ICONS` entry is left as plain text, which covers
-subnetting, DHCP and the rest of the networking list.
+`ICONS` at the top of the script maps a label as written on the page to its
+mark. The chips rewrite reads the label already in the HTML and keeps the `key`
+class, so the skills list stays hand-authored; a label with no `ICONS` entry is
+left as plain text, which covers subnetting, DHCP and the rest of the
+networking list. The marks on the Index rows are written by hand, but the
+script also reads every `tech__name` on the page, so their symbols always stay
+in the sprite.
 
 Marks come from Simple Icons, which publishes the official single-colour version
 of each logo. Simple Icons dropped C# and Java over trademark concerns, so those
@@ -47,9 +48,10 @@ Symbol ids are derived from the source slug rather than the label. Deriving them
 from the label stripped punctuation, which collapsed both "C++" and "C#" to `c`
 — one id for two logos, so C# rendered the C++ mark until this was fixed.
 
-Colour is held to 4.5:1 against the page background. That is the WCAG AA floor
-for normal text rather than the 3:1 that would do for a graphic, because the
-colour carries the label as well as the mark. Anything darker is walked toward
+Colour is held to 4.5:1 against the dark theme's background (`PAGE_BG`). On
+the light page the chip marks stay ink; they take their colour only on dark
+ground — the wall's brand-mark cards, and on hover in the dark theme — so that
+is the ground the colours are tuned for. Anything darker is walked toward
 white until it clears; the script prints every colour it changed.
 
 ## make-og.py
@@ -60,15 +62,17 @@ SVG, which is why this is a raster step.
 
     python tools/make-og.py
 
-Needs Pillow. On first run it downloads Sora, Inter and JetBrains Mono into
-`tools/.fonts/` and caches them there; that folder is gitignored. Keep the
-colours in the script in step with the palette at the top of
+Needs Pillow. On first run it downloads Inter and JetBrains Mono into
+`tools/.fonts/` and caches them there; that folder is gitignored. The card is
+the name on the dot-grid paper with a tilted wall of simplified project
+screens to the right, warped into perspective by the script itself (no numpy).
+Keep the colours in the script in step with the palette at the top of
 `assets/css/styles.css`.
 
 ## make-cutout.py
 
-Regenerates `assets/img/portrait-cutout.webp`, the hero photo with its white
-backdrop removed.
+Regenerates `assets/img/portrait-cutout.webp`, the `$whoami` photo with its
+white backdrop removed.
 
     python tools/make-cutout.py [source] [output] [height] [keep]
 
@@ -77,7 +81,7 @@ keeping the top 0.88 of the frame. Needs Pillow and numpy. The background is the
 near-white region that touches the frame's edge, so enclosed white — the collar
 under the hood — is kept.
 Edge pixels fade by their distance from white and the outermost ring is
-feathered, which keeps a pale halo off the dark hero.
+feathered, which keeps a pale halo off it on the dark theme.
 
 ## fetch-badge-art.py
 

@@ -1,4 +1,4 @@
-"""Cut the hero photo out of a pure-white studio backdrop.
+"""Cut the portrait out of a pure-white studio backdrop.
 
     python tools/make-cutout.py [source] [output] [height] [keep]
 
@@ -10,7 +10,7 @@ Background is the near-white region connected to the image border, so white
 clothing enclosed by the subject (a collar under the hood) survives. Pixels
 just inside that region fade by their distance from white, with the white
 bled out of their colour, and the outermost ring is feathered, so hair and
-shoulders do not carry a pale halo onto the dark hero.
+shoulders do not carry a pale halo onto a dark ground.
 
 Needs Pillow and numpy.
 """

@@ -13,7 +13,7 @@
       content="Al-Raji Theng is a computer engineer building web and mobile applications, with a habit of wandering down into computer vision, embedded hardware and networks."
     />
     <meta name="author" content="Al-Raji Theng" />
-    <meta name="theme-color" content="#050A16" />
+    <meta name="theme-color" content="#f2f1ed" />
     <link rel="canonical" href="https://rjtg.vercel.app/" />
 
     <meta property="og:type" content="website" />
@@ -59,19 +59,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://images.credly.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Pixelify+Sans:wght@700&family=Sora:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=10" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=11" />
 
-    <!-- Entry fades only exist when scripting does. Without this class the .reveal
-     rule never applies, so the page renders fully rather than staying blank. -->
+    <!-- The .js class switches on the enhancements (the shelf, the filters, the
+         wall); without it every volume and every project is simply listed.
+         The theme is light unless the visitor has chosen dark. -->
     <script>
       document.documentElement.classList.add("js");
       try {
-        var savedTheme = localStorage.getItem("portfolio-theme");
-        if (savedTheme === "light") {
-          document.documentElement.setAttribute("data-theme", "light");
+        if (localStorage.getItem("theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
         }
       } catch (error) {}
     </script>
@@ -112,31 +112,35 @@
   <body>
     <a class="skip" href="#main">Skip to content</a>
 
-    <div class="atmos" aria-hidden="true"></div>
-    <canvas class="constellations" id="constellations" aria-hidden="true"></canvas>
-    <div class="grain" aria-hidden="true"></div>
-
     <!-- ═══════════════════════════ nav ═══════════════════════════ -->
     <header class="nav" id="nav">
-      <a class="nav__brand" href="#home">Al-Raji Theng<span>.</span></a>
+      <div class="wrap nav__inner">
+        <a class="nav__brand" href="#wall">Al-Raji Theng</a>
 
-      <nav class="nav__links" aria-label="Sections">
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#certifications">Certifications</a>
-        <a href="#experience">Experience</a>
-      </nav>
+        <nav class="nav__links" aria-label="Sections">
+          <a href="#wall">Wall</a>
+          <a href="#index">Index</a>
+          <span class="nav__rule" aria-hidden="true"></span>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
 
-      <div class="nav__actions">
-        <a class="nav__cta" href="#contact">Get in touch</a>
         <button
           class="theme-toggle"
           type="button"
           data-theme-toggle
-          aria-label="Switch to light mode"
+          aria-label="Dark mode"
           aria-pressed="false"
         >
+          <svg
+            class="theme-toggle__icon theme-toggle__icon--moon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"
+            ></path>
+          </svg>
           <svg
             class="theme-toggle__icon theme-toggle__icon--sun"
             viewBox="0 0 24 24"
@@ -147,1993 +151,1387 @@
               d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"
             ></path>
           </svg>
-          <svg
-            class="theme-toggle__icon theme-toggle__icon--moon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"
-            ></path>
-          </svg>
         </button>
-        <a
-          class="nav__resume"
-          href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Resume <span aria-hidden="true">↗</span></a
-        >
       </div>
-
-      <button
-        class="nav__burger"
-        id="burger"
-        aria-expanded="false"
-        aria-controls="sheet"
-        aria-label="Open menu"
-      >
-        <i></i><i></i><i></i>
-      </button>
     </header>
 
-    <div class="sheet" id="sheet" hidden>
-      <nav aria-label="Sections">
-        <a href="#about"><span>01</span>About</a>
-        <a href="#skills"><span>02</span>Skills</a>
-        <a href="#projects"><span>03</span>Projects</a>
-        <a href="#certifications"><span>04</span>Certifications</a>
-        <a href="#experience"><span>05</span>Experience</a>
-        <a href="#contact"><span>06</span>Contact</a>
-      </nav>
-      <p class="sheet__mail">
-        <a href="mailto:alrajitheng@gmail.com">alrajitheng@gmail.com</a>
-      </p>
-    </div>
-
     <main id="main">
-      <!-- ═══════════════════════════ 1 · hero ═══════════════════════════
-           The name, set huge, sits behind the photo; the chips float in front
-           of both. The backdrop is the same stage as the closing scene,
-           mirrored, so the page opens and closes on one composition. -->
-      <section
-        class="hero stage stage--mirror"
-        id="home"
-        data-vanish-y=".44"
-        data-calm=".2"
-      >
-        <div class="stage__scene stage__scene--bottom" aria-hidden="true">
-          <div class="stage__glow stage__glow--a"></div>
-          <div class="stage__glow stage__glow--b"></div>
-          <div class="stage__glow stage__glow--c"></div>
-
-          <!-- Dark folds with lit rims. Stretched to the stage rather than
-               cropped, so the edges stay in frame on a phone; the rims use
-               non-scaling strokes so they stay hairlines either way. -->
-          <svg
-            class="stage__fold stage__fold--left"
-            viewBox="0 0 1600 1000"
-            preserveAspectRatio="none"
-            focusable="false"
-          >
-            <defs>
-              <linearGradient id="heroSheetL" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
-                <stop offset="1" class="stage__stop-fold" stop-opacity=".42" />
-              </linearGradient>
-              <linearGradient id="heroRimL" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" class="stage__stop-rim" stop-opacity="0" />
-                <stop offset=".5" class="stage__stop-rim" stop-opacity=".95" />
-                <stop offset="1" class="stage__stop-rim" stop-opacity=".15" />
-              </linearGradient>
-            </defs>
-            <path
-              fill="url(#heroSheetL)"
-              d="M-80-80H390C300 120 540 270 430 480 330 670 150 720 270 1080H-80Z"
-            />
-            <path
-              class="stage__rim stage__rim--halo"
-              stroke="url(#heroRimL)"
-              d="M390-80C300 120 540 270 430 480 330 670 150 720 270 1080"
-            />
-            <path
-              class="stage__rim"
-              stroke="url(#heroRimL)"
-              d="M390-80C300 120 540 270 430 480 330 670 150 720 270 1080"
-            />
-            <path
-              class="stage__rim stage__rim--faint"
-              stroke="url(#heroRimL)"
-              d="M300-80C220 150 440 300 345 500 260 690 70 780 165 1080"
-            />
-          </svg>
-
-          <svg
-            class="stage__fold stage__fold--right"
-            viewBox="0 0 1600 1000"
-            preserveAspectRatio="none"
-            focusable="false"
-          >
-            <defs>
-              <linearGradient id="heroSheetR" x1="1" y1="0" x2="0" y2="0">
-                <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
-                <stop offset="1" class="stage__stop-fold" stop-opacity=".4" />
-              </linearGradient>
-              <linearGradient id="heroRimR" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0" class="stage__stop-rim" stop-opacity=".1" />
-                <stop offset=".42" class="stage__stop-rim" stop-opacity=".9" />
-                <stop offset="1" class="stage__stop-rim" stop-opacity="0" />
-              </linearGradient>
-            </defs>
-            <path
-              fill="url(#heroSheetR)"
-              d="M1680-80V1080H1290C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80Z"
-            />
-            <path
-              class="stage__rim stage__rim--halo"
-              stroke="url(#heroRimR)"
-              d="M1290 1080C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80"
-            />
-            <path
-              class="stage__rim"
-              stroke="url(#heroRimR)"
-              d="M1290 1080C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80"
-            />
-            <path
-              class="stage__rim stage__rim--faint"
-              stroke="url(#heroRimR)"
-              d="M1390 1080C1290 880 1520 720 1390 540 1270 370 1290 150 1440-80"
-            />
-          </svg>
-
-          <svg
-            class="stage__fold stage__fold--edges"
-            viewBox="0 0 1600 1000"
-            preserveAspectRatio="none"
-            focusable="false"
-          >
-            <defs>
-              <linearGradient id="heroSheetT" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" class="stage__stop-fold" stop-opacity=".95" />
-                <stop offset="1" class="stage__stop-fold" stop-opacity=".5" />
-              </linearGradient>
-              <linearGradient id="heroSheetB" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
-                <stop offset="1" class="stage__stop-fold" stop-opacity=".45" />
-              </linearGradient>
-              <linearGradient id="heroRimH" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" class="stage__stop-rim" stop-opacity="0" />
-                <stop offset=".5" class="stage__stop-rim" stop-opacity=".85" />
-                <stop offset="1" class="stage__stop-rim" stop-opacity="0" />
-              </linearGradient>
-            </defs>
-            <path
-              fill="url(#heroSheetT)"
-              d="M430-80C530 110 710 230 870 170 1010 120 1080 20 1250-80Z"
-            />
-            <path
-              class="stage__rim"
-              stroke="url(#heroRimH)"
-              d="M430-80C530 110 710 230 870 170 1010 120 1080 20 1250-80"
-            />
-            <path
-              fill="url(#heroSheetB)"
-              d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790V1080H-80Z"
-            />
-            <path
-              class="stage__rim stage__rim--halo"
-              stroke="url(#heroRimH)"
-              d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790"
-            />
-            <path
-              class="stage__rim"
-              stroke="url(#heroRimH)"
-              d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790"
-            />
-          </svg>
-
-          <canvas class="stage__particles"></canvas>
+      <!-- ═══════════════════════════ 1 · wall ═══════════════════════════
+           The project screens laid out on a plane tipped away from the
+           viewer. main.js builds the tiles from the Index below, so the wall
+           always shows the real project list. Hovering a screen keeps that
+           project in colour and names it in the caption, where the intro sits
+           the rest of the time. -->
+      <section class="wall" id="wall" aria-labelledby="wall-title">
+        <div class="wall__stage" aria-hidden="true">
+          <div class="wall__plane" data-wall></div>
         </div>
 
-        <div class="wrap hero__frame">
-          <div class="hero__copy">
-            <!-- EDIT: restore this pill while you're looking for work. -->
-            <!-- <p class="pill">
-              <span class="dot" aria-hidden="true"></span>Open to work
-            </p> -->
-
-            <h1 class="hero__name"><span>Al-Raji</span> <span>Theng</span></h1>
-
-            <!-- EDIT: the tagline is a placeholder in the reference's pattern;
-                 change both copies of the sentence together. main.js types it
-                 out once; screen readers get the plain copy. -->
-            <p class="hero__tagline">
-              <span class="visually-hidden">Apps that don&rsquo;t just look good &mdash; they&nbsp;work.</span>
-              <span class="hero__typed" aria-hidden="true">Apps that don&rsquo;t just look good &mdash; they&nbsp;work.</span><span class="caret" aria-hidden="true"></span>
+        <div class="wrap wall__caption">
+          <div class="wall__intro">
+            <p class="wall__kicker">Computer Engineer · Zamboanga City, PH</p>
+            <h1 class="wall__title" id="wall-title">Al-Raji Theng</h1>
+            <!-- EDIT: the tagline is a placeholder; say it your way. -->
+            <p class="wall__text">
+              Apps that don&rsquo;t just look good &mdash; they&nbsp;work.
             </p>
+          </div>
+          <div class="wall__focus" aria-hidden="true">
+            <p class="wall__count" data-wall-count></p>
+            <p class="wall__name" data-wall-name></p>
+            <p class="wall__desc" data-wall-desc></p>
+          </div>
+        </div>
+      </section>
 
-            <div class="hero__actions">
-              <a class="btn btn--primary hero__cta" href="#contact">
-                Get in touch
-                <span class="eyes" aria-hidden="true"
-                  ><i class="eyes__ball"></i><i class="eyes__ball"></i
-                ></span>
-              </a>
-              <a
-                class="btn btn--ghost"
-                href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
+      <!-- ═══════════════════════════ 2 · index ═══════════════════════════
+           Every project as a row. The thumbnail holds the project's mock
+           screen, which is the one copy main.js clones for the preview panel
+           and the wall. Rows link to the repositories. -->
+      <section class="index" id="index" aria-labelledby="index-title">
+        <div class="wrap index__grid">
+          <div class="index__main">
+            <h2 class="visually-hidden" id="index-title">Projects</h2>
+
+            <div class="index__tools">
+              <div
+                class="index__filters"
+                role="group"
+                aria-label="Show projects by type"
               >
-                View my resume
-              </a>
+                <button
+                  class="filter"
+                  type="button"
+                  data-filter="all"
+                  aria-pressed="true"
+                  title="All projects"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="4" y="4" width="6.5" height="6.5" rx="1"></rect>
+                    <rect x="13.5" y="4" width="6.5" height="6.5" rx="1"></rect>
+                    <rect x="4" y="13.5" width="6.5" height="6.5" rx="1"></rect>
+                    <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"></rect>
+                  </svg>
+                  <sup data-filter-count>4</sup>
+                  <span class="visually-hidden">All projects</span>
+                </button>
+                <button
+                  class="filter"
+                  type="button"
+                  data-filter="gov"
+                  aria-pressed="false"
+                  title="Government systems"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M3.5 9.5 12 4.5l8.5 5M4.5 20h15M6.5 11v6.5M10.2 11v6.5M13.8 11v6.5M17.5 11v6.5"
+                    ></path>
+                  </svg>
+                  <sup data-filter-count>2</sup>
+                  <span class="visually-hidden">Government systems</span>
+                </button>
+                <button
+                  class="filter"
+                  type="button"
+                  data-filter="web"
+                  aria-pressed="false"
+                  title="Web apps"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                    <path d="M3 9h18M6 7h.01M8.5 7h.01"></path>
+                  </svg>
+                  <sup data-filter-count>1</sup>
+                  <span class="visually-hidden">Web apps</span>
+                </button>
+                <button
+                  class="filter"
+                  type="button"
+                  data-filter="mobile"
+                  aria-pressed="false"
+                  title="Mobile apps"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="7" y="2.5" width="10" height="19" rx="2.5"></rect>
+                    <path d="M11 18.5h2"></path>
+                  </svg>
+                  <sup data-filter-count>1</sup>
+                  <span class="visually-hidden">Mobile apps</span>
+                </button>
+              </div>
+
+              <p class="index__label" data-filter-label>All</p>
+
+              <label class="index__find">
+                <span class="visually-hidden">Find a project</span>
+                <input
+                  type="search"
+                  placeholder="type to find"
+                  autocomplete="off"
+                  spellcheck="false"
+                  data-find
+                />
+              </label>
             </div>
 
-            <!-- Labels over the name: --x and --y are in name-ems from the
-                 name's top-left corner, so they keep their place over the
-                 same letters at any size. -->
-            <ul class="hero__chips hero__chips--name" aria-label="Roles">
-              <li class="hero__chip" style="--x: .55; --y: -.24; --t: 7s">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14" />
-                </svg>
-                Full-Stack Developer
+            <div class="index__head" aria-hidden="true">
+              <span></span>
+              <span>Project</span>
+              <span>Type</span>
+              <span>Built with</span>
+              <span data-count>04</span>
+            </div>
+
+            <ol class="index__list" data-index>
+              <li class="project" id="dict-frcc" data-type="gov">
+                <a
+                  class="project__link"
+                  href="https://github.com/walidsalih111-ux/dict_frcc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="project__thumb" aria-hidden="true"
+                    ><span class="shot">
+                      <span class="project-preview">
+                        <span class="preview__topbar"
+                          ><i></i><i></i><i></i
+                          ><b>DICT <span>COMPLIANCE</span></b></span
+                        >
+                        <span class="preview__body">
+                          <span class="preview__side"></span>
+                          <span class="preview__content">
+                            <span class="preview__eyebrow"
+                              >Attendance overview</span
+                            ><strong>Flag raising<br />compliance</strong>
+                            <span class="preview__stats"
+                              ><i></i><i></i><i></i
+                            ></span>
+                            <span class="preview__rows"
+                              ><i></i><i></i><i></i
+                            ></span>
+                          </span>
+                        </span>
+                      </span> </span
+                  ></span>
+                  <span class="project__name"
+                    >DICT Flag Raising Compliance Checker</span
+                  >
+                  <span class="project__type">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M3.5 9.5 12 4.5l8.5 5M4.5 20h15M6.5 11v6.5M10.2 11v6.5M13.8 11v6.5M17.5 11v6.5"
+                      ></path>
+                    </svg>
+                    <span class="project__type-label">Government system</span>
+                  </span>
+                  <span class="project__tech">
+                    <span class="tech tech--sprite" style="--brand: #777bb4"
+                      ><svg aria-hidden="true"><use href="#t-php"></use></svg
+                      ><span class="tech__name">PHP</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #4d7fa5"
+                      ><svg aria-hidden="true"><use href="#t-mysql"></use></svg
+                      ><span class="tech__name">MySQL</span></span
+                    >
+                    <span class="tech tech--icon"
+                      ><svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                        <path d="M3 9h18M8 9v11M13 9v11M18 9v11"></path></svg
+                      ><span class="tech__name">DataTables</span></span
+                    >
+                    <span class="tech tech--icon"
+                      ><svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 19V5M4 19h17"></path>
+                        <path d="m7 15 3-4 3 2 5-7"></path></svg
+                      ><span class="tech__name">Chart.js</span></span
+                    >
+                  </span>
+                  <span class="project__go" aria-hidden="true">&#8599;</span>
+                  <span class="visually-hidden">, repository on GitHub</span>
+                </a>
+                <p class="project__role">
+                  Lead Full-Stack Developer &amp; UI/UX Designer
+                </p>
+                <p class="project__desc">
+                  A web-based attendance and compliance checker for
+                  flag-raising activities, employee records, and reporting.
+                </p>
               </li>
-              <li class="hero__chip" style="--x: 1.8; --y: .08; --t: 8.5s">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 20l4-1L19 8l-3-3L5 16l-1 4Z" />
-                  <path d="m14 7 3 3" />
-                </svg>
-                UI/UX &amp; Graphic Designer
+
+              <li class="project" id="readysethire" data-type="mobile">
+                <a
+                  class="project__link"
+                  href="https://github.com/rjtng/readysethire"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="project__thumb" aria-hidden="true"
+                    ><span class="shot">
+                      <span class="project-preview project-preview--records">
+                        <span class="preview__topbar"
+                          ><i></i><i></i><i></i
+                          ><b>READY<span>SETHIRE</span></b></span
+                        >
+                        <span class="preview__body">
+                          <span class="preview__side"></span>
+                          <span class="preview__content">
+                            <span class="preview__eyebrow"
+                              >Candidate pipeline</span
+                            ><strong>Find your<br />next hire</strong>
+                            <span class="preview__table"
+                              ><i></i><i></i><i></i><i></i
+                            ></span>
+                            <span class="preview__graph"
+                              ><b></b><b></b><b></b><b></b><b></b
+                            ></span>
+                          </span>
+                        </span>
+                      </span> </span
+                  ></span>
+                  <span class="project__name">ReadySetHire</span>
+                  <span class="project__type">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <rect x="7" y="2.5" width="10" height="19" rx="2.5"></rect>
+                      <path d="M11 18.5h2"></path>
+                    </svg>
+                    <span class="project__type-label">Mobile app</span>
+                  </span>
+                  <span class="project__tech">
+                    <span class="tech tech--sprite" style="--brand: #1a82c8"
+                      ><svg aria-hidden="true"><use href="#t-dart"></use></svg
+                      ><span class="tech__name">Dart</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #4180b4"
+                      ><svg aria-hidden="true"><use href="#t-flutter"></use></svg
+                      ><span class="tech__name">Flutter</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #e04119"
+                      ><svg aria-hidden="true"><use href="#t-firebase"></use></svg
+                      ><span class="tech__name">Firebase</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #8573b6"
+                      ><svg aria-hidden="true">
+                        <use href="#t-materialdesign"></use></svg
+                      ><span class="tech__name">Material Design</span></span
+                    >
+                  </span>
+                  <span class="project__go" aria-hidden="true">&#8599;</span>
+                  <span class="visually-hidden">, repository on GitHub</span>
+                </a>
+                <p class="project__role">
+                  Product Designer &amp; Flutter Developer
+                </p>
+                <p class="project__desc">
+                  A focused recruitment app for candidate profiles, job
+                  listings, and the stages an application moves through.
+                </p>
               </li>
-              <li class="hero__chip" style="--x: .18; --y: .76; --t: 8s">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="9" y="3" width="6" height="5" rx="1" />
-                  <rect x="3" y="16" width="6" height="5" rx="1" />
-                  <rect x="15" y="16" width="6" height="5" rx="1" />
-                  <path d="M12 8v4M6 16v-2h12v2" />
-                </svg>
-                Network Technician
+
+              <li class="project" id="recycoin" data-type="web">
+                <a
+                  class="project__link"
+                  href="https://github.com/rjtng/reycoin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="project__thumb" aria-hidden="true"
+                    ><span class="shot">
+                      <span class="project-preview project-preview--vision">
+                        <span class="preview__topbar"
+                          ><i></i><i></i><i></i
+                          ><b>RECY<span>COIN</span></b></span
+                        >
+                        <span class="preview__body">
+                          <span class="preview__side"></span>
+                          <span class="preview__content">
+                            <span class="preview__eyebrow"
+                              >Sustainable actions</span
+                            ><strong
+                              >Recycle today.<br /><b>Earn tomorrow.</b></strong
+                            >
+                            <span class="preview__camera"
+                              ><i></i><b>SCAN + EARN</b></span
+                            >
+                          </span>
+                        </span>
+                      </span> </span
+                  ></span>
+                  <span class="project__name">RECYCOIN</span>
+                  <span class="project__type">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                      <path d="M3 9h18M6 7h.01M8.5 7h.01"></path>
+                    </svg>
+                    <span class="project__type-label">Web app</span>
+                  </span>
+                  <span class="project__tech">
+                    <span class="tech tech--sprite" style="--brand: #777bb4"
+                      ><svg aria-hidden="true"><use href="#t-php"></use></svg
+                      ><span class="tech__name">PHP</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #4d7fa5"
+                      ><svg aria-hidden="true"><use href="#t-mysql"></use></svg
+                      ><span class="tech__name">MySQL</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #8d6bbe"
+                      ><svg aria-hidden="true"><use href="#t-bootstrap"></use></svg
+                      ><span class="tech__name">Bootstrap</span></span
+                    >
+                  </span>
+                  <span class="project__go" aria-hidden="true">&#8599;</span>
+                  <span class="visually-hidden">, repository on GitHub</span>
+                </a>
+                <p class="project__role">
+                  UX Researcher &amp; Full-Stack Developer
+                </p>
+                <p class="project__desc">
+                  A recycling-focused platform designed to connect sustainable
+                  actions with a simple digital rewards experience.
+                </p>
               </li>
-            </ul>
+
+              <li class="project" id="barangay-maganda" data-type="gov">
+                <a
+                  class="project__link"
+                  href="https://github.com/rjtng/Barangay_Maganda_MI_System"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="project__thumb" aria-hidden="true"
+                    ><span class="shot">
+                      <span class="project-preview project-preview--vision">
+                        <span class="preview__topbar"
+                          ><i></i><i></i><i></i
+                          ><b>BARANGAY <span>MIS</span></b></span
+                        >
+                        <span class="preview__body">
+                          <span class="preview__side"></span>
+                          <span class="preview__content">
+                            <span class="preview__eyebrow"
+                              >Resident records</span
+                            ><strong>Maganda<br />information system</strong>
+                            <span class="preview__camera"
+                              ><i></i><b>RECORDS ONLINE</b></span
+                            >
+                          </span>
+                        </span>
+                      </span> </span
+                  ></span>
+                  <span class="project__name">Barangay Maganda MIS</span>
+                  <span class="project__type">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="M3.5 9.5 12 4.5l8.5 5M4.5 20h15M6.5 11v6.5M10.2 11v6.5M13.8 11v6.5M17.5 11v6.5"
+                      ></path>
+                    </svg>
+                    <span class="project__type-label">Government system</span>
+                  </span>
+                  <span class="project__tech">
+                    <span class="tech tech--sprite" style="--brand: #777bb4"
+                      ><svg aria-hidden="true"><use href="#t-php"></use></svg
+                      ><span class="tech__name">PHP</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #4d7fa5"
+                      ><svg aria-hidden="true"><use href="#t-mysql"></use></svg
+                      ><span class="tech__name">MySQL</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #d84248"
+                      ><svg aria-hidden="true"><use href="#t-apache"></use></svg
+                      ><span class="tech__name">Apache</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #8d6bbe"
+                      ><svg aria-hidden="true"><use href="#t-bootstrap"></use></svg
+                      ><span class="tech__name">Bootstrap</span></span
+                    >
+                  </span>
+                  <span class="project__go" aria-hidden="true">&#8599;</span>
+                  <span class="visually-hidden">, repository on GitHub</span>
+                </a>
+                <p class="project__role">
+                  Full-Stack Developer &amp; Systems Designer
+                </p>
+                <p class="project__desc">
+                  A practical management information system for resident
+                  records, document requests, and office reports.
+                </p>
+              </li>
+            </ol>
+
+            <p class="index__empty" data-empty hidden></p>
+            <p class="visually-hidden" role="status" data-status></p>
           </div>
 
-          <!-- On wide screens the area starts short of the end of the name
-               (--photo-start), so the photo stands over it as in the
-               reference; on narrow ones it follows the copy. -->
-          <div class="hero__area">
-            <div class="hero__visual">
-              <!-- Labels over the photo: --x and --y are shares of the photo, so
-                   they keep their place beside the face; --t sets each bob so
-                   no two move in step. The ones over the name are with the
-                   copy, sized from the name. -->
-              <ul class="hero__chips" aria-label="More roles">
-                <li class="hero__chip" style="--x: 68%; --y: 24%; --t: 7.6s">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                  Computer Vision Tinkerer
+          <!-- Filled by main.js with whichever row the pointer is over; the
+               list itself carries the same text for everyone else. -->
+          <aside class="peek" data-peek aria-hidden="true">
+            <div class="peek__shot" data-peek-shot></div>
+            <p class="peek__name" data-peek-name></p>
+            <p class="peek__role" data-peek-role></p>
+            <p class="peek__desc" data-peek-desc></p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════ 3 · about ═══════════════════════════
+           A shelf of six volumes. Each spine is a link to its volume; main.js
+           shows one volume at a time under the shelf and pulls its spine out.
+           Without scripting the volumes are simply printed one after another.
+           The ids double as the old section anchors (#skills, #experience,
+           #contact), so links to the previous design still land. -->
+      <section class="about" id="about" aria-labelledby="about-title">
+        <div class="wrap">
+          <h2 class="visually-hidden" id="about-title">About</h2>
+
+          <div class="shelf">
+            <div class="shelf__stack" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </div>
+
+            <nav class="shelf__books" aria-label="About volumes">
+              <a
+                class="book book--light book--first"
+                href="#whoami"
+                aria-controls="whoami"
+                style="--w: 64; --h: 392"
+              >
+                <span class="book__vol">Vol.</span
+                ><span class="book__num">01</span
+                ><span class="book__title">$whoami</span
+                ><span class="book__by" aria-hidden="true">Al-Raji</span>
+              </a>
+              <a
+                class="book"
+                href="#skills"
+                aria-controls="skills"
+                style="--w: 54; --h: 394"
+              >
+                <span class="book__vol">Vol.</span
+                ><span class="book__num">02</span
+                ><span class="book__title">Skills</span
+                ><span class="book__by" aria-hidden="true">Al-Raji</span>
+              </a>
+              <a
+                class="book book--ink"
+                href="#certifications"
+                aria-controls="certifications"
+                style="--w: 60; --h: 390"
+              >
+                <span class="book__vol">Vol.</span
+                ><span class="book__num">03</span
+                ><span class="book__title">Certifications</span
+                ><span class="book__by" aria-hidden="true">Al-Raji</span>
+              </a>
+              <a
+                class="book"
+                href="#experience"
+                aria-controls="experience"
+                style="--w: 66; --h: 393"
+              >
+                <span class="book__vol">Vol.</span
+                ><span class="book__num">04</span
+                ><span class="book__title">Experience</span
+                ><span class="book__by" aria-hidden="true">Al-Raji</span>
+              </a>
+              <a
+                class="book book--ink"
+                href="#affiliations"
+                aria-controls="affiliations"
+                style="--w: 48; --h: 395"
+              >
+                <span class="book__vol">Vol.</span
+                ><span class="book__num">05</span
+                ><span class="book__title">Affiliations</span
+                ><span class="book__by" aria-hidden="true">Al-Raji</span>
+              </a>
+              <a
+                class="book book--light"
+                href="#contact"
+                aria-controls="contact"
+                style="--w: 46; --h: 392"
+              >
+                <span class="book__vol">Vol.</span
+                ><span class="book__num">06</span
+                ><span class="book__title">Contact Me</span
+                ><span class="book__by" aria-hidden="true">Al-Raji</span>
+              </a>
+            </nav>
+
+            <i class="shelf__end" aria-hidden="true"></i>
+            <div class="shelf__board" aria-hidden="true"></div>
+          </div>
+
+          <p class="shelf__clock">
+            Zamboanga City<span data-clock-sep hidden> · </span
+            ><time data-clock></time>
+          </p>
+
+          <div class="volumes">
+            <!-- ─────────────── vol. 01 ─────────────── -->
+            <section class="vol" id="whoami" aria-labelledby="whoami-title" tabindex="-1">
+              <header class="vol__head">
+                <p class="vol__num">Vol. 01</p>
+                <h3 class="vol__title" id="whoami-title">$whoami</h3>
+              </header>
+
+              <div class="whoami">
+                <figure class="whoami__photo">
+                  <img
+                    src="/assets/img/portrait-cutout.webp?v=9"
+                    alt="Al-Raji Theng in graduation regalia"
+                    width="1131"
+                    height="968"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+
+                <div class="whoami__copy">
+                  <p class="whoami__name">Al-Raji Theng</p>
+                  <p class="whoami__title">Computer Engineer</p>
+                  <p class="whoami__meta">
+                    BS Computer Engineering | <em>Universidad de Zamboanga</em>
+                  </p>
+
+                  <p class="whoami__text">
+                    I'm a <mark>computer engineer</mark> who spends equal
+                    amounts of time figuring out hardware, writing code, and
+                    occasionally wondering why it worked yesterday but not
+                    today. Argh! &gt;_&lt;
+                  </p>
+
+                  <ul class="whoami__roles" aria-label="Roles">
+                    <li>Full-Stack Developer</li>
+                    <li>UI/UX &amp; Graphic Designer</li>
+                    <li>Network Technician</li>
+                    <li>Computer Vision Tinkerer</li>
+                    <li>Mobile App Developer</li>
+                  </ul>
+
+                  <!-- Filled by main.js from TOP_CERTS, the hand-picked top six,
+                       each linking to its Credly record. -->
+                  <ul
+                    class="badges"
+                    data-featured-badges
+                    aria-label="Featured credentials"
+                  ></ul>
+                </div>
+              </div>
+
+              <nav class="vol__nav" aria-label="Volumes">
+                <span></span>
+                <a href="#skills">02 Skills <span aria-hidden="true">&rarr;</span></a>
+              </nav>
+            </section>
+
+            <!-- ─────────────── vol. 02 ─────────────── -->
+            <section class="vol" id="skills" aria-labelledby="skills-title" tabindex="-1">
+              <header class="vol__head">
+                <p class="vol__num">Vol. 02</p>
+                <h3 class="vol__title" id="skills-title">Skills</h3>
+              </header>
+
+              <div class="stack">
+                <div class="stack__row">
+                  <div class="stack__label">
+                    <i>01</i>
+                    <h4>Languages</h4>
+                  </div>
+                  <div>
+                    <ul class="chips">
+                      <li class="key" style="--brand: #4b83b3">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-python"></use></svg
+                        ><span>Python</span>
+                      </li>
+                      <li class="key" style="--brand: #f7df1e">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-javascript"></use></svg
+                        ><span>JavaScript</span>
+                      </li>
+                      <li class="key" style="--brand: #777bb4">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-php"></use></svg
+                        ><span>PHP</span>
+                      </li>
+                      <li class="key" style="--brand: #1a82c8">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-dart"></use></svg
+                        ><span>Dart</span>
+                      </li>
+                      <li class="key">SQL</li>
+                      <li style="--brand: #ea2d2e">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-java"></use></svg
+                        ><span>Java</span>
+                      </li>
+                      <li style="--brand: #3f82b4">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-cplusplus"></use></svg
+                        ><span>C++</span>
+                      </li>
+                      <li style="--brand: #9c6ea8">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-csharp"></use></svg
+                        ><span>C#</span>
+                      </li>
+                      <li>Assembly</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="stack__row">
+                  <div class="stack__label">
+                    <i>02</i>
+                    <h4>Web</h4>
+                  </div>
+                  <div>
+                    <ul class="chips">
+                      <li class="key" style="--brand: #777bb4">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-php"></use></svg
+                        ><span>PHP</span>
+                      </li>
+                      <li class="key" style="--brand: #4d7fa5">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-mysql"></use></svg
+                        ><span>MySQL</span>
+                      </li>
+                      <li class="key" style="--brand: #8d6bbe">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-bootstrap"></use></svg
+                        ><span>Bootstrap</span>
+                      </li>
+                      <li class="key" style="--brand: #d84248">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-apache"></use></svg
+                        ><span>Apache</span>
+                      </li>
+                      <li style="--brand: #61dafb">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-react"></use></svg
+                        ><span>React</span>
+                      </li>
+                      <li style="--brand: #5fa04e">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-nodedotjs"></use></svg
+                        ><span>Node.js</span>
+                      </li>
+                      <li style="--brand: #7f7f7f">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-express"></use></svg
+                        ><span>Express</span>
+                      </li>
+                      <li style="--brand: #6b8179">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-django"></use></svg
+                        ><span>Django</span>
+                      </li>
+                      <li style="--brand: #3babc3">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-flask"></use></svg
+                        ><span>Flask</span>
+                      </li>
+                      <li style="--brand: #06b6d4">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-tailwindcss"></use></svg
+                        ><span>Tailwind</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="stack__row">
+                  <div class="stack__label">
+                    <i>03</i>
+                    <h4>Mobile</h4>
+                  </div>
+                  <div>
+                    <ul class="chips">
+                      <li class="key" style="--brand: #4180b4">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-flutter"></use></svg
+                        ><span>Flutter</span>
+                      </li>
+                      <li class="key" style="--brand: #1a82c8">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-dart"></use></svg
+                        ><span>Dart</span>
+                      </li>
+                      <li class="key" style="--brand: #e04119">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-firebase"></use></svg
+                        ><span>Firebase</span>
+                      </li>
+                      <li style="--brand: #3ddc84">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-androidstudio"></use></svg
+                        ><span>Android Studio</span>
+                      </li>
+                      <li style="--brand: #8573b6">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-materialdesign"></use></svg
+                        ><span>Material Design</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="stack__row">
+                  <div class="stack__label">
+                    <i>04</i>
+                    <h4>Vision &amp; ML</h4>
+                  </div>
+                  <div>
+                    <ul class="chips">
+                      <li class="key" style="--brand: #7c64ec">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-opencv"></use></svg
+                        ><span>OpenCV</span>
+                      </li>
+                      <li class="key" style="--brand: #66848e">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-numpy"></use></svg
+                        ><span>NumPy</span>
+                      </li>
+                      <li style="--brand: #0097a7">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-mediapipe"></use></svg
+                        ><span>MediaPipe</span>
+                      </li>
+                      <li style="--brand: #ff6f00">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-tensorflow"></use></svg
+                        ><span>TensorFlow</span>
+                      </li>
+                      <li>Vertex AI</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="stack__row">
+                  <div class="stack__label">
+                    <i>05</i>
+                    <h4>Infrastructure</h4>
+                  </div>
+                  <div>
+                    <ul class="chips">
+                      <li class="key" style="--brand: #4d7fa5">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-mysql"></use></svg
+                        ><span>MySQL</span>
+                      </li>
+                      <li class="key" style="--brand: #65858f">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-mariadb"></use></svg
+                        ><span>MariaDB</span>
+                      </li>
+                      <li class="key" style="--brand: #d84248">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-apache"></use></svg
+                        ><span>Apache</span>
+                      </li>
+                      <li style="--brand: #009639">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-nginx"></use></svg
+                        ><span>NGINX</span>
+                      </li>
+                      <li style="--brand: #2496ed">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-docker"></use></svg
+                        ><span>Docker</span>
+                      </li>
+                      <li style="--brand: #4285f4">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-googlecloud"></use></svg
+                        ><span>Google Cloud</span>
+                      </li>
+                      <li style="--brand: #3c73e6">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-kubernetes"></use></svg
+                        ><span>Kubernetes</span>
+                      </li>
+                      <li style="--brand: #7f7f7f">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-vercel"></use></svg
+                        ><span>Vercel</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="stack__row">
+                  <div class="stack__label">
+                    <i>06</i>
+                    <h4>Networking</h4>
+                  </div>
+                  <div>
+                    <ul class="chips">
+                      <li class="key">TCP/IP</li>
+                      <li class="key">Subnetting</li>
+                      <li class="key" style="--brand: #1ba0d7">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-cisco"></use></svg
+                        ><span>Cisco IOS</span>
+                      </li>
+                      <li>Routing &amp; switching</li>
+                      <li>DHCP</li>
+                      <li>DNS</li>
+                      <li>Wireless</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="stack__row">
+                  <div class="stack__label">
+                    <i>07</i>
+                    <h4>Design &amp; tools</h4>
+                  </div>
+                  <div>
+                    <ul class="chips">
+                      <li class="key" style="--brand: #f24e1e">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-figma"></use></svg
+                        ><span>Figma</span>
+                      </li>
+                      <li class="key" style="--brand: #f05032">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-git"></use></svg
+                        ><span>Git</span>
+                      </li>
+                      <li class="key" style="--brand: #fcc624">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-linux"></use></svg
+                        ><span>Linux</span>
+                      </li>
+                      <li>Wireframing</li>
+                      <li style="--brand: #5083ae">
+                        <svg
+                          class="chip__logo"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        >
+                          <use href="#t-cmake"></use></svg
+                        ><span>CMake</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <nav class="vol__nav" aria-label="Volumes">
+                <a href="#whoami"><span aria-hidden="true">&larr;</span> 01 $whoami</a>
+                <a href="#certifications">03 Certifications <span aria-hidden="true">&rarr;</span></a>
+              </nav>
+            </section>
+
+            <!-- ─────────────── vol. 03 ─────────────── -->
+            <section
+              class="vol"
+              id="certifications"
+              aria-labelledby="certifications-title"
+              tabindex="-1"
+            >
+              <header class="vol__head">
+                <p class="vol__num">Vol. 03</p>
+                <h3 class="vol__title" id="certifications-title">
+                  Certifications
+                </h3>
+                <p class="vol__lede">
+                  A living showcase of the credentials I have earned through
+                  deliberate study and hands-on practice. Every badge links to
+                  its official verification page on Credly.
+                </p>
+              </header>
+
+              <div class="credly-marquee" id="credlyMarquee">
+                <div class="credly-row" data-direction="left">
+                  <div class="credly-row__drag">
+                    <div class="credly-row__track" data-credly-track></div>
+                  </div>
+                </div>
+                <div class="credly-row" data-direction="right">
+                  <div class="credly-row__drag">
+                    <div class="credly-row__track" data-credly-track></div>
+                  </div>
+                </div>
+                <p class="credly-marquee__hint">
+                  <span>Drag or swipe to explore</span>
+                  <a
+                    href="https://www.credly.com/users/rjt"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >View all on Credly <span aria-hidden="true">&#8599;</span></a
+                  >
+                </p>
+              </div>
+
+              <noscript>
+                <p class="vol__note">
+                  The complete list, with issue dates and verification links,
+                  is public at
+                  <a
+                    href="https://credly.com/users/rjt"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >credly.com/users/rjt</a
+                  >.
+                </p>
+              </noscript>
+
+              <nav class="vol__nav" aria-label="Volumes">
+                <a href="#skills"><span aria-hidden="true">&larr;</span> 02 Skills</a>
+                <a href="#experience">04 Experience <span aria-hidden="true">&rarr;</span></a>
+              </nav>
+            </section>
+
+            <!-- ─────────────── vol. 04 ─────────────── -->
+            <section
+              class="vol"
+              id="experience"
+              aria-labelledby="experience-title"
+              tabindex="-1"
+            >
+              <header class="vol__head">
+                <p class="vol__num">Vol. 04</p>
+                <h3 class="vol__title" id="experience-title">Experience</h3>
+                <p class="vol__lede">
+                  Web development, database design, and digital workplace
+                  enablement in a government technology environment.
+                </p>
+              </header>
+
+              <ol class="entries">
+                <li class="entry">
+                  <p class="entry__when">
+                    2026
+                    <span>Zamboanga City, Philippines</span>
+                  </p>
+                  <div class="entry__what">
+                    <h4>DICT Regional Office IX and BASULTA</h4>
+                    <p class="entry__role">
+                      Web Developer Intern | March 2026 – April 2026
+                    </p>
+                    <ul class="entry__bullets">
+                      <li>
+                        Co-developed and deployed a web-based
+                        <a
+                          href="https://github.com/walidsalih111-ux/dict_frcc"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          >Flag Raising Attendance and Compliance Checker</a
+                        >
+                        using PHP and MySQL for 50+ employees at the Management
+                        Information Systems Service. Implemented role-based
+                        admin and employee access, employee management CRUD,
+                        and browser camera capture for timestamped attendance
+                        verification.
+                      </li>
+                      <li>
+                        Designed the MySQL database schema and developed the
+                        reporting layer using DataTables and Chart.js
+                        dashboards. Used PDO prepared statements for secure
+                        database queries and conducted functional testing and
+                        QA before the production rollout following HR
+                        approval.
+                      </li>
+                      <li>
+                        Served as a resource speaker for DICT&rsquo;s
+                        <a
+                          href="https://sites.google.com/dict.gov.ph/ilcd-r9basulta/2026/april/26r9b-dwi02-040726"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          >OJT 2.0 Webinar</a
+                        >, presenting Google Workspace and Gemini AI workflows
+                        for a digital office environment to 100+ attendees.
+                      </li>
+                    </ul>
+                  </div>
                 </li>
-                <li class="hero__chip" style="--x: 66%; --y: 52%; --t: 9s">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="7" y="2.5" width="10" height="19" rx="2.5" />
-                    <path d="M11 18.5h2" />
-                  </svg>
-                  Mobile App Developer
+              </ol>
+
+              <nav class="vol__nav" aria-label="Volumes">
+                <a href="#certifications"><span aria-hidden="true">&larr;</span> 03 Certifications</a>
+                <a href="#affiliations">05 Affiliations <span aria-hidden="true">&rarr;</span></a>
+              </nav>
+            </section>
+
+            <!-- ─────────────── vol. 05 ─────────────── -->
+            <section
+              class="vol"
+              id="affiliations"
+              aria-labelledby="affiliations-title"
+              tabindex="-1"
+            >
+              <header class="vol__head">
+                <p class="vol__num">Vol. 05</p>
+                <h3 class="vol__title" id="affiliations-title">Affiliations</h3>
+              </header>
+
+              <ol class="entries">
+                <li class="entry">
+                  <p class="entry__when">
+                    2024 – 2026
+                    <span>UZ Chapter</span>
+                  </p>
+                  <div class="entry__what">
+                    <h4>
+                      Institute of Computer Engineers of the Philippines &ndash;
+                      Student Edition (ICpEP.SE), UZ Chapter
+                    </h4>
+                    <p class="entry__role">
+                      President | 2025–2026<br />
+                      Vice President | 2024–2025
+                    </p>
+                  </div>
+                </li>
+              </ol>
+
+              <nav class="vol__nav" aria-label="Volumes">
+                <a href="#experience"><span aria-hidden="true">&larr;</span> 04 Experience</a>
+                <a href="#contact">06 Contact Me <span aria-hidden="true">&rarr;</span></a>
+              </nav>
+            </section>
+
+            <!-- ─────────────── vol. 06 ─────────────── -->
+            <section class="vol" id="contact" aria-labelledby="contact-title" tabindex="-1">
+              <header class="vol__head">
+                <p class="vol__num">Vol. 06</p>
+                <h3 class="vol__title" id="contact-title">Contact Me</h3>
+                <p class="vol__lede">
+                  Let&rsquo;s build something remarkable together.
+                </p>
+              </header>
+
+              <a class="contact__mail" href="mailto:alrajitheng@gmail.com"
+                >alrajitheng@gmail.com</a
+              >
+
+              <ul class="contact__links">
+                <li>
+                  <a
+                    href="https://linkedin.com/in/rjtg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path
+                        d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8 19H5V9.5h3V19ZM6.5 8.2a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5ZM19 19h-3v-4.6c0-1.1 0-2.5-1.6-2.5s-1.8 1.2-1.8 2.4V19h-3V9.5h2.9v1.3h.1a3.2 3.2 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.5V19Z"
+                      />
+                    </svg>
+                    <span class="contact__label">LinkedIn</span>
+                    <span class="contact__handle">linkedin.com/in/rjtg</span>
+                    <span class="contact__go" aria-hidden="true">&#8599;</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/rjtng"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path
+                        d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.5 5 18.5 5.3 18.5 5.3c.6 1.7.2 2.9.1 3.2.8.9 1.2 1.9 1.2 3.2 0 4.6-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5Z"
+                      />
+                    </svg>
+                    <span class="contact__label">GitHub</span>
+                    <span class="contact__handle">github.com/rjtng</span>
+                    <span class="contact__go" aria-hidden="true">&#8599;</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://facebook.com/rjitg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path
+                        d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.4-.1c-2.4 0-4 1.5-4 4.1V10H8v3h2.4v8h3.1Z"
+                      />
+                    </svg>
+                    <span class="contact__label">Facebook</span>
+                    <span class="contact__handle">facebook.com/rjitg</span>
+                    <span class="contact__go" aria-hidden="true">&#8599;</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://credly.com/users/rjt"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      aria-hidden="true"
+                    >
+                      <circle cx="12" cy="9" r="6" />
+                      <path d="M8.5 14.2 7 22l5-2.5 5 2.5-1.5-7.8" />
+                    </svg>
+                    <span class="contact__label">Credly</span>
+                    <span class="contact__handle">credly.com/users/rjt</span>
+                    <span class="contact__go" aria-hidden="true">&#8599;</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://g.dev/teg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 3a9 9 0 1 0 8.5 12H12V9.8h11" />
+                    </svg>
+                    <span class="contact__label">Google Developers</span>
+                    <span class="contact__handle">g.dev/teg</span>
+                    <span class="contact__go" aria-hidden="true">&#8599;</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+                      <path d="M14 3v5h5M9 13h6M9 17h4" />
+                    </svg>
+                    <span class="contact__label">Resume</span>
+                    <span class="contact__handle">Google Drive</span>
+                    <span class="contact__go" aria-hidden="true">&#8599;</span>
+                  </a>
                 </li>
               </ul>
 
-              <img
-                class="hero__photo"
-                src="/assets/img/portrait-cutout.webp?v=9"
-                alt="Al-Raji Theng in graduation regalia"
-                width="1131"
-                height="968"
-                fetchpriority="high"
-              />
-            </div>
+              <nav class="vol__nav" aria-label="Volumes">
+                <a href="#affiliations"><span aria-hidden="true">&larr;</span> 05 Affiliations</a>
+                <span></span>
+              </nav>
+            </section>
           </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════ marquee ═══════════════════════════ -->
-      <div class="band" id="bandViewport" aria-hidden="true">
-        <!-- Drag offset lives on its own element so the auto-scroll
-             animation on the track underneath is left untouched. -->
-        <div class="band__drag" id="bandDrag">
-          <div class="band__track" id="band">
-            <ul>
-              <!-- tech-marquee:start -->
-              <li style="--brand: #4180b4">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-flutter"></use></svg
-                ><span>Flutter</span>
-              </li>
-              <li style="--brand: #1a82c8">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-dart"></use></svg
-                ><span>Dart</span>
-              </li>
-              <li style="--brand: #4b83b3">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-python"></use></svg
-                ><span>Python</span>
-              </li>
-              <li style="--brand: #f7df1e">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-javascript"></use></svg
-                ><span>JavaScript</span>
-              </li>
-              <li style="--brand: #777bb4">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-php"></use></svg
-                ><span>PHP</span>
-              </li>
-              <li style="--brand: #ea2d2e">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-java"></use></svg
-                ><span>Java</span>
-              </li>
-              <li style="--brand: #3f82b4">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-cplusplus"></use></svg
-                ><span>C++</span>
-              </li>
-              <li style="--brand: #9c6ea8">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-csharp"></use></svg
-                ><span>C#</span>
-              </li>
-              <li style="--brand: #e34f26">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-html5"></use></svg
-                ><span>HTML5</span>
-              </li>
-              <li style="--brand: #9370b7">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-css"></use></svg
-                ><span>CSS3</span>
-              </li>
-              <li style="--brand: #06b6d4">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-tailwindcss"></use></svg
-                ><span>Tailwind CSS</span>
-              </li>
-              <li style="--brand: #8d6bbe">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-bootstrap"></use></svg
-                ><span>Bootstrap</span>
-              </li>
-              <li style="--brand: #61dafb">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-react"></use></svg
-                ><span>React</span>
-              </li>
-              <li style="--brand: #5fa04e">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-nodedotjs"></use></svg
-                ><span>Node.js</span>
-              </li>
-              <li style="--brand: #4d7fa5">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-mysql"></use></svg
-                ><span>MySQL</span>
-              </li>
-              <li style="--brand: #65858f">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-mariadb"></use></svg
-                ><span>MariaDB</span>
-              </li>
-              <li style="--brand: #fb7a24">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-xampp"></use></svg
-                ><span>XAMPP</span>
-              </li>
-              <li style="--brand: #e04119">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-firebase"></use></svg
-                ><span>Firebase</span>
-              </li>
-              <li style="--brand: #7c64ec">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-opencv"></use></svg
-                ><span>OpenCV</span>
-              </li>
-              <li style="--brand: #0097a7">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-mediapipe"></use></svg
-                ><span>MediaPipe</span>
-              </li>
-              <li style="--brand: #ff6f00">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-tensorflow"></use></svg
-                ><span>TensorFlow</span>
-              </li>
-              <li style="--brand: #2496ed">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-docker"></use></svg
-                ><span>Docker</span>
-              </li>
-              <li style="--brand: #3c73e6">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-kubernetes"></use></svg
-                ><span>Kubernetes</span>
-              </li>
-              <li style="--brand: #4285f4">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-googlecloud"></use></svg
-                ><span>Google Cloud</span>
-              </li>
-              <li style="--brand: #7f7f7f">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-vercel"></use></svg
-                ><span>Vercel</span>
-              </li>
-              <li style="--brand: #fcc624">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-linux"></use></svg
-                ><span>Linux</span>
-              </li>
-              <li style="--brand: #7f7f7f">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-github"></use></svg
-                ><span>GitHub</span>
-              </li>
-              <li style="--brand: #1ba0d7">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-cisco"></use></svg
-                ><span>Cisco IOS</span>
-              </li>
-              <li style="--brand: #00878f">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-arduino"></use></svg
-                ><span>Arduino</span>
-              </li>
-              <li style="--brand: #b95d74">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-raspberrypi"></use></svg
-                ><span>Raspberry Pi</span>
-              </li>
-              <li style="--brand: #3ddc84">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-androidstudio"></use></svg
-                ><span>Android Studio</span>
-              </li>
-              <li style="--brand: #f24e1e">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-figma"></use></svg
-                ><span>Figma</span>
-              </li>
-              <li style="--brand: #00c4cc">
-                <svg
-                  class="band__logo"
-                  width="20"
-                  height="20"
-                  aria-hidden="true"
-                >
-                  <use href="#t-canva"></use></svg
-                ><span>Canva</span>
-              </li>
-              <!-- tech-marquee:end -->
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- ═══════════════════════════ 2 · about ═══════════════════════════
-           A dark panel over a slowly drifting wall of project screens. main.js
-           builds the wall from the mock screens on the project cards, so it
-           always shows the real project list; without scripting the panel
-           simply has no wall behind it. -->
-      <section class="section section--wall" id="about">
-        <div class="wall" aria-hidden="true">
-          <div class="wall__plane" data-project-wall></div>
-        </div>
-
-        <div class="wrap">
-          <div class="head">
-            <p class="head__index">01 / About</p>
-            <div class="head__rule"></div>
-          </div>
-
-          <div class="bio reveal">
-            <h2 class="bio__name">Al-Raji Theng</h2>
-            <p class="bio__title">Computer Engineer</p>
-            <p class="bio__meta">
-              BS Computer Engineering | <em>Universidad de Zamboanga</em>
-            </p>
-
-            <p class="bio__text">
-              I'm a <mark>computer engineer</mark> who spends equal amounts of
-              time figuring out hardware, writing code, and occasionally
-              wondering why it worked yesterday but not today. Argh! &gt;_&lt;
-            </p>
-
-            <!-- Filled by main.js from TOP_CERTS, the hand-picked top six,
-                 each linking to its Credly record. -->
-            <ul
-              class="bio__badges"
-              data-featured-badges
-              aria-label="Featured credentials"
-            ></ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════ 3 · skills ═══════════════════════════ -->
-      <section class="section" id="skills">
-        <div class="wrap">
-          <div class="head">
-            <p class="head__index">02 / Skills</p>
-            <div class="head__rule"></div>
-          </div>
-
-          <div class="stack">
-            <div class="stack__row reveal">
-              <div class="stack__label">
-                <i>01</i>
-                <h3>Languages</h3>
-              </div>
-              <div>
-                <ul class="chips">
-                  <li class="key" style="--brand: #4b83b3">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-python"></use></svg
-                    ><span>Python</span>
-                  </li>
-                  <li class="key" style="--brand: #f7df1e">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-javascript"></use></svg
-                    ><span>JavaScript</span>
-                  </li>
-                  <li class="key" style="--brand: #777bb4">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-php"></use></svg
-                    ><span>PHP</span>
-                  </li>
-                  <li class="key" style="--brand: #1a82c8">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-dart"></use></svg
-                    ><span>Dart</span>
-                  </li>
-                  <li class="key">SQL</li>
-                  <li style="--brand: #ea2d2e">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-java"></use></svg
-                    ><span>Java</span>
-                  </li>
-                  <li style="--brand: #3f82b4">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-cplusplus"></use></svg
-                    ><span>C++</span>
-                  </li>
-                  <li style="--brand: #9c6ea8">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-csharp"></use></svg
-                    ><span>C#</span>
-                  </li>
-                  <li>Assembly</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="stack__row reveal">
-              <div class="stack__label">
-                <i>02</i>
-                <h3>Web</h3>
-              </div>
-              <div>
-                <ul class="chips">
-                  <li class="key" style="--brand: #777bb4">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-php"></use></svg
-                    ><span>PHP</span>
-                  </li>
-                  <li class="key" style="--brand: #4d7fa5">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-mysql"></use></svg
-                    ><span>MySQL</span>
-                  </li>
-                  <li class="key" style="--brand: #8d6bbe">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-bootstrap"></use></svg
-                    ><span>Bootstrap</span>
-                  </li>
-                  <li class="key" style="--brand: #d84248">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-apache"></use></svg
-                    ><span>Apache</span>
-                  </li>
-                  <li style="--brand: #61dafb">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-react"></use></svg
-                    ><span>React</span>
-                  </li>
-                  <li style="--brand: #5fa04e">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-nodedotjs"></use></svg
-                    ><span>Node.js</span>
-                  </li>
-                  <li style="--brand: #7f7f7f">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-express"></use></svg
-                    ><span>Express</span>
-                  </li>
-                  <li style="--brand: #6b8179">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-django"></use></svg
-                    ><span>Django</span>
-                  </li>
-                  <li style="--brand: #3babc3">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-flask"></use></svg
-                    ><span>Flask</span>
-                  </li>
-                  <li style="--brand: #06b6d4">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-tailwindcss"></use></svg
-                    ><span>Tailwind</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="stack__row reveal">
-              <div class="stack__label">
-                <i>03</i>
-                <h3>Mobile</h3>
-              </div>
-              <div>
-                <ul class="chips">
-                  <li class="key" style="--brand: #4180b4">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-flutter"></use></svg
-                    ><span>Flutter</span>
-                  </li>
-                  <li class="key" style="--brand: #1a82c8">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-dart"></use></svg
-                    ><span>Dart</span>
-                  </li>
-                  <li class="key" style="--brand: #e04119">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-firebase"></use></svg
-                    ><span>Firebase</span>
-                  </li>
-                  <li style="--brand: #3ddc84">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-androidstudio"></use></svg
-                    ><span>Android Studio</span>
-                  </li>
-                  <li style="--brand: #8573b6">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-materialdesign"></use></svg
-                    ><span>Material Design</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="stack__row reveal">
-              <div class="stack__label">
-                <i>04</i>
-                <h3>Vision &amp; ML</h3>
-              </div>
-              <div>
-                <ul class="chips">
-                  <li class="key" style="--brand: #7c64ec">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-opencv"></use></svg
-                    ><span>OpenCV</span>
-                  </li>
-                  <li class="key" style="--brand: #66848e">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-numpy"></use></svg
-                    ><span>NumPy</span>
-                  </li>
-                  <li style="--brand: #0097a7">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-mediapipe"></use></svg
-                    ><span>MediaPipe</span>
-                  </li>
-                  <li style="--brand: #ff6f00">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-tensorflow"></use></svg
-                    ><span>TensorFlow</span>
-                  </li>
-                  <li>Vertex AI</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="stack__row reveal">
-              <div class="stack__label">
-                <i>05</i>
-                <h3>Infrastructure</h3>
-              </div>
-              <div>
-                <ul class="chips">
-                  <li class="key" style="--brand: #4d7fa5">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-mysql"></use></svg
-                    ><span>MySQL</span>
-                  </li>
-                  <li class="key" style="--brand: #65858f">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-mariadb"></use></svg
-                    ><span>MariaDB</span>
-                  </li>
-                  <li class="key" style="--brand: #d84248">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-apache"></use></svg
-                    ><span>Apache</span>
-                  </li>
-                  <li style="--brand: #009639">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-nginx"></use></svg
-                    ><span>NGINX</span>
-                  </li>
-                  <li style="--brand: #2496ed">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-docker"></use></svg
-                    ><span>Docker</span>
-                  </li>
-                  <li style="--brand: #4285f4">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-googlecloud"></use></svg
-                    ><span>Google Cloud</span>
-                  </li>
-                  <li style="--brand: #3c73e6">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-kubernetes"></use></svg
-                    ><span>Kubernetes</span>
-                  </li>
-                  <li style="--brand: #7f7f7f">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-vercel"></use></svg
-                    ><span>Vercel</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="stack__row reveal">
-              <div class="stack__label">
-                <i>06</i>
-                <h3>Networking</h3>
-              </div>
-              <div>
-                <ul class="chips">
-                  <li class="key">TCP/IP</li>
-                  <li class="key">Subnetting</li>
-                  <li class="key" style="--brand: #1ba0d7">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-cisco"></use></svg
-                    ><span>Cisco IOS</span>
-                  </li>
-                  <li>Routing &amp; switching</li>
-                  <li>DHCP</li>
-                  <li>DNS</li>
-                  <li>Wireless</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="stack__row reveal">
-              <div class="stack__label">
-                <i>07</i>
-                <h3>Design &amp; tools</h3>
-              </div>
-              <div>
-                <ul class="chips">
-                  <li class="key" style="--brand: #f24e1e">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-figma"></use></svg
-                    ><span>Figma</span>
-                  </li>
-                  <li class="key" style="--brand: #f05032">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-git"></use></svg
-                    ><span>Git</span>
-                  </li>
-                  <li class="key" style="--brand: #fcc624">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-linux"></use></svg
-                    ><span>Linux</span>
-                  </li>
-                  <li>Wireframing</li>
-                  <li style="--brand: #5083ae">
-                    <svg
-                      class="chip__logo"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    >
-                      <use href="#t-cmake"></use></svg
-                    ><span>CMake</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════ 4 · projects ═══════════════════════════ -->
-      <section class="section" id="projects">
-        <div class="wrap">
-          <div class="head">
-            <p class="head__index">03 / Projects &amp; Portfolio</p>
-            <div class="head__rule"></div>
-          </div>
-
-          <div class="projects-carousel reveal" id="projectsCarousel">
-            <div class="projects-carousel__toolbar">
-              <p class="projects-carousel__hint">
-                <span>Drag to explore</span> / <span>01 — 04</span>
-              </p>
-              <div class="projects-carousel__controls">
-                <button
-                  class="carousel-button"
-                  type="button"
-                  data-carousel-prev
-                  aria-label="Show previous project"
-                >
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    aria-hidden="true"
-                  >
-                    <path d="M12.5 4.5 7 10l5.5 5.5M7.5 10H17" />
-                  </svg>
-                </button>
-                <button
-                  class="carousel-button"
-                  type="button"
-                  data-carousel-next
-                  aria-label="Show next project"
-                >
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    aria-hidden="true"
-                  >
-                    <path d="m7.5 4.5 5.5 5.5-5.5 5.5M12.5 10H3" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div
-              class="projects-carousel__viewport"
-              data-carousel-viewport
-              tabindex="0"
-              aria-label="Projects carousel. Use the arrow keys to change project."
-            >
-              <div class="projects-carousel__track" data-carousel-track>
-                <article class="project-card project-card--hire">
-                  <div class="project-card__visual">
-                    <div
-                      class="project-preview"
-                      role="img"
-                      aria-label="Dashboard preview for DICT Flag Raising Compliance Checker"
-                    >
-                      <div class="preview__topbar">
-                        <i></i><i></i><i></i><b>DICT <span>COMPLIANCE</span></b>
-                      </div>
-                      <div class="preview__body">
-                        <div class="preview__side"></div>
-                        <div class="preview__content">
-                          <span class="preview__eyebrow"
-                            >Attendance overview</span
-                          ><strong>Flag raising<br />compliance</strong>
-                          <div class="preview__stats">
-                            <i></i><i></i><i></i>
-                          </div>
-                          <div class="preview__rows"><i></i><i></i><i></i></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="project-card__body">
-                    <h3>
-                      <a
-                        href="https://github.com/walidsalih111-ux/dict_frcc"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >DICT Flag Raising Compliance Checker</a
-                      >
-                    </h3>
-                    <p class="project-card__role">
-                      Lead Full-Stack Developer &amp; UI/UX Designer
-                    </p>
-                    <p class="project-card__description">
-                      A web-based attendance and compliance checker for
-                      flag-raising activities, employee records, and reporting.
-                    </p>
-                    <div class="project-card__foot">
-                      <div
-                        class="project-card__tech"
-                        aria-label="Technologies used"
-                      >
-                        <span
-                          class="project-card__tech-item"
-                          role="img"
-                          title="PHP"
-                          aria-label="PHP"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-php"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          role="img"
-                          title="MySQL"
-                          aria-label="MySQL"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-mysql"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          role="img"
-                          title="DataTables"
-                          aria-label="DataTables"
-                          ><svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            aria-hidden="true"
-                          >
-                            <rect
-                              x="3"
-                              y="4"
-                              width="18"
-                              height="16"
-                              rx="2"
-                            ></rect>
-                            <path
-                              d="M3 9h18M8 9v11M13 9v11M18 9v11"
-                            ></path></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          role="img"
-                          title="Chart.js"
-                          aria-label="Chart.js"
-                          ><svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            aria-hidden="true"
-                          >
-                            <path d="M4 19V5M4 19h17"></path>
-                            <path d="m7 15 3-4 3 2 5-7"></path></svg
-                        ></span>
-                      </div>
-                      <a
-                        class="case__link"
-                        href="https://github.com/walidsalih111-ux/dict_frcc"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >View repository <span aria-hidden="true">↗</span></a
-                      >
-                    </div>
-                  </div>
-                </article>
-
-                <article class="project-card project-card--hire">
-                  <div class="project-card__visual">
-                    <div
-                      class="project-preview project-preview--records"
-                      role="img"
-                      aria-label="Recruitment dashboard preview for ReadySetHire"
-                    >
-                      <div class="preview__topbar">
-                        <i></i><i></i><i></i><b>READY<span>SETHIRE</span></b>
-                      </div>
-                      <div class="preview__body">
-                        <div class="preview__side"></div>
-                        <div class="preview__content">
-                          <span class="preview__eyebrow"
-                            >Candidate pipeline</span
-                          ><strong>Find your<br />next hire</strong>
-                          <div class="preview__table">
-                            <i></i><i></i><i></i><i></i>
-                          </div>
-                          <div class="preview__graph">
-                            <b></b><b></b><b></b><b></b><b></b>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="project-card__body">
-                    <h3>
-                      <a
-                        href="https://github.com/rjtng/readysethire"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >ReadySetHire</a
-                      >
-                    </h3>
-                    <p class="project-card__role">
-                      Product Designer &amp; Flutter Developer
-                    </p>
-                    <p class="project-card__description">
-                      A focused recruitment app for candidate profiles, job
-                      listings, and the stages an application moves through.
-                    </p>
-                    <div class="project-card__foot">
-                      <div
-                        class="project-card__tech"
-                        aria-label="Technologies used"
-                      >
-                        <span
-                          class="project-card__tech-item"
-                          role="img"
-                          title="Dart"
-                          aria-label="Dart"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-dart"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          role="img"
-                          title="Flutter"
-                          aria-label="Flutter"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-flutter"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          role="img"
-                          title="Firebase"
-                          aria-label="Firebase"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-firebase"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          role="img"
-                          title="Material"
-                          aria-label="Material Design"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-materialdesign"></use></svg
-                        ></span>
-                      </div>
-                      <a
-                        class="case__link"
-                        href="https://github.com/rjtng/readysethire"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >View repository <span aria-hidden="true">↗</span></a
-                      >
-                    </div>
-                  </div>
-                </article>
-
-                <article class="project-card project-card--records">
-                  <div class="project-card__visual">
-                    <div
-                      class="project-preview project-preview--vision"
-                      role="img"
-                      aria-label="Rewards dashboard preview for RECYCOIN"
-                    >
-                      <div class="preview__topbar">
-                        <i></i><i></i><i></i><b>RECY<span>COIN</span></b>
-                      </div>
-                      <div class="preview__body">
-                        <div class="preview__side"></div>
-                        <div class="preview__content">
-                          <span class="preview__eyebrow"
-                            >Sustainable actions</span
-                          ><strong
-                            >Recycle today.<br /><b>Earn tomorrow.</b></strong
-                          >
-                          <div class="preview__camera">
-                            <i></i><b>SCAN + EARN</b>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="project-card__body">
-                    <h3>
-                      <a
-                        href="https://github.com/rjtng/reycoin"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >RECYCOIN</a
-                      >
-                    </h3>
-                    <p class="project-card__role">
-                      UX Researcher &amp; Full-Stack Developer
-                    </p>
-                    <p class="project-card__description">
-                      A recycling-focused platform designed to connect
-                      sustainable actions with a simple digital rewards
-                      experience.
-                    </p>
-                    <div class="project-card__foot">
-                      <div
-                        class="project-card__tech"
-                        aria-label="Technologies used"
-                      >
-                        <span
-                          class="project-card__tech-item"
-                          title="PHP"
-                          aria-label="PHP"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-php"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          title="MySQL"
-                          aria-label="MySQL"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-mysql"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          title="Bootstrap"
-                          aria-label="Bootstrap"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-bootstrap"></use></svg
-                        ></span>
-                      </div>
-                      <a
-                        class="case__link"
-                        href="https://github.com/rjtng/reycoin"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >View repository <span aria-hidden="true">↗</span></a
-                      >
-                    </div>
-                  </div>
-                </article>
-
-                <article class="project-card project-card--vision">
-                  <div class="project-card__visual">
-                    <div
-                      class="project-preview project-preview--vision"
-                      role="img"
-                      aria-label="Records management preview for Barangay Maganda MIS"
-                    >
-                      <div class="preview__topbar">
-                        <i></i><i></i><i></i><b>BARANGAY <span>MIS</span></b>
-                      </div>
-                      <div class="preview__body">
-                        <div class="preview__side"></div>
-                        <div class="preview__content">
-                          <span class="preview__eyebrow">Resident records</span
-                          ><strong>Maganda<br />information system</strong>
-                          <div class="preview__camera">
-                            <i></i><b>RECORDS ONLINE</b>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="project-card__body">
-                    <h3>
-                      <a
-                        href="https://github.com/rjtng/Barangay_Maganda_MI_System"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >Barangay Maganda MIS</a
-                      >
-                    </h3>
-                    <p class="project-card__role">
-                      Full-Stack Developer &amp; Systems Designer
-                    </p>
-                    <p class="project-card__description">
-                      A practical management information system for resident
-                      records, document requests, and office reports.
-                    </p>
-                    <div class="project-card__foot">
-                      <div
-                        class="project-card__tech"
-                        aria-label="Technologies used"
-                      >
-                        <span
-                          class="project-card__tech-item"
-                          title="PHP"
-                          aria-label="PHP"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-php"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          title="MySQL"
-                          aria-label="MySQL"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-mysql"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          title="Apache"
-                          aria-label="Apache"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-apache"></use></svg></span
-                        ><span
-                          class="project-card__tech-item"
-                          title="Bootstrap"
-                          aria-label="Bootstrap"
-                          ><svg viewBox="0 0 24 24" aria-hidden="true">
-                            <use href="#t-bootstrap"></use></svg
-                        ></span>
-                      </div>
-                      <a
-                        class="case__link"
-                        href="https://github.com/rjtng/Barangay_Maganda_MI_System"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >View repository <span aria-hidden="true">↗</span></a
-                      >
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-            <p
-              class="projects-carousel__status"
-              data-carousel-status
-              aria-live="polite"
-            >
-              Showing project 1 of 4
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════ 5 · certifications ═══════════════════════════ -->
-      <section class="section" id="certifications">
-        <div class="wrap">
-          <div class="head">
-            <p class="head__index">04 / Certifications &amp; Achievements</p>
-            <div class="head__rule"></div>
-            <h2 class="head__title">Badges that show the work</h2>
-            <p class="head__sub">
-              A living showcase of the credentials I have earned through
-              deliberate study and hands-on practice. Every badge links to its
-              official verification page on Credly.
-            </p>
-          </div>
-
-          <div class="credly-marquee reveal" id="credlyMarquee">
-            <div class="credly-row" data-direction="left">
-              <div class="credly-row__drag">
-                <div class="credly-row__track" data-credly-track></div>
-              </div>
-            </div>
-            <div class="credly-row" data-direction="right">
-              <div class="credly-row__drag">
-                <div class="credly-row__track" data-credly-track></div>
-              </div>
-            </div>
-            <p class="credly-marquee__hint">
-              <span>Drag or swipe to explore</span>
-              <a
-                href="https://www.credly.com/users/rjt"
-                target="_blank"
-                rel="noopener noreferrer"
-                >View all on Credly <span aria-hidden="true">↗</span></a
-              >
-            </p>
-          </div>
-
-          <noscript>
-            <p class="outro">
-              The complete list, with issue dates and verification links, is
-              public at
-              <a
-                href="https://credly.com/users/rjt"
-                target="_blank"
-                rel="noopener noreferrer"
-                >credly.com/users/rjt</a
-              >.
-            </p>
-          </noscript>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════ 6 · experience ═══════════════════════════ -->
-      <section class="section" id="experience">
-        <div class="wrap">
-          <div class="head">
-            <p class="head__index">05 / Experience</p>
-            <div class="head__rule"></div>
-            <h2 class="head__title">Professional experience</h2>
-            <p class="head__sub">
-              Web development, database design, and digital workplace enablement
-              in a government technology environment.
-            </p>
-          </div>
-
-          <ol class="timeline">
-            <li class="reveal">
-              <p class="timeline__when">
-                2026
-                <span class="timeline__where">Zamboanga City, Philippines</span>
-              </p>
-              <div class="timeline__what">
-                <h3>DICT Regional Office IX and BASULTA</h3>
-                <p class="timeline__role">
-                  Web Developer Intern | March 2026 – April 2026
-                </p>
-                <ul class="timeline__bullets">
-                  <li>
-                    Co-developed and deployed a web-based
-                    <a
-                      href="https://github.com/walidsalih111-ux/dict_frcc"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >Flag Raising Attendance and Compliance Checker</a
-                    >
-                    using PHP and MySQL for 50+ employees at the Management
-                    Information Systems Service. Implemented role-based admin
-                    and employee access, employee management CRUD, and browser
-                    camera capture for timestamped attendance verification.
-                  </li>
-                  <li>
-                    Designed the MySQL database schema and developed the
-                    reporting layer using DataTables and Chart.js dashboards.
-                    Used PDO prepared statements for secure database queries and
-                    conducted functional testing and QA before the production
-                    rollout following HR approval.
-                  </li>
-                  <li>
-                    Served as a resource speaker for DICT&rsquo;s
-                    <a
-                      href="https://sites.google.com/dict.gov.ph/ilcd-r9basulta/2026/april/26r9b-dwi02-040726"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >OJT 2.0 Webinar</a
-                    >, presenting Google Workspace and Gemini AI workflows for a
-                    digital office environment to 100+ attendees.
-                  </li>
-                </ul>
-              </div>
-            </li>
-
-            <li class="reveal">
-              <p class="timeline__when">
-                2024 – 2026
-                <span class="timeline__where">UZ Chapter</span>
-              </p>
-              <div class="timeline__what">
-                <h3>
-                  Institute of Computer Engineers of the Philippines – Student
-                  Edition (ICpEP.SE), UZ Chapter
-                </h3>
-                <p class="timeline__role">
-                  President | 2025–2026<br />
-                  Vice President | 2024–2025
-                </p>
-              </div>
-            </li>
-          </ol>
         </div>
       </section>
     </main>
 
-    <!-- ═══════════════════════════ 7 · contact ═══════════════════════════
-         The closing scene. The invitation, the links and the copyright share
-         one full-height stage, so the page ends on a single composition
-         instead of a card and a strip beneath it. Everything inside
-         .finale__scene is decoration: drawn in CSS and SVG, with the particle
-         canvas animated by main.js. -->
-    <footer
-      class="finale stage"
-      id="contact"
-      data-vanish-y=".46"
-      data-calm=".36"
-      data-foot="130"
-    >
-      <div class="stage__scene stage__scene--top" aria-hidden="true">
-        <div class="stage__glow stage__glow--a"></div>
-        <div class="stage__glow stage__glow--b"></div>
-        <div class="stage__glow stage__glow--c"></div>
-
-        <!-- Dark folds with lit rims. Stretched to the stage rather than
-             cropped, so the edges stay in frame on a phone; the rims use
-             non-scaling strokes so they stay hairlines either way. -->
-        <svg
-          class="stage__fold stage__fold--left"
-          viewBox="0 0 1600 1000"
-          preserveAspectRatio="none"
-          focusable="false"
-        >
-          <defs>
-            <linearGradient id="finaleSheetL" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
-              <stop offset="1" class="stage__stop-fold" stop-opacity=".42" />
-            </linearGradient>
-            <linearGradient id="finaleRimL" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" class="stage__stop-rim" stop-opacity="0" />
-              <stop offset=".5" class="stage__stop-rim" stop-opacity=".95" />
-              <stop offset="1" class="stage__stop-rim" stop-opacity=".15" />
-            </linearGradient>
-          </defs>
-          <path
-            fill="url(#finaleSheetL)"
-            d="M-80-80H390C300 120 540 270 430 480 330 670 150 720 270 1080H-80Z"
-          />
-          <path
-            class="stage__rim stage__rim--halo"
-            stroke="url(#finaleRimL)"
-            d="M390-80C300 120 540 270 430 480 330 670 150 720 270 1080"
-          />
-          <path
-            class="stage__rim"
-            stroke="url(#finaleRimL)"
-            d="M390-80C300 120 540 270 430 480 330 670 150 720 270 1080"
-          />
-          <path
-            class="stage__rim stage__rim--faint"
-            stroke="url(#finaleRimL)"
-            d="M300-80C220 150 440 300 345 500 260 690 70 780 165 1080"
-          />
-        </svg>
-
-        <svg
-          class="stage__fold stage__fold--right"
-          viewBox="0 0 1600 1000"
-          preserveAspectRatio="none"
-          focusable="false"
-        >
-          <defs>
-            <linearGradient id="finaleSheetR" x1="1" y1="0" x2="0" y2="0">
-              <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
-              <stop offset="1" class="stage__stop-fold" stop-opacity=".4" />
-            </linearGradient>
-            <linearGradient id="finaleRimR" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0" class="stage__stop-rim" stop-opacity=".1" />
-              <stop offset=".42" class="stage__stop-rim" stop-opacity=".9" />
-              <stop offset="1" class="stage__stop-rim" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-          <path
-            fill="url(#finaleSheetR)"
-            d="M1680-80V1080H1290C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80Z"
-          />
-          <path
-            class="stage__rim stage__rim--halo"
-            stroke="url(#finaleRimR)"
-            d="M1290 1080C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80"
-          />
-          <path
-            class="stage__rim"
-            stroke="url(#finaleRimR)"
-            d="M1290 1080C1170 870 1430 700 1290 520 1160 350 1180 140 1340-80"
-          />
-          <path
-            class="stage__rim stage__rim--faint"
-            stroke="url(#finaleRimR)"
-            d="M1390 1080C1290 880 1520 720 1390 540 1270 370 1290 150 1440-80"
-          />
-        </svg>
-
-        <svg
-          class="stage__fold stage__fold--edges"
-          viewBox="0 0 1600 1000"
-          preserveAspectRatio="none"
-          focusable="false"
-        >
-          <defs>
-            <linearGradient id="finaleSheetT" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" class="stage__stop-fold" stop-opacity=".95" />
-              <stop offset="1" class="stage__stop-fold" stop-opacity=".5" />
-            </linearGradient>
-            <linearGradient id="finaleSheetB" x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0" class="stage__stop-fold" stop-opacity=".97" />
-              <stop offset="1" class="stage__stop-fold" stop-opacity=".45" />
-            </linearGradient>
-            <linearGradient id="finaleRimH" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" class="stage__stop-rim" stop-opacity="0" />
-              <stop offset=".5" class="stage__stop-rim" stop-opacity=".85" />
-              <stop offset="1" class="stage__stop-rim" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-          <path
-            fill="url(#finaleSheetT)"
-            d="M430-80C530 110 710 230 870 170 1010 120 1080 20 1250-80Z"
-          />
-          <path
-            class="stage__rim"
-            stroke="url(#finaleRimH)"
-            d="M430-80C530 110 710 230 870 170 1010 120 1080 20 1250-80"
-          />
-          <path
-            fill="url(#finaleSheetB)"
-            d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790V1080H-80Z"
-          />
-          <path
-            class="stage__rim stage__rim--halo"
-            stroke="url(#finaleRimH)"
-            d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790"
-          />
-          <path
-            class="stage__rim"
-            stroke="url(#finaleRimH)"
-            d="M-80 790C300 800 520 1010 800 1010 1080 1010 1300 800 1680 790"
-          />
-        </svg>
-
-        <canvas class="stage__particles"></canvas>
-      </div>
-
-      <div class="wrap finale__inner reveal">
-        <p class="finale__index">06 / Contact</p>
-        <h2 class="finale__title">
-          Let&rsquo;s build something <em>remarkable</em> together.
-          <span>Contact me at:</span>
-        </h2>
-
-        <a class="finale__mail" href="mailto:alrajitheng@gmail.com">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="3" y="5" width="18" height="14" rx="2.5" />
-            <path d="m4 7.5 8 5.5 8-5.5" />
-          </svg>
-          <span>alrajitheng@gmail.com</span>
-        </a>
-      </div>
-
-      <div class="wrap finale__base">
-        <ul class="finale__social">
-          <li>
-            <a
-              href="https://linkedin.com/in/rjtg"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              data-label="LinkedIn"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8 19H5V9.5h3V19ZM6.5 8.2a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5ZM19 19h-3v-4.6c0-1.1 0-2.5-1.6-2.5s-1.8 1.2-1.8 2.4V19h-3V9.5h2.9v1.3h.1a3.2 3.2 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.5V19Z"
-                />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://github.com/rjtng"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              data-label="GitHub"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.5 5 18.5 5.3 18.5 5.3c.6 1.7.2 2.9.1 3.2.8.9 1.2 1.9 1.2 3.2 0 4.6-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5Z"
-                />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://facebook.com/rjitg"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              data-label="Facebook"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.4-.1c-2.4 0-4 1.5-4 4.1V10H8v3h2.4v8h3.1Z"
-                />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://credly.com/users/rjt"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Credly"
-              data-label="Credly"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="9" r="6" />
-                <path d="M8.5 14.2 7 22l5-2.5 5 2.5-1.5-7.8" />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://g.dev/teg"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Google Developers"
-              data-label="Google Developers"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-                aria-hidden="true"
-              >
-                <path d="M12 3a9 9 0 1 0 8.5 12H12V9.8h11" />
-              </svg>
-            </a>
-          </li>
-        </ul>
-
-        <p class="finale__legal">
-          <span>
-            Copyright &copy; <span id="year">2026</span>
-            <b>Al-Raji Theng</b>. All Rights Reserved.
-          </span>
-          <a class="finale__top" href="#home"
-            >Back to top <span aria-hidden="true">↑</span></a
-          >
-        </p>
+    <!-- ═══════════════════════════ footer ═══════════════════════════ -->
+    <footer class="foot">
+      <div class="wrap foot__inner">
+        <p>&copy; <span id="year">2026</span> Al-Raji Theng</p>
+        <a href="mailto:alrajitheng@gmail.com">alrajitheng@gmail.com</a>
+        <a href="#wall">Back to top <span aria-hidden="true">&uarr;</span></a>
       </div>
     </footer>
 
     <script src="/assets/js/data-certs.js?v=5"></script>
-    <script src="/assets/js/main.js?v=10"></script>
+    <script src="/assets/js/main.js?v=11"></script>
   </body>
 </html>
