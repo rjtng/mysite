@@ -62,7 +62,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=14" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=15" />
 
     <!-- The .js class switches on the enhancements (the shelf, the filters, the
          wall); without it every volume and every project is simply listed.
@@ -262,9 +262,16 @@
                 </button>
               </div>
 
-              <p class="index__label" data-filter-label>All</p>
+              <p class="index__label">
+                <span data-filter-label>All projects</span
+                ><span class="index__count" data-count aria-hidden="true">04</span>
+              </p>
 
               <label class="index__find">
+                <svg class="index__find-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="10.5" cy="10.5" r="6.5"></circle>
+                  <path d="m15.5 15.5 5 5"></path>
+                </svg>
                 <span class="visually-hidden">Find a project</span>
                 <input
                   type="search"
@@ -561,10 +568,11 @@
       </section>
 
       <!-- ═══════════════════════════ 3 · about ═══════════════════════════
-           A shelf of six volumes. Each spine is a link to its volume, and each
-           volume is a run of pages (.vol__page, each with its title). main.js
-           takes the book off the shelf, turns it to its cover and opens it:
-           contents on the left, one page on the right. Without scripting the
+           A shelf of six volumes (a pile of them on a phone). Each spine is a
+           link to its volume, and each volume is a run of pages (.vol__page,
+           each with its title). main.js takes the book off the shelf, turns it
+           to its cover and opens it: contents on the left, one page on the
+           right, or one page at a time on a phone. Without scripting the
            volumes are simply printed one after another. The ids double as the
            old section anchors (#skills, #experience, #contact), so links to
            the previous design still land. -->
@@ -573,6 +581,7 @@
           <h2 class="visually-hidden" id="about-title">About</h2>
 
           <div class="library" data-library>
+            <p class="shelf__kicker" aria-hidden="true">Six volumes</p>
             <div class="shelf">
               <div class="shelf__stack" aria-hidden="true">
                 <i></i><i></i><i></i>
@@ -651,6 +660,7 @@
               <div class="shelf__board" aria-hidden="true"></div>
             </div>
 
+            <p class="shelf__hint" aria-hidden="true">Tap a volume to open it</p>
             <p class="shelf__clock">
               Zamboanga City<span data-clock-sep hidden> · </span
               ><time data-clock></time>
@@ -1574,6 +1584,6 @@
     </footer>
 
     <script src="/assets/js/data-certs.js?v=5"></script>
-    <script src="/assets/js/main.js?v=14"></script>
+    <script src="/assets/js/main.js?v=15"></script>
   </body>
 </html>
