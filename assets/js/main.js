@@ -77,7 +77,7 @@
      ====================================================================== */
   var list = $('[data-index]');
   var rows = list ? $$('.project', list) : [];
-  var TYPE_NAMES = { all: 'All', gov: 'Government systems', web: 'Web apps', mobile: 'Mobile apps' };
+  var TYPE_NAMES = { all: 'All', gov: 'Government systems', device: 'Smart devices', mobile: 'Mobile apps' };
 
   var projects = rows.map(function (row, i) {
     var text = function (sel) {
@@ -95,7 +95,7 @@
       role: text('.project__role'),
       desc: text('.project__desc'),
       preview: preview ? preview.outerHTML : '',
-      marks: $$('.tech', row).map(function (t) { return t.outerHTML; }).join('')
+      marks: $$('.tech', row).slice(0, 4).map(function (t) { return t.outerHTML; }).join('')
     };
     var techNames = $$('.tech__name', row).map(function (t) { return t.textContent; }).join(' ');
     p.haystack = [p.name, p.typeName, p.role, p.desc, techNames].join(' ').toLowerCase();
@@ -223,21 +223,14 @@
   }
   if (projects.length) { showPeek(projects[0], false); }
 
-  // From the wall: show the project's row, clearing anything that hides it.
-  function goToProject(p) {
-    if (p.row.hidden) {
-      filter = 'all';
-      filterButtons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-filter') === 'all')); });
-      if (find) { find.value = ''; }
-      applyFilter();
-    }
-    showPeek(p, true);
-    p.row.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
-    p.row.classList.remove('is-flash');
-    void p.row.offsetWidth;
-    p.row.classList.add('is-flash');
-    setTimeout(function () { p.row.classList.remove('is-flash'); }, 1500);
+  // A project page offers the way back to whichever room the visit began in.
+  function rememberRoom(room) {
+    try { sessionStorage.setItem('workFrom', room); } catch (error) {}
   }
+  projects.forEach(function (p) {
+    var link = $('.project__link', p.row);
+    if (link) { link.addEventListener('click', function () { rememberRoom('index'); }); }
+  });
 
   /* =========================================================================
      Wall
@@ -260,7 +253,7 @@
       html += '<div class="wall__row">';
       for (var c = 0; c < PER_ROW; c++) {
         var t = unique[(c + r * 5) % unique.length];
-        html += '<a class="tile tile--' + t.kind + '" href="#' + t.p.id + '" data-p="' + t.p.i + '" tabindex="-1">' +
+        html += '<a class="tile tile--' + t.kind + '" href="/work/' + t.p.id + '" data-p="' + t.p.i + '" tabindex="-1">' +
           shot(t.p, t.kind) + '</a>';
       }
       html += '</div>';
@@ -304,10 +297,9 @@
     plane.addEventListener('click', function (e) {
       var tile = e.target.closest('.tile');
       if (!tile) { return; }
-      e.preventDefault();
       var i = Number(tile.getAttribute('data-p'));
-      if (lastPointer === 'touch' && focused !== i) { focusProject(i); return; }
-      goToProject(projects[i]);
+      if (lastPointer === 'touch' && focused !== i) { e.preventDefault(); focusProject(i); return; }
+      rememberRoom('wall');   // and the link goes to the project's page
     });
 
     // The wall drifts a little slower than the page, so it sits behind it.
@@ -322,6 +314,61 @@
       window.addEventListener('scroll', function () {
         if (!driftQueued) { driftQueued = true; window.requestAnimationFrame(drift); }
       }, { passive: true });
+    }
+  }
+
+  /* =========================================================================
+     Project pages (/work/*)
+     The back link and the nav follow the room the visit began in. The hero
+     screen is fitted to its card, and the rail at the right marks the section
+     in view.
+     ====================================================================== */
+  var work = $('[data-work]');
+  if (work) {
+    var from = null;
+    try { from = sessionStorage.getItem('workFrom'); } catch (error) {}
+    if (from === 'index') {
+      var back = $('[data-back]');
+      var backLabel = $('[data-back-label]');
+      if (back) { back.setAttribute('href', '/#index'); }
+      if (backLabel) { backLabel.textContent = 'Back to the index'; }
+      $$('.nav__links a').forEach(function (a) {
+        a.classList.toggle('current', a.getAttribute('href') === '/#index');
+      });
+    }
+
+    var fit = $('[data-fit]');
+    if (fit) {
+      var hero = fit.parentElement;
+      var fitShot = function () {
+        var cs = window.getComputedStyle(hero);
+        var room = hero.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        if (room > 0) { fit.style.setProperty('--s', Math.min(1.2, room / 480).toFixed(3)); }
+      };
+      fitShot();
+      window.addEventListener('resize', fitShot);
+    }
+
+    var rail = $('[data-rail]');
+    var marks = $$('[data-rail-mark]', work);
+    if (rail && marks.length > 1 && 'IntersectionObserver' in window) {
+      var ticks = marks.map(function (mark) {
+        var li = document.createElement('li');
+        li.title = mark.getAttribute('data-rail-mark');
+        li.addEventListener('click', function () {
+          mark.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+        });
+        rail.appendChild(li);
+        return li;
+      });
+      var seen = marks.map(function () { return false; });
+      var railIo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { seen[marks.indexOf(entry.target)] = entry.isIntersecting; });
+        var at = seen.indexOf(true);
+        ticks.forEach(function (li, n) { li.classList.toggle('is-current', n === (at < 0 ? 0 : at)); });
+      }, { rootMargin: '-30% 0px -50% 0px' });
+      marks.forEach(function (mark) { railIo.observe(mark); });
+      ticks[0].classList.add('is-current');
     }
   }
 

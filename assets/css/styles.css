@@ -521,7 +521,7 @@ html:not(.js) .wall__caption { position: static; }
   transform: scale(.5);
   transform-origin: 0 0;
 }
-.project-preview--phone .preview__topbar { height: 46px; padding-top: 10px; }
+.project-preview--phone .preview__topbar { position: relative; z-index: 1; height: 46px; padding-top: 10px; }
 .project-preview--phone .preview__body { grid-template-columns: 1fr; height: auto; }
 .project-preview--phone .preview__side { display: none; }
 .project-preview--phone .preview__content { padding: 26px 18px; }
@@ -697,11 +697,6 @@ html:not(.js) .index__tools { display: none; }
 }
 .project__link:hover,
 .project.is-peek .project__link { background: var(--bg-raise); }
-.project.is-flash .project__link { animation: flash 1.4s var(--ease); }
-@keyframes flash {
-  0%, 30% { background: var(--line-strong); }
-  100%    { background: var(--bg-raise); }
-}
 
 .project__thumb {
   display: block;
@@ -1278,6 +1273,150 @@ a.badge:focus-visible { transform: translateY(-3px); }
 .contact__links a:hover .contact__go { color: var(--text); transform: translate(2px, -2px); }
 
 /* =============================================================================
+   4 — Project pages (/work/*)
+   A column of facts that stays put on the left and the work on the right, as
+   in the reference. The rail at the far right marks the section in view.
+   ========================================================================== */
+.work { position: relative; padding: clamp(32px, 5vw, 64px) 0 clamp(64px, 9vw, 110px); }
+.work__grid {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  gap: clamp(36px, 5vw, 64px);
+  align-items: start;
+}
+.work__side {
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - var(--nav-h) - 64px);
+}
+.work__back {
+  align-self: flex-start;
+  margin-bottom: 26px;
+  color: var(--muted);
+  font: 400 11.5px/1 var(--mono);
+  transition: color .2s var(--ease);
+}
+.work__back:hover { color: var(--text); }
+.work__title {
+  font-size: clamp(28px, 3.4vw, 38px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+.work__lede { margin: 16px 0 0; color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+.work__tech {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 20px 0 0;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.work__tech .tech:hover { color: var(--brand, var(--text)); }
+.work__facts { display: grid; gap: 11px; margin-top: 22px; }
+.work__facts li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.work__facts svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.work__dot { display: grid; flex: none; place-items: center; width: 15px; height: 15px; }
+.work__dot::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3f9b5c;
+  box-shadow: 0 0 0 3px rgba(63, 155, 92, .2);
+}
+.work__repo {
+  align-self: flex-start;
+  margin-top: 24px;
+  font-size: 13px;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 4px;
+  transition: text-decoration-color .2s var(--ease);
+}
+.work__repo:hover { text-decoration-color: currentColor; }
+.work__pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 40px;
+}
+.work__pager a { display: grid; gap: 5px; max-width: 48%; font-size: 12.5px; line-height: 1.35; transition: color .2s var(--ease); }
+.work__pager a:last-child { text-align: right; }
+.work__pager a:hover { color: var(--muted); }
+.work__pager span { color: var(--muted); font: 400 10px/1 var(--mono); letter-spacing: .04em; }
+.work__pager--end { display: none; }
+
+.work__hero {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: clamp(20px, 4vw, 44px);
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line), var(--shadow-soft);
+}
+/* main.js fits the screen to the card; these are the steps without it. */
+.work__hero .shot { --s: 1.15; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(30, 26, 18, .5); }
+.work__hero .shot:has(> .phones) { box-shadow: none; }
+
+.work__features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: clamp(32px, 5vw, 48px);
+}
+.work__features li { padding-top: 16px; border-top: 1px solid var(--line-strong); }
+.work__features h2 { margin-bottom: 8px; font-size: 14px; font-weight: 600; letter-spacing: -.01em; }
+.work__features p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.work__section { max-width: 62ch; margin-top: clamp(40px, 6vw, 64px); }
+.work__section h2 { margin-bottom: 14px; font-size: 20px; font-weight: 600; letter-spacing: -.025em; }
+.work__section p { color: var(--muted); font-size: 14.5px; line-height: 1.75; }
+
+/* Built by main.js from the sections; decoration, so pointer-only. */
+.work__rail {
+  position: fixed;
+  top: 50%;
+  right: max(16px, calc((100vw - var(--wrap)) / 2 - 72px));
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+  transform: translateY(-50%);
+}
+.work__rail li { width: 14px; padding: 4px 0; cursor: pointer; transition: width .3s var(--ease); }
+.work__rail li::before {
+  content: "";
+  display: block;
+  height: 1.5px;
+  background: var(--line-strong);
+  transition: background-color .3s var(--ease);
+}
+.work__rail li:hover::before { background: var(--muted); }
+.work__rail li.is-current { width: 24px; }
+.work__rail li.is-current::before { background: var(--text); }
+
+/* =============================================================================
    Footer
    ========================================================================== */
 .foot { border-top: 1px solid var(--line); }
@@ -1298,9 +1437,35 @@ a.badge:focus-visible { transform: translateY(-3px); }
 /* =============================================================================
    Responsive
    ========================================================================== */
+@media (max-width: 1180px) {
+  .work__rail { display: none; }
+}
+
+@media (max-width: 1100px) {
+  .work__hero .shot { --s: .95; }
+}
+
 @media (max-width: 1000px) {
   .js .index__grid { grid-template-columns: minmax(0, 1fr); }
   .peek { display: none; }
+}
+
+/* One column: the facts lead, the pager moves to the end of the page. */
+@media (max-width: 900px) {
+  .work__grid { grid-template-columns: minmax(0, 1fr); }
+  .work__side { position: static; min-height: 0; }
+  .work__side .work__pager { display: none; }
+  .work__pager--end { display: flex; margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .work__hero .shot { --s: 1; }
+}
+
+@media (max-width: 640px) {
+  .work__features { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .work__hero .shot { --s: .78; }
+}
+
+@media (max-width: 440px) {
+  .work__hero .shot { --s: .6; }
 }
 
 @media (max-width: 760px) {
@@ -1356,7 +1521,7 @@ a.badge:focus-visible { transform: translateY(-3px); }
    same place. */
 @media (max-width: 370px) {
   .nav__rule,
-  .nav__links a[href="#wall"] { display: none; }
+  .nav__links a[href$="#wall"] { display: none; }
   .nav__inner { gap: 10px; }
   .theme-toggle { margin-left: 0; }
 }

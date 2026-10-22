@@ -62,7 +62,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=11" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=12" />
 
     <!-- The .js class switches on the enhancements (the shelf, the filters, the
          wall); without it every volume and every project is simply listed.
@@ -187,7 +187,7 @@
       <!-- ═══════════════════════════ 2 · index ═══════════════════════════
            Every project as a row. The thumbnail holds the project's mock
            screen, which is the one copy main.js clones for the preview panel
-           and the wall. Rows link to the repositories. -->
+           and the wall. Each row opens the project's page in /work. -->
       <section class="index" id="index" aria-labelledby="index-title">
         <div class="wrap index__grid">
           <div class="index__main">
@@ -233,16 +233,18 @@
                 <button
                   class="filter"
                   type="button"
-                  data-filter="web"
+                  data-filter="device"
                   aria-pressed="false"
-                  title="Web apps"
+                  title="Smart devices"
                 >
                   <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="3" y="5" width="18" height="14" rx="2"></rect>
-                    <path d="M3 9h18M6 7h.01M8.5 7h.01"></path>
+                    <rect x="7" y="7" width="10" height="10" rx="1.5"></rect>
+                    <path
+                      d="M10 3.5V7M14 3.5V7M10 17v3.5M14 17v3.5M3.5 10H7M3.5 14H7M17 10h3.5M17 14h3.5"
+                    ></path>
                   </svg>
                   <sup data-filter-count>1</sup>
-                  <span class="visually-hidden">Web apps</span>
+                  <span class="visually-hidden">Smart devices</span>
                 </button>
                 <button
                   class="filter"
@@ -284,12 +286,7 @@
 
             <ol class="index__list" data-index>
               <li class="project" id="dict-frcc" data-type="gov">
-                <a
-                  class="project__link"
-                  href="https://github.com/walidsalih111-ux/dict_frcc"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a class="project__link" href="/work/dict-frcc">
                   <span class="project__thumb" aria-hidden="true"
                     ><span class="shot">
                       <span class="project-preview">
@@ -346,8 +343,7 @@
                       ><span class="tech__name">Chart.js</span></span
                     >
                   </span>
-                  <span class="project__go" aria-hidden="true">&#8599;</span>
-                  <span class="visually-hidden">, repository on GitHub</span>
+                  <span class="project__go" aria-hidden="true">&rarr;</span>
                 </a>
                 <p class="project__role">
                   Lead Full-Stack Developer &amp; UI/UX Designer
@@ -359,12 +355,7 @@
               </li>
 
               <li class="project" id="readysethire" data-type="mobile">
-                <a
-                  class="project__link"
-                  href="https://github.com/rjtng/readysethire"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a class="project__link" href="/work/readysethire">
                   <span class="project__thumb" aria-hidden="true"
                     ><span class="shot">
                       <span class="project-preview project-preview--records">
@@ -376,8 +367,8 @@
                           <span class="preview__side"></span>
                           <span class="preview__content">
                             <span class="preview__eyebrow"
-                              >Candidate pipeline</span
-                            ><strong>Find your<br />next hire</strong>
+                              >AI mock interview</span
+                            ><strong>Practice your<br />next interview</strong>
                             <span class="preview__table"
                               ><i></i><i></i><i></i><i></i
                             ></span>
@@ -414,26 +405,22 @@
                         <use href="#t-materialdesign"></use></svg
                       ><span class="tech__name">Material Design</span></span
                     >
+                    <span class="tech"><span class="tech__name">Gemini</span></span>
                   </span>
-                  <span class="project__go" aria-hidden="true">&#8599;</span>
-                  <span class="visually-hidden">, repository on GitHub</span>
+                  <span class="project__go" aria-hidden="true">&rarr;</span>
                 </a>
                 <p class="project__role">
                   Product Designer &amp; Flutter Developer
                 </p>
                 <p class="project__desc">
-                  A focused recruitment app for candidate profiles, job
-                  listings, and the stages an application moves through.
+                  An interview-practice app for fresh graduates and job
+                  seekers: AI mock interviews, aptitude tests and a résumé
+                  builder in one Flutter app.
                 </p>
               </li>
 
-              <li class="project" id="recycoin" data-type="web">
-                <a
-                  class="project__link"
-                  href="https://github.com/rjtng/reycoin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              <li class="project" id="recycoin" data-type="device">
+                <a class="project__link" href="/work/recycoin">
                   <span class="project__thumb" aria-hidden="true"
                     ><span class="shot">
                       <span class="project-preview project-preview--vision">
@@ -459,12 +446,23 @@
                   <span class="project__name">RECYCOIN</span>
                   <span class="project__type">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <rect x="3" y="5" width="18" height="14" rx="2"></rect>
-                      <path d="M3 9h18M6 7h.01M8.5 7h.01"></path>
+                      <rect x="7" y="7" width="10" height="10" rx="1.5"></rect>
+                      <path
+                        d="M10 3.5V7M14 3.5V7M10 17v3.5M14 17v3.5M3.5 10H7M3.5 14H7M17 10h3.5M17 14h3.5"
+                      ></path>
                     </svg>
-                    <span class="project__type-label">Web app</span>
+                    <span class="project__type-label">Smart device</span>
                   </span>
                   <span class="project__tech">
+                    <span class="tech tech--sprite" style="--brand: #ab3e58"
+                      ><svg aria-hidden="true"><use href="#t-raspberrypi"></use></svg
+                      ><span class="tech__name">Raspberry Pi</span></span
+                    >
+                    <span class="tech tech--sprite" style="--brand: #4b83b3"
+                      ><svg aria-hidden="true"><use href="#t-python"></use></svg
+                      ><span class="tech__name">Python</span></span
+                    >
+                    <span class="tech"><span class="tech__name">YOLOv8</span></span>
                     <span class="tech tech--sprite" style="--brand: #777bb4"
                       ><svg aria-hidden="true"><use href="#t-php"></use></svg
                       ><span class="tech__name">PHP</span></span
@@ -473,30 +471,21 @@
                       ><svg aria-hidden="true"><use href="#t-mysql"></use></svg
                       ><span class="tech__name">MySQL</span></span
                     >
-                    <span class="tech tech--sprite" style="--brand: #8d6bbe"
-                      ><svg aria-hidden="true"><use href="#t-bootstrap"></use></svg
-                      ><span class="tech__name">Bootstrap</span></span
-                    >
                   </span>
-                  <span class="project__go" aria-hidden="true">&#8599;</span>
-                  <span class="visually-hidden">, repository on GitHub</span>
+                  <span class="project__go" aria-hidden="true">&rarr;</span>
                 </a>
                 <p class="project__role">
                   UX Researcher &amp; Full-Stack Developer
                 </p>
                 <p class="project__desc">
-                  A recycling-focused platform designed to connect sustainable
-                  actions with a simple digital rewards experience.
+                  A reverse vending machine for PET bottles. A camera running
+                  YOLOv8 checks each bottle, and residents earn points they
+                  redeem with barangay personnel.
                 </p>
               </li>
 
               <li class="project" id="barangay-maganda" data-type="gov">
-                <a
-                  class="project__link"
-                  href="https://github.com/rjtng/Barangay_Maganda_MI_System"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a class="project__link" href="/work/barangay-maganda">
                   <span class="project__thumb" aria-hidden="true"
                     ><span class="shot">
                       <span class="project-preview project-preview--vision">
@@ -544,8 +533,7 @@
                       ><span class="tech__name">Bootstrap</span></span
                     >
                   </span>
-                  <span class="project__go" aria-hidden="true">&#8599;</span>
-                  <span class="visually-hidden">, repository on GitHub</span>
+                  <span class="project__go" aria-hidden="true">&rarr;</span>
                 </a>
                 <p class="project__role">
                   Full-Stack Developer &amp; Systems Designer
@@ -1532,6 +1520,6 @@
     </footer>
 
     <script src="/assets/js/data-certs.js?v=5"></script>
-    <script src="/assets/js/main.js?v=11"></script>
+    <script src="/assets/js/main.js?v=12"></script>
   </body>
 </html>

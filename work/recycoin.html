@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>RECYCOIN &mdash; Al-Raji Theng</title>
+
+    <meta name="description" content="A reverse vending machine for PET bottles. A camera running YOLOv8 checks each bottle, and residents earn points they redeem with barangay personnel." />
+    <meta name="author" content="Al-Raji Theng" />
+    <meta name="theme-color" content="#f2f1ed" />
+    <link rel="canonical" href="https://rjtg.vercel.app/work/recycoin" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Al-Raji Theng" />
+    <meta property="og:title" content="RECYCOIN &mdash; Al-Raji Theng" />
+    <meta property="og:description" content="A reverse vending machine for PET bottles. A camera running YOLOv8 checks each bottle, and residents earn points they redeem with barangay personnel." />
+    <meta property="og:url" content="https://rjtg.vercel.app/work/recycoin" />
+    <meta property="og:image" content="https://rjtg.vercel.app/assets/img/og-cover.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/img/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=12" />
+
+    <script>
+      document.documentElement.classList.add("js");
+      try {
+        if (localStorage.getItem("theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      } catch (error) {}
+    </script>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav" id="nav">
+      <div class="wrap nav__inner">
+        <a class="nav__brand" href="/">Al-Raji Theng</a>
+
+        <nav class="nav__links" aria-label="Sections">
+          <a href="/#wall" class="current">Wall</a>
+          <a href="/#index">Index</a>
+          <span class="nav__rule" aria-hidden="true"></span>
+          <a href="/#about">About</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+
+        <button
+          class="theme-toggle"
+          type="button"
+          data-theme-toggle
+          aria-label="Dark mode"
+          aria-pressed="false"
+        >
+          <svg
+            class="theme-toggle__icon theme-toggle__icon--moon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"
+            ></path>
+          </svg>
+          <svg
+            class="theme-toggle__icon theme-toggle__icon--sun"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="4"></circle>
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ═══════════════════════ project · recycoin ═══════════════════════
+         Facts from the project's repository, its manual or README, and the
+         copy on the home page. The mock screen is the one in this project's
+         row of the Index; change both together. -->
+    <main id="main" class="work" data-work>
+      <div class="wrap work__grid">
+        <aside class="work__side">
+          <a class="work__back" href="/#wall" data-back
+            ><span aria-hidden="true">&larr;</span>
+            <span data-back-label>Back to the wall</span></a
+          >
+          <h1 class="work__title">RECYCOIN</h1>
+          <p class="work__lede">A reverse vending machine for PET bottles. A camera running YOLOv8 checks each bottle, and residents earn points they redeem with barangay personnel.</p>
+          <p class="work__tech" aria-label="Built with">
+            <span class="tech tech--sprite" style="--brand: #ab3e58"
+            ><svg aria-hidden="true"><use href="#t-raspberrypi"></use></svg
+            ><span class="tech__name">Raspberry Pi</span></span
+            >
+            <span class="tech tech--sprite" style="--brand: #4b83b3"
+            ><svg aria-hidden="true"><use href="#t-python"></use></svg
+            ><span class="tech__name">Python</span></span
+            >
+            <span class="tech"><span class="tech__name">YOLOv8</span></span>
+            <span class="tech tech--sprite" style="--brand: #777bb4"
+            ><svg aria-hidden="true"><use href="#t-php"></use></svg
+            ><span class="tech__name">PHP</span></span
+            >
+            <span class="tech tech--sprite" style="--brand: #4d7fa5"
+            ><svg aria-hidden="true"><use href="#t-mysql"></use></svg
+            ><span class="tech__name">MySQL</span></span
+            >
+            <span class="tech tech--sprite" style="--brand: #3290a4"><svg aria-hidden="true"><use href="#t-flask"></use></svg><span class="tech__name">Flask</span></span>
+            <span class="tech tech--sprite" style="--brand: #7c64ec"><svg aria-hidden="true"><use href="#t-opencv"></use></svg><span class="tech__name">OpenCV</span></span>
+            <span class="tech tech--sprite" style="--brand: #0592aa"><svg aria-hidden="true"><use href="#t-tailwindcss"></use></svg><span class="tech__name">Tailwind</span></span>
+          </p>
+          <ul class="work__facts">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1.5"></rect><path d="M10 3.5V7M14 3.5V7M10 17v3.5M14 17v3.5M3.5 10H7M3.5 14H7M17 10h3.5M17 14h3.5"></path></svg><span>Smart device &middot; web</span></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"></path></svg><span>UX Researcher &amp; Full-Stack Developer</span></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M4 10h16M9 3v4M15 3v4"></path></svg><span>May &ndash; June 2026</span></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M3 12h6M15 12h6"></path></svg><span>64 commits, with Walid Salih</span></li>
+          </ul>
+          <a
+            class="work__repo"
+            href="https://github.com/rjtng/reycoin"
+            target="_blank"
+            rel="noopener noreferrer"
+            >github.com/rjtng/<wbr>reycoin&nbsp;<span aria-hidden="true">&#8599;</span></a
+          >
+          <nav class="work__pager" aria-label="More projects">
+            <a href="/work/readysethire" rel="prev"><span>&larr; Previous</span>ReadySetHire</a>
+            <a href="/work/barangay-maganda" rel="next"><span>Next &rarr;</span>Barangay Maganda MIS</a>
+          </nav>
+        </aside>
+
+        <div class="work__main">
+          <figure class="work__hero">
+            <span
+              class="shot"
+              role="img"
+              aria-label="Mock-up of RECYCOIN"
+              data-fit
+              ><span class="project-preview project-preview--vision">
+                        <span class="preview__topbar"
+                          ><i></i><i></i><i></i
+                          ><b>RECY<span>COIN</span></b></span
+                        >
+                        <span class="preview__body">
+                          <span class="preview__side"></span>
+                          <span class="preview__content">
+                            <span class="preview__eyebrow"
+                              >Sustainable actions</span
+                            ><strong
+                              >Recycle today.<br /><b>Earn tomorrow.</b></strong
+                            >
+                            <span class="preview__camera"
+                              ><i></i><b>SCAN + EARN</b></span
+                            >
+                          </span>
+                        </span>
+                      </span></span
+            >
+          </figure>
+
+          <ul class="work__features" data-rail-mark="Highlights">
+            <li>
+              <h2>Sees the bottle</h2>
+              <p>YOLOv8 looks for a bottle in the camera feed and sizes it from its outline: 250&nbsp;ml, 500&nbsp;ml, 1&nbsp;L or 1.5&nbsp;L, worth 0.5 to 3 points.</p>
+            </li>
+            <li>
+              <h2>Hard to cheat</h2>
+              <p>A bottle has to hold still through at least three of five checks before it counts. A hand in the chute, or a disturbed chute, cancels the deposit.</p>
+            </li>
+            <li>
+              <h2>Knows when it&rsquo;s full</h2>
+              <p>An ultrasonic sensor reads the fill level of the 3.5&nbsp;ft bin. At 95% the machine stops accepting bottles and the dashboard shows it.</p>
+            </li>
+          </ul>
+
+          <section class="work__section" id="how-a-deposit-works" aria-labelledby="how-a-deposit-works-title" data-rail-mark="How a deposit works">
+            <h2 id="how-a-deposit-works-title">How a deposit works</h2>
+            <p>A resident opens their RECYCOIN page with their Resident ID and starts a session, which holds the machine for them until they finish.</p>
+            <p>Each bottle goes into the chute. The camera confirms and sizes it, the two servo gates open, the bottle drops into the bin and the gates close again. The screen on the machine narrates each step &mdash; verifying, verified with the points, opening, depositing, closing &mdash; and the points land on the resident&rsquo;s balance.</p>
+          </section>
+
+          <section class="work__section" id="redeeming-points" aria-labelledby="redeeming-points-title" data-rail-mark="Redeeming points">
+            <h2 id="redeeming-points-title">Redeeming points</h2>
+            <p>Barangay personnel sign in to a page of their own, enter a resident&rsquo;s ID and redeem points against the balance. Each redemption goes into a transaction history, and the resident&rsquo;s page updates when their points change.</p>
+          </section>
+
+          <section class="work__section" id="the-hardware" aria-labelledby="the-hardware-title" data-rail-mark="The hardware">
+            <h2 id="the-hardware-title">The hardware</h2>
+            <p>A Raspberry Pi runs the camera and a small Flask service the web app talks to: start and stop the camera, poll for verified bottles, read how full the bin is. The double acceptance gate is a pair of MG996R servos; an IR sensor at the closing gate stops it for a hand in the chute, and an ultrasonic sensor at the top measures the fill.</p>
+          </section>
+
+          <nav class="work__pager work__pager--end" aria-label="More projects">
+            <a href="/work/readysethire" rel="prev"><span>&larr; Previous</span>ReadySetHire</a>
+            <a href="/work/barangay-maganda" rel="next"><span>Next &rarr;</span>Barangay Maganda MIS</a>
+          </nav>
+        </div>
+      </div>
+
+      <ol class="work__rail" aria-hidden="true" data-rail></ol>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot__inner">
+        <p>&copy; <span id="year">2026</span> Al-Raji Theng</p>
+        <a href="mailto:alrajitheng@gmail.com">alrajitheng@gmail.com</a>
+        <a href="#main">Back to top <span aria-hidden="true">&uarr;</span></a>
+      </div>
+    </footer>
+
+    <script src="/assets/js/main.js?v=12"></script>
+  </body>
+</html>

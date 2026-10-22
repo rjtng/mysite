@@ -1,6 +1,6 @@
 # alrajitheng — personal portfolio
 
-A single-page portfolio for Al-Raji Theng. Plain HTML, CSS and JavaScript. No
+A portfolio for Al-Raji Theng: one page, plus a page per project. Plain HTML, CSS and JavaScript. No
 framework, no build step, no dependencies. Around 133 KB of HTML, CSS and
 JavaScript before the webfonts and the credential data.
 
@@ -9,7 +9,8 @@ and three rooms — a **Wall** of project screens, an **Index** of the projects,
 and a **shelf** of six volumes for About. See "Notes on the design" below.
 
 ```
-index.html                 the whole page
+index.html                 the home page: Wall, Index and the shelf
+work/*.html                one page per project, opened from the Wall and the Index
 assets/css/styles.css      all styles
 assets/js/main.js          theme, Index, wall, shelf, credentials
 assets/js/data-certs.js    generated — 60 Credly credentials
@@ -42,11 +43,29 @@ placeholder are marked with `EDIT:` comments in `index.html`.
 1. **The tagline under your name on the Wall**, "Apps that don't just look
    good — they work." It is a placeholder (marked `EDIT:`); say it your way.
 2. **The project types in the Index.** DICT FRCC and Barangay Maganda MIS are
-   filed as government systems, RECYCOIN as a web app and ReadySetHire as a
-   mobile app. The filters and their counts come from these, in the
+   filed as government systems, RECYCOIN as a smart device and ReadySetHire as
+   a mobile app. The filters and their counts come from these, in the
    `data-type` on each row.
 3. **Location.** The Wall says "Zamboanga City, PH", and the clock under the
    shelf runs on Philippine time.
+
+**The project pages, read from the repositories.** Each page in `work/` was
+written from that project's code, its README or user manual, its commit
+history, and the copy already on this page. Reading them turned up three
+corrections, now made here as well:
+
+- **ReadySetHire** was described as a recruitment app for candidate profiles
+  and job listings. The code and its user manual are an interview-practice app
+  for job seekers (Gemini mock interviews, aptitude tests, a résumé builder), so
+  the description and its mock screen now say that.
+- **RECYCOIN** was a "web app" built with Bootstrap. It is a reverse vending
+  machine — a Raspberry Pi running YOLOv8, servos and sensors, with a PHP and
+  MySQL web app styled in Tailwind — so it is now a smart device, with that
+  stack.
+- **Barangay Maganda MIS**: the repository holds only the administrators'
+  sign-in and account creation, so its page stops at the summary, and its
+  description and Bootstrap mark are left as they were, unverified. Add what it
+  does where the `EDIT:` comment in `work/barangay-maganda.html` says.
 
 **Taken from your real profiles, safe as-is:** all 60 credentials with their
 issue dates and verification links, the four projects and their repositories,
@@ -113,9 +132,9 @@ expires. Only a different URL reaches them, so the stylesheet and scripts carry
 a `?v=` token:
 
 ```html
-<link rel="stylesheet" href="/assets/css/styles.css?v=11" />
+<link rel="stylesheet" href="/assets/css/styles.css?v=12" />
 <script src="/assets/js/data-certs.js?v=5"></script>
-<script src="/assets/js/main.js?v=11"></script>
+<script src="/assets/js/main.js?v=12"></script>
 ```
 
 `main.js` carries its own token for the logo sprite it fetches. **Bump the
@@ -226,12 +245,13 @@ each project gets its screen (three phones for ReadySetHire), a close-up or a
 second screen, and a dark card of its brand marks, laid in staggered rows so no
 project sits above itself. Hovering a tile keeps that project in colour, washes
 the rest back to the paper, and swaps your name in the caption for "02 / 04",
-the project and its description. Clicking goes to its row in the Index. On a
+the project and its description. Clicking opens the project's page. On a
 phone the first tap shows the caption and a second one goes. The wall drifts a
 little slower than the page as you scroll.
 
-**Index.** One row per project: thumbnail, name, type, the marks it was built
-with, and a link to the repository. The filters along the top count each type;
+**Index.** One row per project: thumbnail, name, type and the marks it was
+built with; the row opens the project's page. The filters along the top count
+each type;
 "type to find" searches names, roles, descriptions and technologies, and `/`
 jumps to it. On a wide screen the panel on the right previews whichever row
 the pointer is on; elsewhere the role and description sit under the row. Every
@@ -247,6 +267,17 @@ ids are the old section anchors, so links to `#skills`, `#experience`,
 volume, and `#projects` and `#home` land on the Index and the Wall. The clock
 under the shelf is Zamboanga time. Every size on the shelf is a multiple of
 `--k`, so on a phone it scales down rather than reflowing.
+
+**Project pages.** `/work/<project>`, after the reference's case pages: the
+facts in a column that stays put on the left — summary, marks, type, role,
+dates, the repository — and on the right the project's screen in a card, three
+highlights and a few short sections. The rail at the far right marks the
+section in view and jumps to one when clicked. "Back to the wall" becomes
+"Back to the index" when that is where the visit began, and Previous and Next
+walk the projects in Index order. The pages are plain HTML; the mock screen on
+each is a copy of the one in its Index row, so change both together. To add a
+project, add its row to the Index and a page beside the others in `work/`,
+and list it in `sitemap.xml`.
 
 Inter for everything you read, JetBrains Mono for labels and metadata. The
 palette is a handful of custom properties at the top of `styles.css` — paper,
