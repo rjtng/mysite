@@ -12,7 +12,7 @@ and a **shelf** of six volumes for About. See "Notes on the design" below.
 index.html                 the home page: Wall, Index and the shelf
 work/*.html                one page per project, opened from the Wall and the Index
 assets/css/styles.css      all styles
-assets/js/main.js          theme, Index, wall, shelf, credentials
+assets/js/main.js          theme, Index, wall, shelf and reader, credentials
 assets/js/data-certs.js    generated — 60 Credly credentials
 assets/img/favicon.svg     tab icon
 assets/img/og-cover.png    generated — 1200x630 social card
@@ -268,13 +268,23 @@ one mock in that row's thumbnail, drawn in HTML at 480x300 and scaled, so a
 project added to the list turns up everywhere.
 
 **About.** A shelf of six volumes: `$whoami`, Skills, Certifications,
-Experience, Affiliations and Contact Me. Clicking a spine pulls it out and
-opens that volume under the shelf; one is open at a time, `$whoami` first. The
-ids are the old section anchors, so links to `#skills`, `#experience`,
-`#certifications` and `#contact` from the previous design still open the right
-volume, and `#projects` and `#home` land on the Index and the Wall. The clock
-under the shelf is Zamboanga time. Every size on the shelf is a multiple of
-`--k`, so on a phone it scales down rather than reflowing.
+Experience, Affiliations and Contact Me. Clicking a spine takes that book off
+the shelf: it slides out spine first, turns to its cover in front of the shelf
+and opens on a spread, the contents on the left and a page on the right. The
+arrows, the contents, the arrow keys or a swipe turn the pages; "Back to
+shelf" or Escape puts the book back. On a narrow screen it opens to one page
+at a time, the contents first. The book is a box in 3D while it moves and is
+flattened once it lies open, so the pages are ordinary, crisp layout.
+
+Each volume in `index.html` is a run of `<section class="vol__page">`, each
+with its `<h4 class="vol__page-title">`; the title is the page's line in the
+contents. To add a page, add a section. The reader moves the sections into
+the book while they show and puts them back after, and sizes each book to its
+longest page. The ids are the old section anchors, so links to `#skills`,
+`#experience`, `#certifications` and `#contact` from the previous design still
+open the right book, and `#projects` and `#home` land on the Index and the
+Wall. The clock under the shelf is Zamboanga time. Every size on the shelf is
+a multiple of `--k`, so on a phone it scales down rather than reflowing.
 
 **Project pages.** `/work/<project>`, after the reference's case pages: the
 facts in a column that stays put on the left — summary, marks, type, role,
@@ -293,8 +303,8 @@ footer in, and updates the title, description and canonical; the header stays,
 so the theme and nav never flicker. Every move is a history entry that
 remembers its scroll position, so Back and Forward return to the same place,
 and "Back to the wall" steps back in history when that is where the visit
-came from. Moving between volumes on the shelf replaces the entry rather than
-adding one. Pages are fetched when the pointer reaches a link, so they are
+came from. Taking a book off the shelf or putting it back replaces the entry
+rather than adding one. Pages are fetched when the pointer reaches a link, so they are
 usually ready by the click; a slow one shows a thin bar under the nav, and
 browsers with view transitions crossfade. Anything that goes wrong falls back
 to an ordinary page load, which is what every link is without JavaScript.
@@ -312,11 +322,13 @@ moon; only that click is remembered.
 
 Without JavaScript the Wall is just your name and tagline, the Index is a plain
 list with every description showing, and the six volumes are printed one after
-another. `prefers-reduced-motion` stops the drift, the marquee and the
-transitions, and a print stylesheet prints the content as a plain document.
+another, page by page. `prefers-reduced-motion` stops the drift, the marquee,
+the transitions and the book's flight (it opens and closes at once), and a
+print stylesheet prints the content as a plain document.
 
 Accessibility: semantic landmarks, a skip link, visible focus rings,
 `aria-pressed` on the filters and the theme switch, `aria-expanded` on the
 spines, a polite status line that reads out how many projects a filter or
-search leaves, and focus moved into a volume when it opens. Body and muted text
+search leaves, focus moved into the book when it opens and back to its spine
+when it closes, and the page announced as it turns. Body and muted text
 clear AA contrast on both the paper and the dark theme.

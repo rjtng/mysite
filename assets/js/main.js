@@ -393,41 +393,9 @@
     }
 
     /* --- About: the shelf -------------------------------------------------- */
-    var books = $$('.book');
-    var vols = $$('.vol');
     var openHooks = [];
-    var openId = null;
-
-    function volById(id) {
-      var el = id ? document.getElementById(id) : null;
-      return el && el.classList.contains('vol') ? el : null;
-    }
-
-    /* scroll: 'nudge' brings the volume into view only if it is out of sight
-       (a spine was clicked, so the shelf should stay on screen); 'start' puts
-       its top under the nav. */
-    function openVol(id, how) {
-      var vol = volById(id);
-      if (!vol) { return false; }
-      how = how || {};
-      if (openId !== id) {
-        openId = id;
-        vols.forEach(function (v) { v.classList.toggle('is-open', v === vol); });
-        books.forEach(function (b) { b.setAttribute('aria-expanded', String(b.getAttribute('aria-controls') === id)); });
-        openHooks.forEach(function (fn) { fn(id); });
-        markNav();
-      }
-      if (how.scroll === 'start') {
-        scrollToEl(vol, how);
-      } else if (how.scroll === 'nudge') {
-        var top = vol.getBoundingClientRect().top;
-        if (top < 0 || top > window.innerHeight - 140) {
-          window.scrollBy({ top: top - window.innerHeight * 0.38, behavior: scrollBehavior() });
-        }
-      }
-      if (how.focus) { vol.focus({ preventScroll: true }); }
-      return true;
-    }
+    var library = $('[data-library]');
+    var reader = library ? bookReader(library, openHooks) : null;
 
     /* --- the clock under the shelf, in Zamboanga time ---------------------- */
     var clock = $('[data-clock]');
@@ -457,34 +425,527 @@
         var line = (window.scrollY || root.scrollTop) + window.innerHeight * 0.35;
         var here = rooms.length ? rooms[0].id : null;
         rooms.forEach(function (room) { if (room.offsetTop <= line) { here = room.id; } });
-        if (here === 'about' && openId === 'contact') { here = 'contact'; }
+        if (here === 'about' && reader && reader.openId() === 'contact') { here = 'contact'; }
         return here;
       },
-      /* Any link to a volume opens it: the spines, the nav's Contact, the
-         arrows at the foot of each volume, and links to the old section
-         anchors. Old links to #home and #projects land on the rooms that
-         replaced them. */
+      /* Any link to a volume takes its book off the shelf: the spines, the
+         nav's Contact, and links to the old section anchors. Old links to
+         #home and #projects land on the rooms that replaced them. */
       hash: function (hash, how) {
         var raw = decodeURIComponent((hash || '').replace(/^#/, ''));
         var id = ALIASES[raw] || raw;
-        if (volById(id)) {
-          var scroll = how.noScroll ? null : how.shelf ? 'nudge' : 'start';
-          if (how.first && scroll) {
-            // a hidden volume can't be scrolled to before it opens
-            openVol(id, {});
-            window.requestAnimationFrame(function () { scrollToEl(volById(id), { instant: true }); });
-          } else {
-            openVol(id, { scroll: scroll, instant: how.instant, focus: how.user });
-          }
+        if (reader && reader.has(id)) {
+          reader.open(id, {
+            scroll: how.noScroll ? null : how.shelf ? 'nudge' : 'start',
+            instant: how.instant || how.first,
+            focus: how.user
+          });
           return true;
         }
         if (id !== raw) { how = { instant: how.instant, keyboard: how.keyboard, noScroll: how.noScroll }; }
         return goToId(id, how);
       }
     };
+  }
 
-    // $whoami until the address asks for another volume.
-    if (vols.length) { openVol(vols[0].id, {}); }
+  /* =========================================================================
+     The reader. Following a spine takes its book off the shelf: it slides
+     out spine first, turns to its cover in front of the shelf and opens on
+     a spread, the contents on the left and a page on the right. A narrow
+     screen gets one page at a time, the contents first. The pages are the
+     volume's own .vol__page sections, moved into the book while they show
+     and put back after, so whatever is wired to them keeps working.
+
+     The book is one box in 3D (covers, spine, page edges) while it moves.
+     Once it lies open it is flattened (.is-flat), and the spread is ordinary
+     layout: crisp text, links, scrolling. Turning a page lays a copy of it
+     over the spread and swings that.
+     ====================================================================== */
+  function bookReader(library, openHooks) {
+    var shelf = $('.shelf', library);
+    var animates = !!Element.prototype.animate;
+    var navH = parseFloat(window.getComputedStyle(root).getPropertyValue('--nav-h')) || 64;
+
+    var volumes = $$('.book', library).map(function (spine) {
+      var id = spine.getAttribute('aria-controls');
+      var vol = id ? document.getElementById(id) : null;
+      if (!vol) { return null; }
+      var text = function (sel) { var n = $(sel, vol); return n ? n.textContent.trim() : ''; };
+      var lede = $('.vol__lede', vol);
+      return {
+        id: id,
+        spine: spine,
+        num: $('.book__num', spine) ? $('.book__num', spine).textContent : '',
+        by: $('.book__by', spine) ? $('.book__by', spine).textContent : '',
+        title: text('.vol__title'),
+        lede: lede ? lede.innerHTML : '',
+        w: parseFloat(spine.style.getPropertyValue('--w')) || 56,
+        h: parseFloat(spine.style.getPropertyValue('--h')) || 392,
+        tone: (spine.className.match(/\bbook--(?:light|ink)\b/) || [''])[0],
+        pages: $$('.vol__page', vol).map(function (node) {
+          var home = document.createComment('');
+          node.parentNode.insertBefore(home, node);
+          var title = $('.vol__page-title', node);
+          return { node: node, home: home, title: title ? title.textContent.trim() : '' };
+        })
+      };
+    }).filter(function (v) { return v && v.pages.length; });
+    if (!shelf || !volumes.length) { return null; }
+
+    var el = document.createElement('div');
+    el.className = 'reader';
+    el.hidden = true;
+    el.setAttribute('role', 'region');
+    el.innerHTML =
+      '<div class="reader__stage"><div class="fb">' +
+        '<div class="fb__back"></div>' +
+        '<div class="fb__top"></div><div class="fb__bottom"></div><div class="fb__edge"></div>' +
+        '<div class="fb__spine" aria-hidden="true"></div>' +
+        // The left-hand page first, so it is read (and tabbed through) first.
+        '<div class="fb__flap">' +
+          '<div class="fb__cover" aria-hidden="true"></div>' +
+          '<div class="fb__inside"><div class="fb__sheet fb__sheet--left"><div class="fb__body"></div>' +
+            '<p class="fb__folio"><span data-folio-vol></span><span>Contents</span></p></div></div>' +
+        '</div>' +
+        '<div class="fb__page fb__sheet"><div class="fb__body"></div>' +
+          '<p class="fb__folio"><span data-folio-title></span><span data-folio-num></span></p></div>' +
+      '</div></div>' +
+      '<div class="reader__bar">' +
+        '<button type="button" class="reader__turn" data-turn="-1" aria-label="Previous page"><span aria-hidden="true">&larr;</span></button>' +
+        '<p class="reader__where" aria-live="polite"></p>' +
+        '<button type="button" class="reader__turn" data-turn="1" aria-label="Next page"><span aria-hidden="true">&rarr;</span></button>' +
+        '<i class="reader__sep" aria-hidden="true"></i>' +
+        '<button type="button" class="reader__close">Back to shelf</button>' +
+      '</div>' +
+      '<div class="fb__sheet fb__probe" aria-hidden="true"><div class="fb__body"></div><p class="fb__folio"><span>&nbsp;</span></p></div>';
+    library.appendChild(el);
+    (library.closest('.about') || library.parentNode).classList.add('has-reader');
+
+    var stage = $('.reader__stage', el);
+    var fb = $('.fb', el);
+    var right = $('.fb__page', el);
+    var rightBody = $('.fb__body', right);
+    var flap = $('.fb__flap', el);
+    var cover = $('.fb__cover', el);
+    var spineFace = $('.fb__spine', el);
+    var leftSheet = $('.fb__sheet--left', el);
+    var leftBody = $('.fb__body', leftSheet);
+    var where = $('.reader__where', el);
+    var prev = $('[data-turn="-1"]', el);
+    var next = $('[data-turn="1"]', el);
+    var probe = $('.fb__probe', el);
+    var probeBody = $('.fb__body', probe);
+
+    var toc = document.createElement('div');
+    toc.className = 'fb__contents';
+    var contents = { node: toc, title: 'Contents', toc: true };
+
+    var cur = null;       // the volume out of the shelf
+    var state = 'shelf';  // 'shelf', 'moving' or 'open'
+    var single = false;   // one page at a time
+    var size = null;      // { W, H, D } in px
+    var at = 0;           // which of list() is on the right-hand page
+    var shown = null;
+    var endTurn = null;   // ends the turn under way, if any
+    var queue = Promise.resolve();
+    var dimTimer = 0;
+    atLeave(function () { clearTimeout(dimTimer); });
+
+    function byId(id) {
+      for (var i = 0; i < volumes.length; i++) { if (volumes[i].id === id) { return volumes[i]; } }
+      return null;
+    }
+    // What the right-hand page can show: the contents too, on one page.
+    function list() { return single ? [contents].concat(cur.pages) : cur.pages; }
+
+    function play(node, frames, opts) {
+      if (!animates || still) { return Promise.resolve(); }
+      return node.animate(frames, opts).finished.catch(function () {});
+    }
+    function pause(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
+
+    /* --- dressing the book for a volume ----------------------------------- */
+    function dress(v) {
+      fb.className = 'fb' + (v.tone ? ' ' + v.tone : '');
+      el.setAttribute('aria-label', 'Vol. ' + v.num + ', ' + v.title);
+      cover.innerHTML =
+        '<span class="fb__by">' + esc(v.by) + '</span>' +
+        '<span class="fb__num">' + esc(v.num) + '</span>' +
+        '<span class="fb__name">' + esc(v.title) + '</span>' +
+        '<span class="fb__foot">Vol. ' + esc(v.num) + '</span>';
+      spineFace.className = 'fb__spine ' + v.spine.className.replace(/\s*\bbook--first\b/, '').replace(/\s*\bis-out\b/, '');
+      spineFace.innerHTML = v.spine.innerHTML;
+      $('[data-folio-vol]', el).textContent = 'Vol. ' + v.num;
+      toc.innerHTML =
+        '<p class="fb__kicker">Vol. ' + esc(v.num) + '</p>' +
+        '<h3 class="fb__vtitle" id="reader-title" tabindex="-1">' + esc(v.title) + '</h3>' +
+        (v.lede ? '<p class="fb__lede">' + v.lede + '</p>' : '') +
+        '<p class="fb__label">Contents</p>' +
+        '<ol class="fb__toc">' + v.pages.map(function (p, i) {
+          return '<li><button type="button" data-goto="' + i + '"><span>' + esc(p.title) + '</span>' +
+            '<i>' + pad(i + 1) + '</i><b aria-hidden="true">&rarr;</b></button></li>';
+        }).join('') + '</ol>';
+    }
+
+    /* The book is as tall as its longest page needs, within the window, and
+       as deep as its spine is wide for its height. */
+    function measure(v) {
+      var libW = library.clientWidth;
+      single = libW < 680;
+      var W = Math.floor(single ? Math.min(libW, 420) : Math.min(440, libW / 2));
+      fb.style.setProperty('--W', W + 'px');
+      probe.style.width = (W - 6) + 'px';
+      var need = 0;
+      [contents].concat(v.pages).forEach(function (p) {
+        probeBody.appendChild(p.node.cloneNode(true));
+        need = Math.max(need, probe.offsetHeight);
+        probeBody.textContent = '';
+      });
+      var most = Math.max(420, window.innerHeight - navH - (single ? 100 : 150));
+      var H = Math.round(Math.min(most, Math.max(W * 1.28, need + 6)));
+      var D = Math.round(H * v.w / v.h);
+      size = { W: W, H: H, D: D };
+      fb.style.setProperty('--H', H + 'px');
+      fb.style.setProperty('--D', D + 'px');
+      stage.style.height = H + 'px';
+      spineFace.style.cssText = '--w:' + v.w + ';--h:' + v.h + ';--k:' + (H / v.h).toFixed(4);
+      fb.classList.toggle('is-single', single);
+      // The contents live on the left page of a spread.
+      if (!single && toc.parentNode !== leftBody) { leftBody.appendChild(toc); }
+    }
+
+    /* --- what the right-hand page shows ----------------------------------- */
+    function home(item) {
+      if (!item) { return; }
+      if (item.toc) {
+        if (single) { toc.remove(); } else { leftBody.appendChild(toc); }
+      } else {
+        item.home.parentNode.insertBefore(item.node, item.home.nextSibling);
+      }
+    }
+    function show(i) {
+      var items = list();
+      home(shown);
+      at = Math.max(0, Math.min(items.length - 1, i));
+      shown = items[at];
+      rightBody.appendChild(shown.node);
+      rightBody.scrollTop = 0;
+      more();
+      var n = cur.pages.indexOf(shown);
+      $('[data-folio-title]', el).textContent = shown.toc ? 'Vol. ' + cur.num : cur.title;
+      $('[data-folio-num]', el).textContent = n < 0 ? 'Contents' : pad(n + 1);
+      $$('[data-goto]', toc).forEach(function (b) {
+        if (Number(b.getAttribute('data-goto')) === n) { b.setAttribute('aria-current', 'page'); }
+        else { b.removeAttribute('aria-current'); }
+      });
+      where.innerHTML = '<span class="reader__vol">Vol. ' + esc(cur.num) + ' &middot; ' + esc(cur.title) + ' &middot; </span>' +
+        '<b>' + esc(shown.title) + '</b> <span>' + (n < 0 ? '' : (n + 1) + ' ') + '/ ' + cur.pages.length + '</span>';
+      prev.disabled = at === 0;
+      next.disabled = at === items.length - 1;
+      if (state === 'open') { settled(); }
+    }
+    // Whatever measures itself (the marquee) does so once the book lies flat.
+    function settled() { openHooks.forEach(function (fn) { fn(cur.id); }); }
+
+    // A page longer than the book scrolls, and fades out while there is more.
+    function more() {
+      right.classList.toggle('has-more', rightBody.scrollHeight - rightBody.scrollTop - rightBody.clientHeight > 4);
+    }
+    rightBody.addEventListener('scroll', more, { passive: true });
+
+    /* --- poses -------------------------------------------------------------
+       One transform list throughout, so every pose blends into the next. On
+       the shelf the book stands turned a quarter, spine out, scaled down to
+       the spine and pushed back so the spine sits at its true size. */
+    function tf(x, y, z, s, ry, rx) {
+      return 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) ' +
+        'scale3d(' + s.toFixed(4) + ',' + s.toFixed(4) + ',' + s.toFixed(4) + ') ' +
+        'rotateY(' + ry + 'deg) rotateX(' + rx + 'deg)';
+    }
+    function flapAt(deg) { return 'translateZ(' + (size.D / 2) + 'px) rotateY(' + deg + 'deg)'; }
+    function poses(v) {
+      var lr = library.getBoundingClientRect();
+      var sr = v.spine.getBoundingClientRect();
+      var W = size.W, H = size.H, D = size.D;
+      var s = sr.height / H;
+      var x = sr.left + sr.width / 2 - (lr.left + lr.width / 2);
+      var y = sr.top + sr.height / 2 - (lr.top + stage.offsetTop + H / 2);
+      var z = -s * W / 2;
+      var spread = single ? 0 : W / 2;
+      return {
+        shelf: tf(x, y, z, s, 90, 0),
+        pulled: tf(x, y - 6, z + 110, s, 90, 0),
+        turning: tf(x * 0.45, y * 0.45 - 30, -D / 2 + 60, (s + 1) / 2, 38, -6),
+        front: tf(0, 0, -D / 2, 1, 0, 0),
+        opening: tf(spread / 2, -10, -D / 2 + 30, 1, 0, 9),
+        open: tf(spread, 0, -D / 2, 1, 0, 0)
+      };
+    }
+
+    // The shelf makes room for the open book, at once, so that scrolling to
+    // the book (or back to where the page was) finds the page full height.
+    function room(px) { library.style.minHeight = px ? px + 'px' : ''; }
+
+    // Keep the open book in view, under the nav.
+    function bring(how) {
+      if (!how.scroll) { return; }
+      var r = el.getBoundingClientRect();
+      var top = r.top - navH - 16;
+      var delta = 0;
+      if (how.scroll === 'start' || top < 0) { delta = top; }
+      else if (r.bottom > window.innerHeight - 12) { delta = Math.min(top, r.bottom - window.innerHeight + 12); }
+      if (Math.abs(delta) < 2) { return; }
+      if (how.instant) { jump(function () { window.scrollBy(0, delta); }); }
+      else { window.scrollBy({ top: delta, behavior: scrollBehavior() }); }
+    }
+
+    /* --- off the shelf ------------------------------------------------------ */
+    function takeOut(v, how) {
+      cur = v;
+      state = 'moving';
+      el.hidden = false;
+      el.classList.remove('is-open');
+      dress(v);
+      measure(v);
+      shown = null;
+      show(0);
+      var p = poses(v);
+      v.spine.classList.add('is-out');
+      v.spine.setAttribute('aria-expanded', 'true');
+      library.classList.add('is-reading');
+      room(el.offsetHeight);
+      shelf.inert = true;
+      markNav();
+      bring(how);
+
+      if (how.instant || still || !animates) { return Promise.resolve(lieOpen(how)); }
+
+      fb.classList.remove('is-flat');
+      fb.style.transform = p.front;
+      flap.style.transform = flapAt(0);
+      clearTimeout(dimTimer);
+      dimTimer = setTimeout(function () { library.classList.add('is-dim'); }, 380);
+      return play(fb, [
+        { transform: p.shelf, easing: 'cubic-bezier(.3,.6,.35,1)' },
+        { transform: p.pulled, offset: 0.24, easing: 'cubic-bezier(.45,0,.3,1)' },
+        { transform: p.turning, offset: 0.62, easing: 'cubic-bezier(.3,0,.25,1)' },
+        { transform: p.front }
+      ], { duration: 1250 }).then(function () {
+        return pause(90);
+      }).then(function () {
+        if (!el.isConnected) { return; }
+        fb.style.transform = p.open;
+        flap.style.transform = flapAt(-180);
+        var ease = 'cubic-bezier(.55,0,.3,1)';
+        return Promise.all([
+          play(fb, [{ transform: p.front }, { transform: p.opening }, { transform: p.open }], { duration: 950, easing: ease }),
+          play(flap, [{ transform: flapAt(0) }, { transform: flapAt(-180) }], { duration: 950, easing: ease })
+        ]);
+      }).then(function () { lieOpen(how); });
+    }
+
+    function lieOpen(how) {
+      if (!el.isConnected) { return; }
+      fb.style.transform = '';
+      flap.style.transform = '';
+      fb.classList.add('is-flat');
+      library.classList.add('is-dim');
+      el.classList.add('is-open');
+      state = 'open';
+      settled();
+      if (how.focus) { $('#reader-title', el).focus({ preventScroll: true }); }
+    }
+
+    /* --- back on the shelf ------------------------------------------------- */
+    function putBack(how) {
+      var v = cur;
+      if (endTurn) { endTurn(); }
+      state = 'moving';
+      el.classList.remove('is-open');
+      var done = function () {
+        if (!el.isConnected) { return; }
+        home(shown);
+        shown = null;
+        toc.remove();
+        el.hidden = true;
+        fb.style.transform = '';
+        flap.style.transform = '';
+        fb.classList.remove('is-flat');
+        v.spine.classList.remove('is-out');
+        v.spine.setAttribute('aria-expanded', 'false');
+        library.classList.remove('is-reading', 'is-dim');
+        room(0);
+        shelf.inert = false;
+        cur = null;
+        state = 'shelf';
+        markNav();
+        if (how.focus) { v.spine.focus({ preventScroll: true }); }
+      };
+      if (how.instant || still || !animates) { done(); return Promise.resolve(); }
+
+      var p = poses(v);
+      var ease = 'cubic-bezier(.55,0,.3,1)';
+      fb.classList.remove('is-flat');
+      fb.style.transform = p.front;
+      flap.style.transform = flapAt(0);
+      return Promise.all([
+        play(fb, [{ transform: p.open }, { transform: p.opening }, { transform: p.front }], { duration: 850, easing: ease }),
+        play(flap, [{ transform: flapAt(-180) }, { transform: flapAt(0) }], { duration: 850, easing: ease })
+      ]).then(function () {
+        if (!el.isConnected) { return; }
+        library.classList.remove('is-dim');
+        fb.style.transform = p.shelf;
+        return play(fb, [
+          { transform: p.front, easing: 'cubic-bezier(.45,0,.55,1)' },
+          { transform: p.turning, offset: 0.38, easing: 'cubic-bezier(.3,0,.3,1)' },
+          { transform: p.pulled, offset: 0.76, easing: 'cubic-bezier(.4,0,.2,1)' },
+          { transform: p.shelf }
+        ], { duration: 1150 });
+      }).then(done);
+    }
+
+    /* --- turning pages ------------------------------------------------------
+       Forward, a copy of the page lifts off to the left, showing the new one
+       beneath. Back, a copy of the previous page swings in over the current
+       one. Either way the copy's other side is the left-hand page, so it
+       lands as if it were the page. */
+    function turn(to) {
+      if (!cur || state !== 'open' || to === at || to < 0 || to >= list().length) { return; }
+      // A turn asked for mid-turn finishes the one under way first.
+      if (endTurn) { endTurn(); }
+      if (still || !animates) { show(to); return; }
+      var forward = to > at;
+      var leaf = document.createElement('div');
+      leaf.className = 'fb__leaf';
+      leaf.setAttribute('aria-hidden', 'true');
+      leaf.inert = true;
+      var under = null;
+      // Copies only: no ids twice on the page, nothing to tab to.
+      var copy = function (from, cls) {
+        var sheet = document.createElement('div');
+        sheet.className = 'fb__sheet ' + cls;
+        sheet.innerHTML = from.innerHTML;
+        $$('[id]', sheet).forEach(function (n) { n.removeAttribute('id'); });
+        return sheet;
+      };
+      if (forward) {
+        leaf.appendChild(copy(right, 'fb__leaf-face'));
+        show(to);
+      } else {
+        under = copy(right, 'fb__under');
+        fb.appendChild(under);
+        show(to);
+        leaf.appendChild(copy(right, 'fb__leaf-face'));
+      }
+      // On one page there is nothing on the left: the copy's back is bare,
+      // so it vanishes as it passes the spine.
+      var back = single ? document.createElement('div') : copy(leftSheet, 'fb__sheet--left');
+      back.classList.add('fb__leaf-back');
+      leaf.appendChild(back);
+      fb.appendChild(leaf);
+      // No opacity here: it would flatten the leaf and show its face through.
+      var flat = 'perspective(2400px) rotateY(0deg)';
+      var over = 'perspective(2400px) rotateY(-180deg)';
+      var frames = forward ? [{ transform: flat }, { transform: over }] : [{ transform: over }, { transform: flat }];
+      leaf.style.transform = forward ? over : flat;
+      var swing = leaf.animate(frames, { duration: 760, easing: 'cubic-bezier(.45,.05,.25,1)' });
+      var end = function () {
+        if (endTurn === end) { endTurn = null; }
+        swing.cancel();
+        leaf.remove();
+        if (under) { under.remove(); }
+      };
+      endTurn = end;
+      swing.finished.then(end, function () {});
+    }
+
+    /* --- the public face ---------------------------------------------------- */
+    /* Straight away when nothing is moving, so a caller that restores the
+       scroll position next finds the page at its full height; after the
+       move under way otherwise. */
+    function open(id, how) {
+      var v = byId(id);
+      if (!v) { return; }
+      var step = function () {
+        if (!el.isConnected) { return; }
+        if (cur === v) { bring(how); return; }
+        // Another volume is out: it goes back at once, this one comes out.
+        if (cur) { putBack({ instant: true }); }
+        return takeOut(v, how);
+      };
+      queue = state === 'moving' ? queue.then(step) : Promise.resolve(step());
+    }
+    function close(how) {
+      if (!cur || state !== 'open') { return; }
+      queue = Promise.resolve(putBack(how));
+      try { history.replaceState(history.state, '', location.pathname + location.search + '#about'); } catch (error) {}
+    }
+
+    el.addEventListener('click', function (e) {
+      var t = e.target.closest ? e.target.closest('button') : null;
+      if (!t || !el.contains(t)) { return; }
+      if (t.classList.contains('reader__close')) { close({ focus: true }); return; }
+      if (t.hasAttribute('data-turn')) { turn(at + Number(t.getAttribute('data-turn'))); return; }
+      if (t.hasAttribute('data-goto')) { turn(list().indexOf(cur.pages[Number(t.getAttribute('data-goto'))])); }
+    });
+
+    onPage(document, 'keydown', function (e) {
+      if (state !== 'open' || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) { return; }
+      var t = e.target;
+      if (t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) { return; }
+      // From inside the book, or from nowhere in particular while it shows.
+      if (!el.contains(t)) {
+        var r = el.getBoundingClientRect();
+        if (t.closest('a[href], button, [tabindex]:not([tabindex="-1"])') || r.bottom < navH || r.top > window.innerHeight) { return; }
+      }
+      if (e.key === 'Escape') { e.preventDefault(); close({ focus: true }); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); turn(at + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); turn(at - 1); }
+    });
+
+    // A swipe across the page turns it, on a touch screen.
+    if (window.PointerEvent) {
+      var sx = 0, sy = 0, swiping = false;
+      right.addEventListener('pointerdown', function (e) {
+        swiping = e.pointerType === 'touch' && !e.target.closest('.credly-row');
+        sx = e.clientX; sy = e.clientY;
+      });
+      right.addEventListener('pointercancel', function () { swiping = false; });
+      right.addEventListener('pointerup', function (e) {
+        if (!swiping) { return; }
+        swiping = false;
+        var dx = e.clientX - sx, dy = e.clientY - sy;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) { turn(at + (dx < 0 ? 1 : -1)); }
+      });
+    }
+
+    // A new width can change a spread into single pages and back.
+    var fitTimer = 0;
+    onPage(window, 'resize', function () {
+      clearTimeout(fitTimer);
+      fitTimer = setTimeout(function () {
+        if (state !== 'open') { return; }
+        var page = shown;
+        home(shown);
+        shown = null;
+        measure(cur);
+        var i = list().indexOf(page);
+        show(i < 0 ? 0 : i);
+        room(el.offsetHeight);
+      }, 150);
+    });
+    atLeave(function () { clearTimeout(fitTimer); });
+
+    // On paper the volumes print whole, so the page in the book goes home.
+    onPage(window, 'beforeprint', function () { if (shown && !shown.toc) { home(shown); } });
+    onPage(window, 'afterprint', function () { if (shown && !shown.toc) { rightBody.appendChild(shown.node); } });
+
+    return {
+      has: function (id) { return !!byId(id); },
+      openId: function () { return cur ? cur.id : null; },
+      open: open,
+      close: close
+    };
   }
 
   /* =========================================================================

@@ -851,10 +851,14 @@ html:not(.js) .peek { display: none; }
   margin-left: calc(84px * var(--k));
 }
 
-.book {
+/* A spine's tones, which its book in the reader shares. */
+.book,
+.fb {
   --cover: #1c1c1e;
   --ink: #ecebe7;
   --rule: rgba(236, 235, 231, .2);
+}
+.book {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -876,6 +880,8 @@ html:not(.js) .peek { display: none; }
   --cover: #dcdbd7;
   --ink: #1b1b19;
   --rule: rgba(27, 27, 25, .2);
+}
+.book.book--light {
   box-shadow:
     inset calc(-3px * var(--k)) 0 0 rgba(0, 0, 0, .1),
     inset 1px 0 0 rgba(255, 255, 255, .5),
@@ -883,7 +889,8 @@ html:not(.js) .peek { display: none; }
 }
 /* The end of the row shows its side. */
 /* On the dark page the dark spines step up a shade so they stay objects. */
-[data-theme="dark"] .book { --cover: #242427; }
+[data-theme="dark"] .book,
+[data-theme="dark"] .fb { --cover: #242427; }
 [data-theme="dark"] .book--ink { --cover: #1e1e21; }
 [data-theme="dark"] .book--light { --cover: #cfcec9; }
 [data-theme="dark"] .shelf__stack i:nth-child(2),
@@ -908,6 +915,8 @@ html:not(.js) .peek { display: none; }
     0 26px 30px -22px rgba(0, 0, 0, .55);
 }
 .book:focus-visible { outline-offset: 4px; }
+/* Its book is out in the reader. */
+.book.is-out { visibility: hidden; }
 
 .book__vol {
   font: 500 calc(8px * var(--k))/1 var(--mono);
@@ -985,9 +994,388 @@ html:not(.js) .peek { display: none; }
 }
 
 /* =============================================================================
+   The reader
+   A volume off the shelf (main.js). While the book moves it is a box in 3D:
+   covers, spine and page edges, sized by --W and --H (a page) and --D (its
+   depth). Lying open it is flattened (.is-flat) into plain layout, a board
+   under each page and the contents on the left.
+   ========================================================================== */
+.library { position: relative; }
+.library .shelf,
+.library .shelf__clock { transition: opacity .55s var(--ease); }
+.library.is-dim .shelf,
+.library.is-dim .shelf__clock { opacity: 0; }
+
+.reader {
+  --leaf:       #fbfaf7;
+  --leaf-edge:  #d9d6cd;
+  --gutter-dark: rgba(60, 50, 30, .09);
+  --book-shadow: 0 46px 60px -40px rgba(40, 34, 22, .6);
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.reader[hidden] { display: none; }
+.reader.is-open { pointer-events: auto; }
+[data-theme="dark"] .reader {
+  --leaf:       #1c1c1a;
+  --leaf-edge:  #34342f;
+  --gutter-dark: rgba(0, 0, 0, .4);
+  --book-shadow: 0 46px 60px -40px rgba(0, 0, 0, .95);
+}
+
+.reader__stage {
+  position: relative;
+  width: 100%;
+  perspective: 1800px;
+}
+
+.fb {
+  position: absolute;
+  top: 0;
+  left: calc(50% - var(--W) / 2);
+  width: var(--W);
+  height: var(--H);
+  transform-style: preserve-3d;
+}
+.fb > * { position: absolute; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+
+/* The boards: the back cover, and the front cover hinged at the spine. */
+.fb__back {
+  inset: 0;
+  border-radius: 2px 4px 4px 2px;
+  background: var(--cover);
+  box-shadow: var(--book-shadow);
+  transform: translateZ(calc(var(--D) / -2)) rotateY(180deg);
+}
+.fb__flap {
+  inset: 0;
+  transform-origin: 0 50%;
+  transform: translateZ(calc(var(--D) / 2));
+  transform-style: preserve-3d;
+}
+.fb__cover,
+.fb__inside {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 4px 4px 2px;
+  background: var(--cover);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.fb__inside { transform: rotateY(180deg); border-radius: 4px 2px 2px 4px; }
+/* On one page the cover swings open and out of sight. */
+.fb.is-single .fb__inside { visibility: hidden; }
+
+.fb__cover {
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--W) * .09) calc(var(--W) * .09) calc(var(--W) * .08) calc(var(--W) * .12);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, .24), rgba(0, 0, 0, 0) 3.4%, rgba(255, 255, 255, .07) 4.4%, rgba(255, 255, 255, 0) 8%),
+    var(--cover);
+  color: var(--ink);
+}
+.fb__by {
+  font: 500 11px/1 var(--mono);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: .7;
+}
+.fb__num {
+  margin-top: auto;
+  font-size: calc(var(--W) * .4);
+  font-weight: 800;
+  line-height: .8;
+  letter-spacing: -.07em;
+}
+.fb__name {
+  margin-top: calc(var(--W) * .06);
+  padding-top: calc(var(--W) * .045);
+  border-top: 1px solid var(--rule);
+  font-size: calc(var(--W) * .082);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+.fb__foot {
+  margin-top: 14px;
+  font: 500 10px/1 var(--mono);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  opacity: .55;
+}
+
+/* The spine is the shelf's spine drawn at the book's size (--k). */
+.fb__spine.book {
+  top: 0;
+  left: calc((var(--W) - var(--D)) / 2);
+  width: var(--D);
+  height: var(--H);
+  border-radius: 2px;
+  transform: rotateY(-90deg) translateZ(calc(var(--W) / 2));
+  transition: none;
+}
+
+/* The block of pages: its face is the right-hand page; the edges show
+   between the boards. */
+.fb__edge,
+.fb__top,
+.fb__bottom { background: var(--leaf); }
+.fb__edge {
+  top: 3px;
+  left: calc(var(--W) - 6px - (var(--D) - 4px) / 2);
+  width: calc(var(--D) - 4px);
+  height: calc(var(--H) - 6px);
+  background-image: repeating-linear-gradient(90deg, transparent 0 2px, var(--leaf-edge) 2px 3px);
+  transform: rotateY(90deg);
+}
+.fb__top,
+.fb__bottom {
+  left: 0;
+  width: calc(var(--W) - 6px);
+  height: calc(var(--D) - 4px);
+  background-image: repeating-linear-gradient(0deg, transparent 0 2px, var(--leaf-edge) 2px 3px);
+}
+.fb__top { top: calc(3px - (var(--D) - 4px) / 2); transform: rotateX(90deg); }
+.fb__bottom { top: calc(var(--H) - 3px - (var(--D) - 4px) / 2); transform: rotateX(-90deg); }
+
+/* --- the pages ------------------------------------------------------------ */
+.fb__sheet {
+  --pad: clamp(22px, 2.6vw, 32px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--gutter-dark), transparent 9%) var(--leaf);
+  color: var(--text);
+}
+.fb__page,
+.fb__under,
+.fb__leaf {
+  top: 3px;
+  left: 0;
+  width: calc(var(--W) - 6px);
+  height: calc(var(--H) - 6px);
+}
+.fb__page { transform: translateZ(calc(var(--D) / 2 - 1px)); touch-action: pan-y; }
+.fb__sheet--left {
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: calc(var(--W) - 6px);
+  height: calc(var(--H) - 6px);
+  background: linear-gradient(270deg, var(--gutter-dark), transparent 9%) var(--leaf);
+}
+.fb__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--pad) var(--pad) 10px;
+  scrollbar-width: thin;
+}
+.fb__page.has-more .fb__body {
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 44px), transparent);
+  mask-image: linear-gradient(#000 calc(100% - 44px), transparent);
+}
+.fb__folio {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 10px var(--pad) 16px;
+  color: var(--muted);
+  font: 400 10px/1 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.fb__probe {
+  position: absolute;
+  top: 0; left: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.fb__probe .fb__body { flex: none; overflow: visible; }
+
+/* A page being turned: a copy, hinged at the spine, the left-hand page on
+   its back. */
+.fb .fb__leaf {
+  z-index: 3;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+  pointer-events: none;
+}
+.fb__leaf > .fb__sheet {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.fb__leaf > .fb__leaf-back { left: 0; top: 0; width: 100%; height: 100%; transform: rotateY(180deg); }
+div.fb__leaf-back:not(.fb__sheet) { position: absolute; }
+.fb__under { z-index: 2; }
+
+/* --- lying open ------------------------------------------------------------ */
+.fb.is-flat { transform: translateX(calc(var(--W) / 2)); transform-style: flat; }
+.fb.is-flat.is-single { transform: none; }
+.fb.is-flat > * { transform: none; }
+.fb.is-flat .fb__flap { transform: translateX(-100%); transform-style: flat; }
+.fb.is-flat .fb__inside { transform: none; box-shadow: var(--book-shadow); }
+.fb.is-flat .fb__cover,
+.fb.is-flat .fb__spine,
+.fb.is-flat .fb__edge,
+.fb.is-flat .fb__top,
+.fb.is-flat .fb__bottom,
+.fb.is-flat.is-single .fb__flap { display: none; }
+/* The rest of the book shows as page edges beside each page. */
+.fb.is-flat .fb__page { box-shadow: 1px 0 0 var(--leaf-edge), 2px 0 0 var(--leaf), 3px 0 0 var(--leaf-edge), 4px 0 0 var(--leaf); }
+.fb.is-flat .fb__sheet--left { box-shadow: -1px 0 0 var(--leaf-edge), -2px 0 0 var(--leaf), -3px 0 0 var(--leaf-edge); }
+
+/* --- the contents ---------------------------------------------------------- */
+.fb__kicker {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font: 500 10.5px/1 var(--mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.fb__vtitle {
+  font-size: clamp(28px, 3.2vw, 36px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+.fb__vtitle:focus { outline: none; }
+.fb__lede { margin: 12px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+.fb__label {
+  margin: 26px 0 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font: 500 10px/1 var(--mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.fb__toc button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 14px;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: color .2s var(--ease);
+}
+.fb__toc i { font: 400 10.5px/1 var(--mono); font-style: normal; }
+.fb__toc b {
+  font-weight: 400;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+.fb__toc button:hover,
+.fb__toc button[aria-current] { color: var(--text); }
+.fb__toc button:hover b,
+.fb__toc button[aria-current] b { opacity: 1; transform: none; }
+.fb__toc button[aria-current] span { font-weight: 600; }
+
+/* --- the volumes' pages, fitted to a page ------------------------------------ */
+/* Each page is headed like the contents, in small capitals. */
+.fb__body .vol__page-title {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font: 500 10.5px/1 var(--mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.fb__body .whoami__photo { width: min(100%, 250px); }
+.fb__body .whoami__text { font-size: 14.5px; }
+.fb__body .badges { grid-template-columns: repeat(3, minmax(0, 76px)); gap: 18px 22px; }
+.fb__body .stack,
+.fb__body .stack__row { display: block; padding: 0; border: 0; }
+.fb__body .stack__label { display: block; padding: 0; }
+.fb__body .stack__label i { display: none; }
+.fb__body .chips li { font-size: 12px; }
+.fb__body .credly-row { height: 116px; }
+.fb__body .credly-marquee__hint { flex-wrap: wrap; row-gap: 6px; }
+.fb__body .entries { border: 0; }
+.fb__body .entry { display: block; padding: 0; border: 0; }
+.fb__body .entry__when { margin-bottom: 12px; }
+.fb__body .entry__when span { display: inline; margin: 0 0 0 8px; }
+.fb__body .entry__bullets li { font-size: 13.5px; line-height: 1.58; }
+.fb__body .contact__mail { margin-bottom: 0; font-size: clamp(19px, 2.3vw, 24px); }
+.fb__body .contact__links a {
+  grid-template-columns: 20px minmax(0, 1fr) 16px;
+  row-gap: 2px;
+  padding-block: 11px;
+}
+.fb__body .contact__links svg { grid-row: 1 / 3; }
+.fb__body .contact__label { grid-column: 2; }
+.fb__body .contact__handle { display: block; grid-column: 2; grid-row: 2; }
+.fb__body .contact__go { grid-column: 3; grid-row: 1 / 3; }
+
+/* --- the bar under the book -------------------------------------------------- */
+.reader__bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  margin-top: 22px;
+  padding: 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+  font: 400 11px/1 var(--mono);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+.reader.is-open .reader__bar { opacity: 1; transform: none; }
+.reader__bar button {
+  flex: none;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color .2s var(--ease), color .2s var(--ease);
+}
+.reader__bar button:hover { background: var(--bg-raise); }
+.reader__bar button:disabled { color: var(--dim); background: none; cursor: default; }
+.reader__turn { padding: 0 10px; font-size: 13px; }
+.reader__where {
+  min-width: 0;
+  margin: 0;
+  padding: 0 6px;
+  overflow: hidden;
+  color: var(--muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.reader__where b { color: var(--text); font-weight: 500; }
+.reader__sep { flex: none; width: 1px; height: 18px; margin: 0 4px; background: var(--line-strong); }
+
+/* =============================================================================
    Volumes
-   One open at a time under the shelf once scripting is on; all of them in a
-   column without it.
+   Printed one after another without scripting; with it, their pages are
+   read in the book above and the volumes themselves stay out of sight.
    ========================================================================== */
 .volumes {
   max-width: 860px;
@@ -1002,16 +1390,8 @@ html:not(.js) .peek { display: none; }
   box-shadow: var(--shadow-soft);
 }
 .vol + .vol { margin-top: 28px; }
-.js .vol:not(.is-open) { display: none; }
-.js .vol + .vol { margin-top: 0; }
-.vol.is-open { animation: vol-in .45s var(--ease); }
-@keyframes vol-in {
-  from { opacity: 0; transform: translateY(12px); }
-}
-/* Focus lands on a volume when it opens, so keyboard users carry on into
-   it; a ring round the whole page of it would shout, so it gets an edge. */
+.has-reader .volumes { display: none; }
 .vol:focus { outline: none; }
-.vol:focus-visible { box-shadow: var(--shadow-soft), 0 0 0 1px var(--line-strong); }
 
 .vol__head { margin-bottom: clamp(22px, 3vw, 32px); }
 .vol__num {
@@ -1046,14 +1426,19 @@ html:not(.js) .peek { display: none; }
 .vol__nav a { color: var(--muted); transition: color .2s var(--ease); }
 .vol__nav a:hover { color: var(--text); }
 
-/* --- 01 · $whoami --------------------------------------------------------- */
-.whoami {
-  display: grid;
-  grid-template-columns: 210px minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 44px);
-  align-items: start;
+/* A volume's pages, one after another, each under its title. */
+.vol__page + .vol__page { margin-top: clamp(28px, 4vw, 40px); }
+.vol__page > .vol__page-title {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font: 500 10.5px/1 var(--mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
+
+/* --- 01 · $whoami --------------------------------------------------------- */
 .whoami__photo {
+  width: min(100%, 240px);
   margin: 0;
   aspect-ratio: 4 / 5;
   overflow: hidden;
@@ -1083,7 +1468,6 @@ html:not(.js) .peek { display: none; }
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 20px;
 }
 .whoami__roles li {
   padding: 5px 10px;
@@ -1099,7 +1483,6 @@ html:not(.js) .peek { display: none; }
   display: grid;
   grid-template-columns: repeat(6, var(--badge));
   gap: clamp(10px, 1.4vw, 16px);
-  margin-top: 26px;
 }
 .badge {
   display: block;
@@ -1115,6 +1498,7 @@ a.badge:focus-visible { transform: translateY(-3px); }
 
 /* --- 02 · skills ---------------------------------------------------------- */
 .stack { border-top: 1px solid var(--line); }
+.stack__row + .stack__row { margin-top: 0; }
 .stack__row {
   display: grid;
   grid-template-columns: 170px minmax(0, 1fr);
@@ -1518,9 +1902,6 @@ a.badge:focus-visible { transform: translateY(-3px); }
   .project__go { grid-area: go; opacity: 1; }
   .project__type { display: none; }
 
-  .whoami { grid-template-columns: minmax(0, 1fr); }
-  .whoami__photo { width: min(100%, 220px); }
-
   .stack__row,
   .entry { grid-template-columns: minmax(0, 1fr); gap: 10px; }
 
@@ -1529,6 +1910,7 @@ a.badge:focus-visible { transform: translateY(-3px); }
 }
 
 @media (max-width: 600px) {
+  .reader__vol { display: none; }
   .shelf { --k: .76; }
   .shelf__stack { display: none; }
   .shelf__books { margin-left: calc(28px * var(--k)); }
@@ -1573,7 +1955,8 @@ a.badge:focus-visible { transform: translateY(-3px); }
   .nav, .wall__stage, .wall::after, .index__tools, .peek, .shelf, .shelf__clock, .vol__nav, .foot { display: none !important; }
   .wall { height: auto; padding: 24px 0; }
   .wall__caption { position: static; }
-  .js .vol:not(.is-open) { display: block; }
+  .reader { display: none !important; }
+  .has-reader .volumes { display: block; }
   .vol { box-shadow: none; break-inside: avoid; }
   .project__role, .project__desc { display: block !important; }
 }

@@ -62,7 +62,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=13" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=14" />
 
     <!-- The .js class switches on the enhancements (the shelf, the filters, the
          wall); without it every volume and every project is simply listed.
@@ -561,97 +561,101 @@
       </section>
 
       <!-- ═══════════════════════════ 3 · about ═══════════════════════════
-           A shelf of six volumes. Each spine is a link to its volume; main.js
-           shows one volume at a time under the shelf and pulls its spine out.
-           Without scripting the volumes are simply printed one after another.
-           The ids double as the old section anchors (#skills, #experience,
-           #contact), so links to the previous design still land. -->
+           A shelf of six volumes. Each spine is a link to its volume, and each
+           volume is a run of pages (.vol__page, each with its title). main.js
+           takes the book off the shelf, turns it to its cover and opens it:
+           contents on the left, one page on the right. Without scripting the
+           volumes are simply printed one after another. The ids double as the
+           old section anchors (#skills, #experience, #contact), so links to
+           the previous design still land. -->
       <section class="about" id="about" aria-labelledby="about-title">
         <div class="wrap">
           <h2 class="visually-hidden" id="about-title">About</h2>
 
-          <div class="shelf">
-            <div class="shelf__stack" aria-hidden="true">
-              <i></i><i></i><i></i>
+          <div class="library" data-library>
+            <div class="shelf">
+              <div class="shelf__stack" aria-hidden="true">
+                <i></i><i></i><i></i>
+              </div>
+
+              <nav class="shelf__books" aria-label="About volumes">
+                <a
+                  class="book book--light book--first"
+                  href="#whoami"
+                  aria-controls="whoami"
+                  style="--w: 64; --h: 392"
+                >
+                  <span class="book__vol">Vol.</span
+                  ><span class="book__num">01</span
+                  ><span class="book__title">$whoami</span
+                  ><span class="book__by" aria-hidden="true">Al-Raji</span>
+                </a>
+                <a
+                  class="book"
+                  href="#skills"
+                  aria-controls="skills"
+                  style="--w: 54; --h: 394"
+                >
+                  <span class="book__vol">Vol.</span
+                  ><span class="book__num">02</span
+                  ><span class="book__title">Skills</span
+                  ><span class="book__by" aria-hidden="true">Al-Raji</span>
+                </a>
+                <a
+                  class="book book--ink"
+                  href="#certifications"
+                  aria-controls="certifications"
+                  style="--w: 60; --h: 390"
+                >
+                  <span class="book__vol">Vol.</span
+                  ><span class="book__num">03</span
+                  ><span class="book__title">Certifications</span
+                  ><span class="book__by" aria-hidden="true">Al-Raji</span>
+                </a>
+                <a
+                  class="book"
+                  href="#experience"
+                  aria-controls="experience"
+                  style="--w: 66; --h: 393"
+                >
+                  <span class="book__vol">Vol.</span
+                  ><span class="book__num">04</span
+                  ><span class="book__title">Experience</span
+                  ><span class="book__by" aria-hidden="true">Al-Raji</span>
+                </a>
+                <a
+                  class="book book--ink"
+                  href="#affiliations"
+                  aria-controls="affiliations"
+                  style="--w: 48; --h: 395"
+                >
+                  <span class="book__vol">Vol.</span
+                  ><span class="book__num">05</span
+                  ><span class="book__title">Affiliations</span
+                  ><span class="book__by" aria-hidden="true">Al-Raji</span>
+                </a>
+                <a
+                  class="book book--light"
+                  href="#contact"
+                  aria-controls="contact"
+                  style="--w: 46; --h: 392"
+                >
+                  <span class="book__vol">Vol.</span
+                  ><span class="book__num">06</span
+                  ><span class="book__title">Contact Me</span
+                  ><span class="book__by" aria-hidden="true">Al-Raji</span>
+                </a>
+              </nav>
+
+              <i class="shelf__end" aria-hidden="true"></i>
+              <div class="shelf__board" aria-hidden="true"></div>
             </div>
 
-            <nav class="shelf__books" aria-label="About volumes">
-              <a
-                class="book book--light book--first"
-                href="#whoami"
-                aria-controls="whoami"
-                style="--w: 64; --h: 392"
-              >
-                <span class="book__vol">Vol.</span
-                ><span class="book__num">01</span
-                ><span class="book__title">$whoami</span
-                ><span class="book__by" aria-hidden="true">Al-Raji</span>
-              </a>
-              <a
-                class="book"
-                href="#skills"
-                aria-controls="skills"
-                style="--w: 54; --h: 394"
-              >
-                <span class="book__vol">Vol.</span
-                ><span class="book__num">02</span
-                ><span class="book__title">Skills</span
-                ><span class="book__by" aria-hidden="true">Al-Raji</span>
-              </a>
-              <a
-                class="book book--ink"
-                href="#certifications"
-                aria-controls="certifications"
-                style="--w: 60; --h: 390"
-              >
-                <span class="book__vol">Vol.</span
-                ><span class="book__num">03</span
-                ><span class="book__title">Certifications</span
-                ><span class="book__by" aria-hidden="true">Al-Raji</span>
-              </a>
-              <a
-                class="book"
-                href="#experience"
-                aria-controls="experience"
-                style="--w: 66; --h: 393"
-              >
-                <span class="book__vol">Vol.</span
-                ><span class="book__num">04</span
-                ><span class="book__title">Experience</span
-                ><span class="book__by" aria-hidden="true">Al-Raji</span>
-              </a>
-              <a
-                class="book book--ink"
-                href="#affiliations"
-                aria-controls="affiliations"
-                style="--w: 48; --h: 395"
-              >
-                <span class="book__vol">Vol.</span
-                ><span class="book__num">05</span
-                ><span class="book__title">Affiliations</span
-                ><span class="book__by" aria-hidden="true">Al-Raji</span>
-              </a>
-              <a
-                class="book book--light"
-                href="#contact"
-                aria-controls="contact"
-                style="--w: 46; --h: 392"
-              >
-                <span class="book__vol">Vol.</span
-                ><span class="book__num">06</span
-                ><span class="book__title">Contact Me</span
-                ><span class="book__by" aria-hidden="true">Al-Raji</span>
-              </a>
-            </nav>
-
-            <i class="shelf__end" aria-hidden="true"></i>
-            <div class="shelf__board" aria-hidden="true"></div>
+            <p class="shelf__clock">
+              Zamboanga City<span data-clock-sep hidden> · </span
+              ><time data-clock></time>
+            </p>
           </div>
-
-          <p class="shelf__clock">
-            Zamboanga City<span data-clock-sep hidden> · </span
-            ><time data-clock></time>
-          </p>
 
           <div class="volumes">
             <!-- ─────────────── vol. 01 ─────────────── -->
@@ -661,19 +665,9 @@
                 <h3 class="vol__title" id="whoami-title">$whoami</h3>
               </header>
 
-              <div class="whoami">
-                <figure class="whoami__photo">
-                  <img
-                    src="/assets/img/portrait-cutout.webp?v=9"
-                    alt="Al-Raji Theng in graduation regalia"
-                    width="1131"
-                    height="968"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </figure>
-
-                <div class="whoami__copy">
+              <div class="vol__pages">
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Hello</h4>
                   <p class="whoami__name">Al-Raji Theng</p>
                   <p class="whoami__title">Computer Engineer</p>
                   <p class="whoami__meta">
@@ -686,7 +680,22 @@
                     occasionally wondering why it worked yesterday but not
                     today. Argh! &gt;_&lt;
                   </p>
-
+                </section>
+                <section class="vol__page">
+                  <h4 class="vol__page-title">A photo</h4>
+                  <figure class="whoami__photo">
+                    <img
+                      src="/assets/img/portrait-cutout.webp?v=9"
+                      alt="Al-Raji Theng in graduation regalia"
+                      width="1131"
+                      height="968"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </figure>
+                </section>
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Roles</h4>
                   <ul class="whoami__roles" aria-label="Roles">
                     <li>Full-Stack Developer</li>
                     <li>UI/UX &amp; Graphic Designer</li>
@@ -694,7 +703,9 @@
                     <li>Computer Vision Tinkerer</li>
                     <li>Mobile App Developer</li>
                   </ul>
-
+                </section>
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Credentials</h4>
                   <!-- Filled by main.js from TOP_CERTS, the hand-picked top six,
                        each linking to its Credly record. -->
                   <ul
@@ -702,7 +713,18 @@
                     data-featured-badges
                     aria-label="Featured credentials"
                   ></ul>
-                </div>
+                  <noscript>
+                    <p class="vol__note">
+                      Verified on
+                      <a
+                        href="https://credly.com/users/rjt"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >credly.com/users/rjt</a
+                      >.
+                    </p>
+                  </noscript>
+                </section>
               </div>
 
               <nav class="vol__nav" aria-label="Volumes">
@@ -718,11 +740,11 @@
                 <h3 class="vol__title" id="skills-title">Skills</h3>
               </header>
 
-              <div class="stack">
-                <div class="stack__row">
+              <div class="vol__pages stack">
+                <section class="vol__page stack__row">
                   <div class="stack__label">
                     <i>01</i>
-                    <h4>Languages</h4>
+                    <h4 class="vol__page-title">Languages</h4>
                   </div>
                   <div>
                     <ul class="chips">
@@ -800,12 +822,12 @@
                       <li>Assembly</li>
                     </ul>
                   </div>
-                </div>
+                </section>
 
-                <div class="stack__row">
+                <section class="vol__page stack__row">
                   <div class="stack__label">
                     <i>02</i>
-                    <h4>Web</h4>
+                    <h4 class="vol__page-title">Web</h4>
                   </div>
                   <div>
                     <ul class="chips">
@@ -911,12 +933,12 @@
                       </li>
                     </ul>
                   </div>
-                </div>
+                </section>
 
-                <div class="stack__row">
+                <section class="vol__page stack__row">
                   <div class="stack__label">
                     <i>03</i>
-                    <h4>Mobile</h4>
+                    <h4 class="vol__page-title">Mobile</h4>
                   </div>
                   <div>
                     <ul class="chips">
@@ -972,12 +994,12 @@
                       </li>
                     </ul>
                   </div>
-                </div>
+                </section>
 
-                <div class="stack__row">
+                <section class="vol__page stack__row">
                   <div class="stack__label">
                     <i>04</i>
-                    <h4>Vision &amp; ML</h4>
+                    <h4 class="vol__page-title">Vision &amp; ML</h4>
                   </div>
                   <div>
                     <ul class="chips">
@@ -1024,12 +1046,12 @@
                       <li>Vertex AI</li>
                     </ul>
                   </div>
-                </div>
+                </section>
 
-                <div class="stack__row">
+                <section class="vol__page stack__row">
                   <div class="stack__label">
                     <i>05</i>
-                    <h4>Infrastructure</h4>
+                    <h4 class="vol__page-title">Infrastructure</h4>
                   </div>
                   <div>
                     <ul class="chips">
@@ -1115,12 +1137,12 @@
                       </li>
                     </ul>
                   </div>
-                </div>
+                </section>
 
-                <div class="stack__row">
+                <section class="vol__page stack__row">
                   <div class="stack__label">
                     <i>06</i>
-                    <h4>Networking</h4>
+                    <h4 class="vol__page-title">Networking</h4>
                   </div>
                   <div>
                     <ul class="chips">
@@ -1142,12 +1164,12 @@
                       <li>Wireless</li>
                     </ul>
                   </div>
-                </div>
+                </section>
 
-                <div class="stack__row">
+                <section class="vol__page stack__row">
                   <div class="stack__label">
                     <i>07</i>
-                    <h4>Design &amp; tools</h4>
+                    <h4 class="vol__page-title">Design &amp; tools</h4>
                   </div>
                   <div>
                     <ul class="chips">
@@ -1194,7 +1216,7 @@
                       </li>
                     </ul>
                   </div>
-                </div>
+                </section>
               </div>
 
               <nav class="vol__nav" aria-label="Volumes">
@@ -1222,40 +1244,45 @@
                 </p>
               </header>
 
-              <div class="credly-marquee" id="credlyMarquee">
-                <div class="credly-row" data-direction="left">
-                  <div class="credly-row__drag">
-                    <div class="credly-row__track" data-credly-track></div>
+              <div class="vol__pages">
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Badges</h4>
+                  <div class="credly-marquee" id="credlyMarquee">
+                    <div class="credly-row" data-direction="left">
+                      <div class="credly-row__drag">
+                        <div class="credly-row__track" data-credly-track></div>
+                      </div>
+                    </div>
+                    <div class="credly-row" data-direction="right">
+                      <div class="credly-row__drag">
+                        <div class="credly-row__track" data-credly-track></div>
+                      </div>
+                    </div>
+                    <p class="credly-marquee__hint">
+                      <span>Drag or swipe to explore</span>
+                      <a
+                        href="https://www.credly.com/users/rjt"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >View all on Credly <span aria-hidden="true">&#8599;</span></a
+                      >
+                    </p>
                   </div>
-                </div>
-                <div class="credly-row" data-direction="right">
-                  <div class="credly-row__drag">
-                    <div class="credly-row__track" data-credly-track></div>
-                  </div>
-                </div>
-                <p class="credly-marquee__hint">
-                  <span>Drag or swipe to explore</span>
-                  <a
-                    href="https://www.credly.com/users/rjt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >View all on Credly <span aria-hidden="true">&#8599;</span></a
-                  >
-                </p>
-              </div>
 
-              <noscript>
-                <p class="vol__note">
-                  The complete list, with issue dates and verification links,
-                  is public at
-                  <a
-                    href="https://credly.com/users/rjt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >credly.com/users/rjt</a
-                  >.
-                </p>
-              </noscript>
+                  <noscript>
+                    <p class="vol__note">
+                      The complete list, with issue dates and verification links,
+                      is public at
+                      <a
+                        href="https://credly.com/users/rjt"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >credly.com/users/rjt</a
+                      >.
+                    </p>
+                  </noscript>
+                </section>
+              </div>
 
               <nav class="vol__nav" aria-label="Volumes">
                 <a href="#skills"><span aria-hidden="true">&larr;</span> 02 Skills</a>
@@ -1279,54 +1306,64 @@
                 </p>
               </header>
 
-              <ol class="entries">
-                <li class="entry">
-                  <p class="entry__when">
-                    2026
-                    <span>Zamboanga City, Philippines</span>
-                  </p>
-                  <div class="entry__what">
-                    <h4>DICT Regional Office IX and BASULTA</h4>
-                    <p class="entry__role">
-                      Web Developer Intern | March 2026 – April 2026
-                    </p>
-                    <ul class="entry__bullets">
-                      <li>
-                        Co-developed and deployed a web-based
-                        <a
-                          href="https://github.com/walidsalih111-ux/dict_frcc"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          >Flag Raising Attendance and Compliance Checker</a
-                        >
-                        using PHP and MySQL for 50+ employees at the Management
-                        Information Systems Service. Implemented role-based
-                        admin and employee access, employee management CRUD,
-                        and browser camera capture for timestamped attendance
-                        verification.
-                      </li>
-                      <li>
-                        Designed the MySQL database schema and developed the
-                        reporting layer using DataTables and Chart.js
-                        dashboards. Used PDO prepared statements for secure
-                        database queries and conducted functional testing and
-                        QA before the production rollout following HR
-                        approval.
-                      </li>
-                      <li>
-                        Served as a resource speaker for DICT&rsquo;s
-                        <a
-                          href="https://sites.google.com/dict.gov.ph/ilcd-r9basulta/2026/april/26r9b-dwi02-040726"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          >OJT 2.0 Webinar</a
-                        >, presenting Google Workspace and Gemini AI workflows
-                        for a digital office environment to 100+ attendees.
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-              </ol>
+              <div class="vol__pages">
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Web Developer Intern</h4>
+                  <ol class="entries">
+                    <li class="entry">
+                      <p class="entry__when">
+                        2026
+                        <span>Zamboanga City, Philippines</span>
+                      </p>
+                      <div class="entry__what">
+                        <h4>DICT Regional Office IX and BASULTA</h4>
+                        <p class="entry__role">
+                          Web Developer Intern | March 2026 – April 2026
+                        </p>
+                        <ul class="entry__bullets">
+                          <li>
+                            Co-developed and deployed a web-based
+                            <a
+                              href="https://github.com/walidsalih111-ux/dict_frcc"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              >Flag Raising Attendance and Compliance Checker</a
+                            >
+                            using PHP and MySQL for 50+ employees at the Management
+                            Information Systems Service. Implemented role-based
+                            admin and employee access, employee management CRUD,
+                            and browser camera capture for timestamped attendance
+                            verification.
+                          </li>
+                          <li>
+                            Designed the MySQL database schema and developed the
+                            reporting layer using DataTables and Chart.js
+                            dashboards. Used PDO prepared statements for secure
+                            database queries and conducted functional testing and
+                            QA before the production rollout following HR
+                            approval.
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ol>
+                </section>
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Resource speaker</h4>
+                  <ul class="entry__bullets">
+                    <li>
+                      Served as a resource speaker for DICT&rsquo;s
+                      <a
+                        href="https://sites.google.com/dict.gov.ph/ilcd-r9basulta/2026/april/26r9b-dwi02-040726"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >OJT 2.0 Webinar</a
+                      >, presenting Google Workspace and Gemini AI workflows
+                      for a digital office environment to 100+ attendees.
+                    </li>
+                  </ul>
+                </section>
+              </div>
 
               <nav class="vol__nav" aria-label="Volumes">
                 <a href="#certifications"><span aria-hidden="true">&larr;</span> 03 Certifications</a>
@@ -1346,24 +1383,29 @@
                 <h3 class="vol__title" id="affiliations-title">Affiliations</h3>
               </header>
 
-              <ol class="entries">
-                <li class="entry">
-                  <p class="entry__when">
-                    2024 – 2026
-                    <span>UZ Chapter</span>
-                  </p>
-                  <div class="entry__what">
-                    <h4>
-                      Institute of Computer Engineers of the Philippines &ndash;
-                      Student Edition (ICpEP.SE), UZ Chapter
-                    </h4>
-                    <p class="entry__role">
-                      President | 2025–2026<br />
-                      Vice President | 2024–2025
-                    </p>
-                  </div>
-                </li>
-              </ol>
+              <div class="vol__pages">
+                <section class="vol__page">
+                  <h4 class="vol__page-title">ICpEP.SE</h4>
+                  <ol class="entries">
+                    <li class="entry">
+                      <p class="entry__when">
+                        2024 – 2026
+                        <span>UZ Chapter</span>
+                      </p>
+                      <div class="entry__what">
+                        <h4>
+                          Institute of Computer Engineers of the Philippines &ndash;
+                          Student Edition (ICpEP.SE), UZ Chapter
+                        </h4>
+                        <p class="entry__role">
+                          President | 2025–2026<br />
+                          Vice President | 2024–2025
+                        </p>
+                      </div>
+                    </li>
+                  </ol>
+                </section>
+              </div>
 
               <nav class="vol__nav" aria-label="Volumes">
                 <a href="#experience"><span aria-hidden="true">&larr;</span> 04 Experience</a>
@@ -1381,124 +1423,136 @@
                 </p>
               </header>
 
-              <a class="contact__mail" href="mailto:alrajitheng@gmail.com"
-                >alrajitheng@gmail.com</a
-              >
-
-              <ul class="contact__links">
-                <li>
-                  <a
-                    href="https://linkedin.com/in/rjtg"
-                    target="_blank"
-                    rel="noopener noreferrer"
+              <div class="vol__pages">
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Write</h4>
+                  <a class="contact__mail" href="mailto:alrajitheng@gmail.com"
+                    >alrajitheng@gmail.com</a
                   >
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path
-                        d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8 19H5V9.5h3V19ZM6.5 8.2a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5ZM19 19h-3v-4.6c0-1.1 0-2.5-1.6-2.5s-1.8 1.2-1.8 2.4V19h-3V9.5h2.9v1.3h.1a3.2 3.2 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.5V19Z"
-                      />
-                    </svg>
-                    <span class="contact__label">LinkedIn</span>
-                    <span class="contact__handle">linkedin.com/in/rjtg</span>
-                    <span class="contact__go" aria-hidden="true">&#8599;</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/rjtng"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path
-                        d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.5 5 18.5 5.3 18.5 5.3c.6 1.7.2 2.9.1 3.2.8.9 1.2 1.9 1.2 3.2 0 4.6-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5Z"
-                      />
-                    </svg>
-                    <span class="contact__label">GitHub</span>
-                    <span class="contact__handle">github.com/rjtng</span>
-                    <span class="contact__go" aria-hidden="true">&#8599;</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://facebook.com/rjitg"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path
-                        d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.4-.1c-2.4 0-4 1.5-4 4.1V10H8v3h2.4v8h3.1Z"
-                      />
-                    </svg>
-                    <span class="contact__label">Facebook</span>
-                    <span class="contact__handle">facebook.com/rjitg</span>
-                    <span class="contact__go" aria-hidden="true">&#8599;</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://credly.com/users/rjt"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.7"
-                      aria-hidden="true"
-                    >
-                      <circle cx="12" cy="9" r="6" />
-                      <path d="M8.5 14.2 7 22l5-2.5 5 2.5-1.5-7.8" />
-                    </svg>
-                    <span class="contact__label">Credly</span>
-                    <span class="contact__handle">credly.com/users/rjt</span>
-                    <span class="contact__go" aria-hidden="true">&#8599;</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://g.dev/teg"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.7"
-                      aria-hidden="true"
-                    >
-                      <path d="M12 3a9 9 0 1 0 8.5 12H12V9.8h11" />
-                    </svg>
-                    <span class="contact__label">Google Developers</span>
-                    <span class="contact__handle">g.dev/teg</span>
-                    <span class="contact__go" aria-hidden="true">&#8599;</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.7"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
-                      <path d="M14 3v5h5M9 13h6M9 17h4" />
-                    </svg>
-                    <span class="contact__label">Resume</span>
-                    <span class="contact__handle">Google Drive</span>
-                    <span class="contact__go" aria-hidden="true">&#8599;</span>
-                  </a>
-                </li>
-              </ul>
+                </section>
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Elsewhere</h4>
+                  <ul class="contact__links">
+                    <li>
+                      <a
+                        href="https://linkedin.com/in/rjtg"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path
+                            d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8 19H5V9.5h3V19ZM6.5 8.2a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5ZM19 19h-3v-4.6c0-1.1 0-2.5-1.6-2.5s-1.8 1.2-1.8 2.4V19h-3V9.5h2.9v1.3h.1a3.2 3.2 0 0 1 2.8-1.5c3 0 3.6 2 3.6 4.5V19Z"
+                          />
+                        </svg>
+                        <span class="contact__label">LinkedIn</span>
+                        <span class="contact__handle">linkedin.com/in/rjtg</span>
+                        <span class="contact__go" aria-hidden="true">&#8599;</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://github.com/rjtng"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path
+                            d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.5 5 18.5 5.3 18.5 5.3c.6 1.7.2 2.9.1 3.2.8.9 1.2 1.9 1.2 3.2 0 4.6-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5Z"
+                          />
+                        </svg>
+                        <span class="contact__label">GitHub</span>
+                        <span class="contact__handle">github.com/rjtng</span>
+                        <span class="contact__go" aria-hidden="true">&#8599;</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://facebook.com/rjitg"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path
+                            d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.4-.1c-2.4 0-4 1.5-4 4.1V10H8v3h2.4v8h3.1Z"
+                          />
+                        </svg>
+                        <span class="contact__label">Facebook</span>
+                        <span class="contact__handle">facebook.com/rjitg</span>
+                        <span class="contact__go" aria-hidden="true">&#8599;</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://credly.com/users/rjt"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          aria-hidden="true"
+                        >
+                          <circle cx="12" cy="9" r="6" />
+                          <path d="M8.5 14.2 7 22l5-2.5 5 2.5-1.5-7.8" />
+                        </svg>
+                        <span class="contact__label">Credly</span>
+                        <span class="contact__handle">credly.com/users/rjt</span>
+                        <span class="contact__go" aria-hidden="true">&#8599;</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://g.dev/teg"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          aria-hidden="true"
+                        >
+                          <path d="M12 3a9 9 0 1 0 8.5 12H12V9.8h11" />
+                        </svg>
+                        <span class="contact__label">Google Developers</span>
+                        <span class="contact__handle">g.dev/teg</span>
+                        <span class="contact__go" aria-hidden="true">&#8599;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </section>
+                <section class="vol__page">
+                  <h4 class="vol__page-title">Résumé</h4>
+                  <ul class="contact__links">
+                    <li>
+                      <a
+                        href="https://drive.google.com/file/d/1r-N31jbUfApSlcaQCF1TyfEUuxjG2rRu/view?usp=sharing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.7"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+                          <path d="M14 3v5h5M9 13h6M9 17h4" />
+                        </svg>
+                        <span class="contact__label">Resume</span>
+                        <span class="contact__handle">Google Drive</span>
+                        <span class="contact__go" aria-hidden="true">&#8599;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </section>
+              </div>
 
               <nav class="vol__nav" aria-label="Volumes">
                 <a href="#affiliations"><span aria-hidden="true">&larr;</span> 05 Affiliations</a>
@@ -1520,6 +1574,6 @@
     </footer>
 
     <script src="/assets/js/data-certs.js?v=5"></script>
-    <script src="/assets/js/main.js?v=13"></script>
+    <script src="/assets/js/main.js?v=14"></script>
   </body>
 </html>
