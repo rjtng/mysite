@@ -160,6 +160,14 @@ python -m http.server 5174
 
 Do not open `index.html` by double-clicking — the CSS and JS will not load.
 
+The project pages are linked without `.html` (`/work/recycoin`), which Vercel's
+`cleanUrls` resolves. Neither server above does, so on them those links 404;
+open `/work/recycoin.html` directly, or run the site the way Vercel serves it:
+
+```bash
+npx vercel dev
+```
+
 ---
 
 ## Regenerating the credentials
@@ -278,6 +286,23 @@ walk the projects in Index order. The pages are plain HTML; the mock screen on
 each is a copy of the one in its Index row, so change both together. To add a
 project, add its row to the Index and a page beside the others in `work/`,
 and list it in `sitemap.xml`.
+
+**Moving between pages.** Links within the site don't reload the page. The
+router at the end of `main.js` fetches the next page, swaps its `<main>` and
+footer in, and updates the title, description and canonical; the header stays,
+so the theme and nav never flicker. Every move is a history entry that
+remembers its scroll position, so Back and Forward return to the same place,
+and "Back to the wall" steps back in history when that is where the visit
+came from. Moving between volumes on the shelf replaces the entry rather than
+adding one. Pages are fetched when the pointer reaches a link, so they are
+usually ready by the click; a slow one shows a thin bar under the nav, and
+browsers with view transitions crossfade. Anything that goes wrong falls back
+to an ordinary page load, which is what every link is without JavaScript.
+
+Each page's behaviour is set up by `initPage()` when its content arrives, and
+anything it hangs on `window` or `document` goes through `onPage()` or
+`atLeave()`, so `teardown()` can release it before the next page replaces it.
+New code that listens outside the page's own content should do the same.
 
 Inter for everything you read, JetBrains Mono for labels and metadata. The
 palette is a handful of custom properties at the top of `styles.css` — paper,
