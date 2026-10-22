@@ -17,6 +17,8 @@
   var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // The phone layout: the tab bar, the feed, the pile and the full-screen book.
+  var phone = window.matchMedia('(max-width: 760px)');
   var root = document.documentElement;
 
   function esc(s) {
@@ -54,6 +56,8 @@
   // What the router and the nav ask of whichever page is showing: which room
   // to mark in the nav, and how to go to a #place on it.
   var page = null;
+
+  function navH() { return parseFloat(window.getComputedStyle(root).getPropertyValue('--nav-h')) || 64; }
 
   function focusEl(el) {
     if (!el.matches('a[href], button, input, select, textarea, [tabindex]')) { el.setAttribute('tabindex', '-1'); }
@@ -158,7 +162,7 @@
        project added to the list turns up everywhere. */
     var list = $('[data-index]');
     var rows = list ? $$('.project', list) : [];
-    var TYPE_NAMES = { all: 'All', gov: 'Government systems', device: 'Smart devices', mobile: 'Mobile apps' };
+    var TYPE_NAMES = { all: 'All projects', gov: 'Government systems', device: 'Smart devices', mobile: 'Mobile apps' };
 
     var projects = rows.map(function (row, i) {
       var text = function (sel) {
@@ -258,7 +262,7 @@
     var filterButtons = $$('[data-filter]');
     var find = $('[data-find]');
     var filterLabel = $('[data-filter-label]');
-    var count = $('[data-count]');
+    var counts = $$('[data-count]');
     var empty = $('[data-empty]');
     var status = $('[data-status]');
     var filter = 'all';
@@ -274,7 +278,7 @@
         p.row.hidden = !ok;
         if (ok) { shown++; firstShown = firstShown || p; }
       });
-      if (count) { count.textContent = pad(shown); }
+      counts.forEach(function (c) { c.textContent = pad(shown); });
       if (filterLabel) { filterLabel.textContent = TYPE_NAMES[filter] || 'All'; }
       if (empty) {
         empty.hidden = shown > 0;
@@ -292,6 +296,10 @@
       });
     });
     if (find) {
+      // The phone layout asks in words, as the reference does there.
+      var askPhone = function () { find.placeholder = phone.matches ? 'Find a project' : 'type to find'; };
+      askPhone();
+      if (phone.addEventListener) { onPage(phone, 'change', askPhone); }
       find.addEventListener('input', applyFilter);
       find.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && find.value) { find.value = ''; applyFilter(); }
@@ -341,16 +349,18 @@
       var wallDesc = $('[data-wall-desc]');
       var focused = -1;
 
+      var caption = function (i) {
+        var p = projects[i];
+        wallCount.textContent = pad(i + 1) + ' / ' + pad(projects.length);
+        wallName.textContent = p.name;
+        wallDesc.textContent = p.desc;
+      };
       var focusProject = function (i) {
         if (i === focused) { return; }
         focused = i;
         wall.classList.toggle('is-focus', i >= 0);
         tiles.forEach(function (tile) { tile.classList.toggle('is-on', Number(tile.getAttribute('data-p')) === i); });
-        if (i < 0) { return; }
-        var p = projects[i];
-        wallCount.textContent = pad(i + 1) + ' / ' + pad(projects.length);
-        wallName.textContent = p.name;
-        wallDesc.textContent = p.desc;
+        if (i >= 0) { caption(i); }
       };
 
       /* A mouse previews on hover and goes on click. A finger has no hover, so
@@ -390,6 +400,65 @@
         }, { passive: true });
         drift();
       }
+
+      /* On a phone the wall is a feed instead, as in the reference: one
+         project to a screen, its number, name and line pinned at the foot,
+         and a rail of ticks down the side. The screen nearest its place is
+         in focus and the rest wash back; the caption fades between them. */
+      var feed = document.createElement('ol');
+      feed.className = 'feed';
+      feed.setAttribute('aria-label', 'Projects');
+      feed.innerHTML = projects.map(function (p) {
+        var kind = mainKind(p);
+        return '<li class="feed__item"><a class="feed__shot feed__shot--' + kind + '" href="/work/' + p.id + '">' +
+          shot(p, kind) + '<span class="visually-hidden">' + esc(p.name) + '</span></a></li>';
+      }).join('');
+      var rail = document.createElement('div');
+      rail.className = 'feed__rail';
+      rail.setAttribute('aria-hidden', 'true');
+      rail.innerHTML = new Array(projects.length * 5 + 1).join('<i></i>');
+      wall.insertBefore(feed, plane.parentNode.nextSibling);
+      wall.insertBefore(rail, feed.nextSibling);
+      var items = $$('.feed__item', feed);
+      var notches = $$('i', rail);
+      $$('.feed__shot', feed).forEach(function (a) {
+        a.addEventListener('click', function () { rememberRoom('wall'); });
+      });
+
+      var feedAt = -1;
+      var feedQueued = false;
+      var follow = function () {
+        feedQueued = false;
+        if (!phone.matches) { return; }
+        var cs = window.getComputedStyle(items[0]);
+        var line = navH() + (items[0].offsetHeight - parseFloat(cs.paddingBottom)) / 2;
+        var near = 0;
+        var nearD = Infinity;
+        var centres = items.map(function (item, i) {
+          var r = item.firstChild.getBoundingClientRect();
+          var c = r.top + r.height / 2;
+          var d = (c - line) / item.offsetHeight;
+          item.style.setProperty('--near', Math.max(0.18, 1 - Math.abs(d) * 1.5).toFixed(3));
+          if (Math.abs(d) < Math.abs(nearD)) { near = i; nearD = d; }
+          return c;
+        });
+        if (near !== feedAt) { feedAt = near; caption(near); }
+        wall.style.setProperty('--cap', Math.max(0, 1 - Math.abs(nearD) * 2.6).toFixed(3));
+        var span = centres[centres.length - 1] - centres[0];
+        var progress = span > 0 ? Math.min(1, Math.max(0, (line - centres[0]) / span)) : 0;
+        var on = Math.round(progress * (notches.length - 1));
+        notches.forEach(function (n, i) { n.classList.toggle('is-on', i === on); });
+      };
+      var fitFeed = function () {
+        var w = feed.clientWidth - 2 * parseFloat(window.getComputedStyle(feed).paddingLeft);
+        if (w > 0) { feed.style.setProperty('--feed-s', Math.min(1, w / 480).toFixed(4)); }
+        follow();
+      };
+      onPage(window, 'scroll', function () {
+        if (!feedQueued) { feedQueued = true; window.requestAnimationFrame(follow); }
+      }, { passive: true });
+      onPage(window, 'resize', fitFeed);
+      fitFeed();
     }
 
     /* --- About: the shelf -------------------------------------------------- */
@@ -464,7 +533,6 @@
   function bookReader(library, openHooks) {
     var shelf = $('.shelf', library);
     var animates = !!Element.prototype.animate;
-    var navH = parseFloat(window.getComputedStyle(root).getPropertyValue('--nav-h')) || 64;
 
     var volumes = $$('.book', library).map(function (spine) {
       var id = spine.getAttribute('aria-controls');
@@ -497,8 +565,10 @@
     el.hidden = true;
     el.setAttribute('role', 'region');
     el.innerHTML =
+      '<p class="reader__label" aria-hidden="true"></p>' +
       '<div class="reader__stage"><div class="fb">' +
         '<div class="fb__back"></div>' +
+        '<div class="fb__facing" aria-hidden="true"></div>' +
         '<div class="fb__top"></div><div class="fb__bottom"></div><div class="fb__edge"></div>' +
         '<div class="fb__spine" aria-hidden="true"></div>' +
         // The left-hand page first, so it is read (and tabbed through) first.
@@ -536,6 +606,17 @@
     var probe = $('.fb__probe', el);
     var probeBody = $('.fb__body', probe);
 
+    /* On a phone the open book fills the window, and the header's Close puts
+       it back, as in the reference. The button lives in the header only
+       while this page does. */
+    var navClose = document.createElement('button');
+    navClose.type = 'button';
+    navClose.className = 'nav__close';
+    navClose.textContent = 'Close';
+    var toggle = $('.nav__inner .theme-toggle');
+    if (toggle) { toggle.parentNode.insertBefore(navClose, toggle); }
+    atLeave(function () { navClose.remove(); root.classList.remove('is-reading'); });
+
     var toc = document.createElement('div');
     toc.className = 'fb__contents';
     var contents = { node: toc, title: 'Contents', toc: true };
@@ -547,6 +628,7 @@
     var at = 0;           // which of list() is on the right-hand page
     var shown = null;
     var endTurn = null;   // ends the turn under way, if any
+    var overlay = false;  // the full-screen book of the phone layout
     var queue = Promise.resolve();
     var dimTimer = 0;
     atLeave(function () { clearTimeout(dimTimer); });
@@ -573,9 +655,10 @@
         '<span class="fb__num">' + esc(v.num) + '</span>' +
         '<span class="fb__name">' + esc(v.title) + '</span>' +
         '<span class="fb__foot">Vol. ' + esc(v.num) + '</span>';
-      spineFace.className = 'fb__spine ' + v.spine.className.replace(/\s*\bbook--first\b/, '').replace(/\s*\bis-out\b/, '');
-      spineFace.innerHTML = v.spine.innerHTML;
+      spineFace.innerHTML = '<span class="' + v.spine.className.replace(/\s*\b(book--first|is-out)\b/g, '') + '">' +
+        v.spine.innerHTML + '</span>';
       $('[data-folio-vol]', el).textContent = 'Vol. ' + v.num;
+      $('.reader__label', el).textContent = 'Vol. ' + v.num + ' \u00b7 ' + v.title;
       toc.innerHTML =
         '<p class="fb__kicker">Vol. ' + esc(v.num) + '</p>' +
         '<h3 class="fb__vtitle" id="reader-title" tabindex="-1">' + esc(v.title) + '</h3>' +
@@ -601,14 +684,20 @@
         need = Math.max(need, probe.offsetHeight);
         probeBody.textContent = '';
       });
-      var most = Math.max(420, window.innerHeight - navH - (single ? 100 : 150));
-      var H = Math.round(Math.min(most, Math.max(W * 1.28, need + 6)));
-      var D = Math.round(H * v.w / v.h);
+      var most = overlay ? window.innerHeight - navH() - 130 : Math.max(420, window.innerHeight - navH() - 150);
+      var H = Math.round(Math.min(most, Math.max(W * (overlay && single ? 1.42 : 1.28), need + 6)));
+      // As deep as the spine is wide for its length, standing or lying.
+      var sr = v.spine.getBoundingClientRect();
+      var lying = phone.matches;
+      var long = lying ? sr.width : sr.height;
+      var D = Math.round(H * (long ? (lying ? sr.height : sr.width) / long : v.w / v.h));
       size = { W: W, H: H, D: D };
       fb.style.setProperty('--H', H + 'px');
       fb.style.setProperty('--D', D + 'px');
       stage.style.height = H + 'px';
-      spineFace.style.cssText = '--w:' + v.w + ';--h:' + v.h + ';--k:' + (H / v.h).toFixed(4);
+      // The spine drawn at the book's size: --k for a standing one, --z lying.
+      spineFace.firstChild.style.cssText = '--w:' + v.w + ';--h:' + v.h + ';--k:' + (H / v.h).toFixed(4) +
+        ';--z:' + (long ? H / long : 1).toFixed(4);
       fb.classList.toggle('is-single', single);
       // The contents live on the left page of a spread.
       if (!single && toc.parentNode !== leftBody) { leftBody.appendChild(toc); }
@@ -630,6 +719,7 @@
       shown = items[at];
       rightBody.appendChild(shown.node);
       rightBody.scrollTop = 0;
+      right.classList.toggle('fb__sheet--left', verso(at));
       more();
       var n = cur.pages.indexOf(shown);
       $('[data-folio-title]', el).textContent = shown.toc ? 'Vol. ' + cur.num : cur.title;
@@ -638,12 +728,20 @@
         if (Number(b.getAttribute('data-goto')) === n) { b.setAttribute('aria-current', 'page'); }
         else { b.removeAttribute('aria-current'); }
       });
+      // One page at a time counts the contents as a page, as the reference does.
+      var count = single ? (at + 1) + ' / ' + items.length : (n < 0 ? '' : (n + 1) + ' ') + '/ ' + cur.pages.length;
       where.innerHTML = '<span class="reader__vol">Vol. ' + esc(cur.num) + ' &middot; ' + esc(cur.title) + ' &middot; </span>' +
-        '<b>' + esc(shown.title) + '</b> <span>' + (n < 0 ? '' : (n + 1) + ' ') + '/ ' + cur.pages.length + '</span>';
+        '<b>' + esc(shown.title) + '</b> <span class="reader__count">' + count + '</span>';
       prev.disabled = at === 0;
       next.disabled = at === items.length - 1;
       if (state === 'open') { settled(); }
     }
+    /* One page at a time, the pages still fall either side of a spine: the
+       contents and every other page to its left, the rest to its right, with
+       the edge of the facing page in view. */
+    function verso(i) { return single && i % 2 === 0; }
+    function side() { fb.classList.toggle('is-verso', verso(at)); }
+
     // Whatever measures itself (the marquee) does so once the book lies flat.
     function settled() { openHooks.forEach(function (fn) { fn(cur.id); }); }
 
@@ -657,28 +755,32 @@
        One transform list throughout, so every pose blends into the next. On
        the shelf the book stands turned a quarter, spine out, scaled down to
        the spine and pushed back so the spine sits at its true size. */
-    function tf(x, y, z, s, ry, rx) {
+    function tf(x, y, z, s, rz, ry, rx) {
       return 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) ' +
         'scale3d(' + s.toFixed(4) + ',' + s.toFixed(4) + ',' + s.toFixed(4) + ') ' +
-        'rotateY(' + ry + 'deg) rotateX(' + rx + 'deg)';
+        'rotateZ(' + rz + 'deg) rotateY(' + ry + 'deg) rotateX(' + rx + 'deg)';
     }
     function flapAt(deg) { return 'translateZ(' + (size.D / 2) + 'px) rotateY(' + deg + 'deg)'; }
+    /* A book lying in the phone layout's pile is the same, turned a further
+       quarter in the plane of the page, so its spine runs across. */
     function poses(v) {
-      var lr = library.getBoundingClientRect();
+      var st = stage.getBoundingClientRect();
       var sr = v.spine.getBoundingClientRect();
       var W = size.W, H = size.H, D = size.D;
-      var s = sr.height / H;
-      var x = sr.left + sr.width / 2 - (lr.left + lr.width / 2);
-      var y = sr.top + sr.height / 2 - (lr.top + stage.offsetTop + H / 2);
+      var lying = phone.matches;
+      var rz = lying ? -90 : 0;
+      var s = (lying ? sr.width : sr.height) / H;
+      var x = sr.left + sr.width / 2 - (st.left + st.width / 2);
+      var y = sr.top + sr.height / 2 - (st.top + H / 2);
       var z = -s * W / 2;
       var spread = single ? 0 : W / 2;
       return {
-        shelf: tf(x, y, z, s, 90, 0),
-        pulled: tf(x, y - 6, z + 110, s, 90, 0),
-        turning: tf(x * 0.45, y * 0.45 - 30, -D / 2 + 60, (s + 1) / 2, 38, -6),
-        front: tf(0, 0, -D / 2, 1, 0, 0),
-        opening: tf(spread / 2, -10, -D / 2 + 30, 1, 0, 9),
-        open: tf(spread, 0, -D / 2, 1, 0, 0)
+        shelf: tf(x, y, z, s, rz, 90, 0),
+        pulled: tf(x, y - 6, z + 110, s, rz, 90, 0),
+        turning: tf(x * 0.45, y * 0.45 - 30, -D / 2 + 60, (s + 1) / 2, rz * 0.4, 38, -6),
+        front: tf(0, 0, -D / 2, 1, 0, 0, 0),
+        opening: tf(spread / 2, -10, -D / 2 + 30, 1, 0, 0, 9),
+        open: tf(spread, 0, -D / 2, 1, 0, 0, 0)
       };
     }
 
@@ -688,9 +790,9 @@
 
     // Keep the open book in view, under the nav.
     function bring(how) {
-      if (!how.scroll) { return; }
+      if (!how.scroll || overlay) { return; }
       var r = el.getBoundingClientRect();
-      var top = r.top - navH - 16;
+      var top = r.top - navH() - 16;
       var delta = 0;
       if (how.scroll === 'start' || top < 0) { delta = top; }
       else if (r.bottom > window.innerHeight - 12) { delta = Math.min(top, r.bottom - window.innerHeight + 12); }
@@ -703,17 +805,26 @@
     function takeOut(v, how) {
       cur = v;
       state = 'moving';
+      overlay = phone.matches;
+      // Full screen, the book still comes off the pile: bring the pile into
+      // view behind it, so the flight starts from its spine and Close lands
+      // there.
+      if (overlay && how.scroll === 'start') {
+        jump(function () { window.scrollBy(0, library.getBoundingClientRect().top - navH() - 24); });
+      }
+      root.classList.toggle('is-reading', overlay);
       el.hidden = false;
       el.classList.remove('is-open');
       dress(v);
       measure(v);
       shown = null;
       show(0);
+      side();
       var p = poses(v);
       v.spine.classList.add('is-out');
       v.spine.setAttribute('aria-expanded', 'true');
       library.classList.add('is-reading');
-      room(el.offsetHeight);
+      if (!overlay) { room(el.offsetHeight); }
       shelf.inert = true;
       markNav();
       bring(how);
@@ -774,6 +885,7 @@
         v.spine.classList.remove('is-out');
         v.spine.setAttribute('aria-expanded', 'false');
         library.classList.remove('is-reading', 'is-dim');
+        root.classList.remove('is-reading');
         room(0);
         shelf.inert = false;
         cur = null;
@@ -805,58 +917,126 @@
     }
 
     /* --- turning pages ------------------------------------------------------
-       Forward, a copy of the page lifts off to the left, showing the new one
-       beneath. Back, a copy of the previous page swings in over the current
-       one. Either way the copy's other side is the left-hand page, so it
-       lands as if it were the page. */
-    function turn(to) {
-      if (!cur || state !== 'open' || to === at || to < 0 || to >= list().length) { return; }
-      // A turn asked for mid-turn finishes the one under way first.
-      if (endTurn) { endTurn(); }
-      if (still || !animates) { show(to); return; }
-      var forward = to > at;
+       On a spread, a copy of the page lifts off to the left, showing the new
+       one beneath; back, a copy of the previous page swings in over it.
+       Either way the copy's other side is the left-hand page, so it lands as
+       if it were the page. One page at a time, the book slides along within
+       a spread and a page turns over between spreads, the book following it
+       across so the page that lands is the one in view. */
+    // Copies only: no ids twice on the page, nothing to tab to.
+    function copy(from, cls) {
+      var sheet = document.createElement('div');
+      sheet.className = 'fb__sheet ' + cls;
+      sheet.innerHTML = from.innerHTML;
+      $$('[id]', sheet).forEach(function (n) { n.removeAttribute('id'); });
+      return sheet;
+    }
+    function leafOf(front, back) {
       var leaf = document.createElement('div');
       leaf.className = 'fb__leaf';
       leaf.setAttribute('aria-hidden', 'true');
       leaf.inert = true;
-      var under = null;
-      // Copies only: no ids twice on the page, nothing to tab to.
-      var copy = function (from, cls) {
-        var sheet = document.createElement('div');
-        sheet.className = 'fb__sheet ' + cls;
-        sheet.innerHTML = from.innerHTML;
-        $$('[id]', sheet).forEach(function (n) { n.removeAttribute('id'); });
-        return sheet;
+      leaf.appendChild(front);
+      back.classList.add('fb__leaf-back');
+      leaf.appendChild(back);
+      return leaf;
+    }
+    var FLAT = 'perspective(2400px) rotateY(0deg)';
+    var OVER = 'perspective(2400px) rotateY(-180deg)';
+    var TURN_EASE = 'cubic-bezier(.45,.05,.25,1)';
+    // Ends the turn when its animations do, or at once when another starts.
+    function finish(parts, anims, after) {
+      var end = function () {
+        if (endTurn === end) { endTurn = null; }
+        anims.forEach(function (a) { a.cancel(); });
+        parts.forEach(function (n) { n.remove(); });
+        after();
       };
+      endTurn = end;
+      Promise.all(anims.map(function (a) { return a.finished; })).then(end, function () {});
+    }
+
+    function turn(to) {
+      if (!cur || state !== 'open' || to === at || to < 0 || to >= list().length) { return; }
+      // A turn asked for mid-turn finishes the one under way first.
+      if (endTurn) { endTurn(); }
+      if (still || !animates) { show(to); side(); return; }
+      var forward = to > at;
+      if (single) {
+        var across = Math.floor(at / 2) !== Math.floor(to / 2);
+        if (across && verso(at) !== forward) { turnOver(to, forward); } else { slide(to, forward); }
+        return;
+      }
+      var under = null;
+      var front;
       if (forward) {
-        leaf.appendChild(copy(right, 'fb__leaf-face'));
+        front = copy(right, 'fb__leaf-face');
         show(to);
       } else {
         under = copy(right, 'fb__under');
         fb.appendChild(under);
         show(to);
-        leaf.appendChild(copy(right, 'fb__leaf-face'));
+        front = copy(right, 'fb__leaf-face');
       }
-      // On one page there is nothing on the left: the copy's back is bare,
-      // so it vanishes as it passes the spine.
-      var back = single ? document.createElement('div') : copy(leftSheet, 'fb__sheet--left');
-      back.classList.add('fb__leaf-back');
-      leaf.appendChild(back);
+      var leaf = leafOf(front, copy(leftSheet, 'fb__sheet--left'));
       fb.appendChild(leaf);
       // No opacity here: it would flatten the leaf and show its face through.
-      var flat = 'perspective(2400px) rotateY(0deg)';
-      var over = 'perspective(2400px) rotateY(-180deg)';
-      var frames = forward ? [{ transform: flat }, { transform: over }] : [{ transform: over }, { transform: flat }];
-      leaf.style.transform = forward ? over : flat;
-      var swing = leaf.animate(frames, { duration: 760, easing: 'cubic-bezier(.45,.05,.25,1)' });
-      var end = function () {
-        if (endTurn === end) { endTurn = null; }
-        swing.cancel();
-        leaf.remove();
-        if (under) { under.remove(); }
-      };
-      endTurn = end;
-      swing.finished.then(end, function () {});
+      leaf.style.transform = forward ? OVER : FLAT;
+      var swing = leaf.animate(forward ? [{ transform: FLAT }, { transform: OVER }] : [{ transform: OVER }, { transform: FLAT }],
+        { duration: 760, easing: TURN_EASE });
+      finish(under ? [leaf, under] : [leaf], [swing], function () {});
+    }
+
+    // Within a spread: the book slides a page's width, the old page with it.
+    function slide(to, forward) {
+      var delta = forward ? -size.W : size.W;
+      var old = copy(right, 'fb__under' + (verso(at) ? ' fb__sheet--left' : ''));
+      old.style.left = (verso(at) ? 6 : 0) + 'px';
+      fb.appendChild(old);
+      show(to);
+      right.style.left = ((verso(to) ? 6 : 0) - delta) + 'px';
+      fb.classList.add('is-turning');
+      var move = fb.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + delta + 'px)' }],
+        { duration: 560, easing: TURN_EASE });
+      finish([old], [move], function () {
+        right.style.left = '';
+        fb.classList.remove('is-turning');
+        side();
+      });
+    }
+
+    // Between spreads: the right-hand page turns over to become the next
+    // left-hand one (or back), and the book follows it across.
+    function turnOver(to, forward) {
+      var front, back;
+      if (forward) {
+        front = copy(right, 'fb__leaf-face');
+        show(to);
+        back = copy(right, 'fb__sheet--left');
+      } else {
+        back = copy(right, 'fb__sheet--left');
+        show(to);
+        front = copy(right, 'fb__leaf-face');
+      }
+      var blank = document.createElement('div');
+      blank.className = 'fb__sheet fb__under';
+      var leaf = leafOf(front, back);
+      fb.appendChild(blank);
+      fb.appendChild(leaf);
+      right.style.visibility = 'hidden';
+      fb.classList.add('is-turning');
+      leaf.style.transform = forward ? OVER : FLAT;
+      var here = 'translateX(0)';
+      var there = 'translateX(' + size.W + 'px)';
+      var swing = leaf.animate(forward ? [{ transform: FLAT }, { transform: OVER }] : [{ transform: OVER }, { transform: FLAT }],
+        { duration: 820, easing: TURN_EASE });
+      var follow = fb.animate(forward ? [{ transform: here }, { transform: there }] : [{ transform: there }, { transform: here }],
+        { duration: 820, easing: TURN_EASE });
+      finish([leaf, blank], [swing, follow], function () {
+        right.style.visibility = '';
+        fb.classList.remove('is-turning');
+        side();
+      });
     }
 
     /* --- the public face ---------------------------------------------------- */
@@ -881,6 +1061,14 @@
       try { history.replaceState(history.state, '', location.pathname + location.search + '#about'); } catch (error) {}
     }
 
+    navClose.addEventListener('click', function () { close({ focus: true }); });
+    // Full screen, a link outside the book (the name in the header) puts it
+    // back at once and goes where it goes.
+    onPage(document, 'click', function (e) {
+      if (!overlay || state !== 'open' || !e.target.closest || !e.target.closest('a[href]') || el.contains(e.target)) { return; }
+      queue = Promise.resolve(putBack({ instant: true }));
+    }, true);
+
     el.addEventListener('click', function (e) {
       var t = e.target.closest ? e.target.closest('button') : null;
       if (!t || !el.contains(t)) { return; }
@@ -896,7 +1084,7 @@
       // From inside the book, or from nowhere in particular while it shows.
       if (!el.contains(t)) {
         var r = el.getBoundingClientRect();
-        if (t.closest('a[href], button, [tabindex]:not([tabindex="-1"])') || r.bottom < navH || r.top > window.innerHeight) { return; }
+        if (t.closest('a[href], button, [tabindex]:not([tabindex="-1"])') || r.bottom < navH() || r.top > window.innerHeight) { return; }
       }
       if (e.key === 'Escape') { e.preventDefault(); close({ focus: true }); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); turn(at + 1); }
@@ -925,13 +1113,17 @@
       clearTimeout(fitTimer);
       fitTimer = setTimeout(function () {
         if (state !== 'open') { return; }
+        if (endTurn) { endTurn(); }
         var page = shown;
         home(shown);
         shown = null;
+        overlay = phone.matches;
+        root.classList.toggle('is-reading', overlay);
         measure(cur);
         var i = list().indexOf(page);
         show(i < 0 ? 0 : i);
-        room(el.offsetHeight);
+        side();
+        room(overlay ? 0 : el.offsetHeight);
       }, 150);
     });
     atLeave(function () { clearTimeout(fitTimer); });

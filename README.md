@@ -286,6 +286,18 @@ open the right book, and `#projects` and `#home` land on the Index and the
 Wall. The clock under the shelf is Zamboanga time. Every size on the shelf is
 a multiple of `--k`, so on a phone it scales down rather than reflowing.
 
+**On a phone** (760px and narrower), the layout follows the reference's
+phone version. The four sections move to a tab bar at the foot, and the header
+keeps only the name and the theme switch. The Wall becomes a feed of one
+project to a screen: its number, name and line stay pinned at the foot and
+fade from one project to the next, and a rail of ticks down the side marks the
+way. The Index drops to names, marks and type icons under "All projects" and
+"Find a project". The shelf becomes a pile of books lying on their sides, and
+a tapped one comes off the pile and opens full screen, with Close in the
+header and "← 1 / 5 →" at the foot. One page shows at a time, falling either
+side of the spine as in a real book, with the edge of the facing page in view.
+The book slides along within a spread, and a page turns over between spreads.
+
 **Project pages.** `/work/<project>`, after the reference's case pages: the
 facts in a column that stays put on the left — summary, marks, type, role,
 dates, the repository — and on the right the project's screen in a card, three
@@ -322,9 +334,10 @@ moon; only that click is remembered.
 
 Without JavaScript the Wall is just your name and tagline, the Index is a plain
 list with every description showing, and the six volumes are printed one after
-another, page by page. `prefers-reduced-motion` stops the drift, the marquee,
-the transitions and the book's flight (it opens and closes at once), and a
-print stylesheet prints the content as a plain document.
+another, page by page (on a phone the tab bar still works).
+`prefers-reduced-motion` stops the drift, the marquee, the transitions and the
+book's flight (it opens and closes at once), and a print stylesheet prints the
+content as a plain document.
 
 Accessibility: semantic landmarks, a skip link, visible focus rings,
 `aria-pressed` on the filters and the theme switch, `aria-expanded` on the
