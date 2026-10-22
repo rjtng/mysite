@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Barangay Maganda MIS &mdash; Al-Raji Theng</title>
+
+    <meta name="description" content="A practical management information system for resident records, document requests, and office reports." />
+    <meta name="author" content="Al-Raji Theng" />
+    <meta name="theme-color" content="#f2f1ed" />
+    <link rel="canonical" href="https://rjtg.vercel.app/work/barangay-maganda" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Al-Raji Theng" />
+    <meta property="og:title" content="Barangay Maganda MIS &mdash; Al-Raji Theng" />
+    <meta property="og:description" content="A practical management information system for resident records, document requests, and office reports." />
+    <meta property="og:url" content="https://rjtg.vercel.app/work/barangay-maganda" />
+    <meta property="og:image" content="https://rjtg.vercel.app/assets/img/og-cover.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/img/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=13" />
+
+    <script>
+      document.documentElement.classList.add("js");
+      try {
+        if (localStorage.getItem("theme") === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      } catch (error) {}
+    </script>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav" id="nav">
+      <div class="wrap nav__inner">
+        <a class="nav__brand" href="/">Al-Raji Theng</a>
+
+        <nav class="nav__links" aria-label="Sections">
+          <a href="/#wall" class="current">Wall</a>
+          <a href="/#index">Index</a>
+          <span class="nav__rule" aria-hidden="true"></span>
+          <a href="/#about">About</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+
+        <button
+          class="theme-toggle"
+          type="button"
+          data-theme-toggle
+          aria-label="Dark mode"
+          aria-pressed="false"
+        >
+          <svg
+            class="theme-toggle__icon theme-toggle__icon--moon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.5 8.5 0 1 0 20.5 15.2Z"
+            ></path>
+          </svg>
+          <svg
+            class="theme-toggle__icon theme-toggle__icon--sun"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="4"></circle>
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ═══════════════════════ project · barangay-maganda ═══════════════════════
+         Facts from the project's repository, its manual or README, and the
+         copy on the home page. The mock screen is the one in this project's
+         row of the Index; change both together. -->
+    <main id="main" class="work" data-work>
+      <div class="wrap work__grid">
+        <aside class="work__side">
+          <a class="work__back" href="/#wall" data-back
+            ><span aria-hidden="true">&larr;</span>
+            <span data-back-label>Back to the wall</span></a
+          >
+          <h1 class="work__title">Barangay Maganda MIS</h1>
+          <p class="work__lede">A practical management information system for resident records, document requests, and office reports.</p>
+          <p class="work__tech" aria-label="Built with">
+            <span class="tech tech--sprite" style="--brand: #777bb4"
+            ><svg aria-hidden="true"><use href="#t-php"></use></svg
+            ><span class="tech__name">PHP</span></span
+            >
+            <span class="tech tech--sprite" style="--brand: #4d7fa5"
+            ><svg aria-hidden="true"><use href="#t-mysql"></use></svg
+            ><span class="tech__name">MySQL</span></span
+            >
+            <span class="tech tech--sprite" style="--brand: #d84248"
+            ><svg aria-hidden="true"><use href="#t-apache"></use></svg
+            ><span class="tech__name">Apache</span></span
+            >
+            <span class="tech tech--sprite" style="--brand: #8d6bbe"
+            ><svg aria-hidden="true"><use href="#t-bootstrap"></use></svg
+            ><span class="tech__name">Bootstrap</span></span
+            >
+          </p>
+          <ul class="work__facts">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 9.5 12 4.5l8.5 5M4.5 20h15M6.5 11v6.5M10.2 11v6.5M13.8 11v6.5M17.5 11v6.5"></path></svg><span>Government system &middot; web</span></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"></path></svg><span>Full-Stack Developer &amp; Systems Designer</span></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M4 10h16M9 3v4M15 3v4"></path></svg><span>November 2025</span></li>
+          </ul>
+          <a
+            class="work__repo"
+            href="https://github.com/rjtng/Barangay_Maganda_MI_System"
+            target="_blank"
+            rel="noopener noreferrer"
+            >github.com/rjtng/<wbr>Barangay_Maganda_MI_System&nbsp;<span aria-hidden="true">&#8599;</span></a
+          >
+          <nav class="work__pager" aria-label="More projects">
+            <a href="/work/recycoin" rel="prev"><span>&larr; Previous</span>RECYCOIN</a>
+            <a href="/work/dict-frcc" rel="next"><span>Next &rarr;</span>DICT Flag Raising Compliance Checker</a>
+          </nav>
+        </aside>
+
+        <div class="work__main">
+          <figure class="work__hero">
+            <span
+              class="shot"
+              role="img"
+              aria-label="Mock-up of Barangay Maganda MIS"
+              data-fit
+              ><span class="project-preview project-preview--vision">
+                        <span class="preview__topbar"
+                          ><i></i><i></i><i></i
+                          ><b>BARANGAY <span>MIS</span></b></span
+                        >
+                        <span class="preview__body">
+                          <span class="preview__side"></span>
+                          <span class="preview__content">
+                            <span class="preview__eyebrow"
+                              >Resident records</span
+                            ><strong>Maganda<br />information system</strong>
+                            <span class="preview__camera"
+                              ><i></i><b>RECORDS ONLINE</b></span
+                            >
+                          </span>
+                        </span>
+                      </span></span
+            >
+          </figure>
+
+          <!-- EDIT: the repository only holds the administrators' sign-in and
+               account creation, so this page stops at the summary. Add what
+               the system does here, in the same shape as the other projects:
+               a <ul class="work__features"> of three, then <section>s. -->
+
+          <nav class="work__pager work__pager--end" aria-label="More projects">
+            <a href="/work/recycoin" rel="prev"><span>&larr; Previous</span>RECYCOIN</a>
+            <a href="/work/dict-frcc" rel="next"><span>Next &rarr;</span>DICT Flag Raising Compliance Checker</a>
+          </nav>
+        </div>
+      </div>
+
+      <ol class="work__rail" aria-hidden="true" data-rail></ol>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot__inner">
+        <p>&copy; <span id="year">2026</span> Al-Raji Theng</p>
+        <a href="mailto:alrajitheng@gmail.com">alrajitheng@gmail.com</a>
+        <a href="#main">Back to top <span aria-hidden="true">&uarr;</span></a>
+      </div>
+    </footer>
+
+    <script src="/assets/js/main.js?v=13"></script>
+  </body>
+</html>
