@@ -132,9 +132,9 @@ expires. Only a different URL reaches them, so the stylesheet and scripts carry
 a `?v=` token:
 
 ```html
-<link rel="stylesheet" href="/assets/css/styles.css?v=12" />
+<link rel="stylesheet" href="/assets/css/styles.css?v=13" />
 <script src="/assets/js/data-certs.js?v=5"></script>
-<script src="/assets/js/main.js?v=12"></script>
+<script src="/assets/js/main.js?v=13"></script>
 ```
 
 `main.js` carries its own token for the logo sprite it fetches. **Bump the
