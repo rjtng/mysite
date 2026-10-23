@@ -211,7 +211,7 @@ def main():
 
     d = ImageDraw.Draw(img)
     mono = load("JetBrainsMono", 20, 400)
-    d.text((80, 236), "Computer Engineer · Zamboanga City, PH", font=mono, fill=MUTED)
+    d.text((80, 236), "Computer Engineer · Lamitan City, Basilan, PH", font=mono, fill=MUTED)
 
     name = load("Inter", 86, 600)
     d.text((76, 270), "Al-Raji Theng", font=name, fill=INK)

@@ -40,14 +40,12 @@ placeholder are marked with `EDIT:` comments in `index.html`.
 
 **Written for the redesign, needs your confirmation:**
 
-1. **The tagline under your name on the Wall**, "Apps that don't just look
-   good — they work." It is a placeholder (marked `EDIT:`); say it your way.
-2. **The project types in the Index.** DICT FRCC and Barangay Maganda MIS are
+1. **The project types in the Index.** DICT FRCC and Barangay Maganda MIS are
    filed as government systems, RECYCOIN as a smart device and ReadySetHire as
    a mobile app. The filters and their counts come from these, in the
    `data-type` on each row.
-3. **Location.** The Wall says "Zamboanga City, PH", and the clock under the
-   shelf runs on Philippine time.
+2. **Location.** The Wall says "Lamitan City, Basilan, Philippines", and the
+   clock under the shelf is labelled Lamitan City and runs on Philippine time.
 
 **The project pages, read from the repositories.** Each page in `work/` was
 written from that project's code, its README or user manual, its commit
@@ -270,11 +268,14 @@ project added to the list turns up everywhere.
 **About.** A shelf of six volumes: `$whoami`, Skills, Certifications,
 Experience, Affiliations and Contact Me. Clicking a spine takes that book off
 the shelf: it slides out spine first, turns to its cover in front of the shelf
-and opens on a spread, the contents on the left and a page on the right. The
-arrows, the contents, the arrow keys or a swipe turn the pages; "Back to
-shelf" or Escape puts the book back. On a narrow screen it opens to one page
-at a time, the contents first. The book is a box in 3D while it moves and is
-flattened once it lies open, so the pages are ordinary, crisp layout.
+and opens on its first spread, the contents facing page 1. After that the
+pages go two to a spread, as in a book: 2 and 3, 4 and 5, and so on, with the
+bar under the book reading "Contents / 4", then "pp. 2–3 / 4". The arrows, the
+contents, the arrow keys or a swipe turn the pages, and from the last page
+Next opens the following volume; "Back to shelf" or Escape puts the book back.
+On a narrow screen it opens to one page at a time, in the same order. The book
+is a box in 3D while it moves and is flattened once it lies open, so the pages
+are ordinary, crisp layout.
 
 Each volume in `index.html` is a run of `<section class="vol__page">`, each
 with its `<h4 class="vol__page-title">`; the title is the page's line in the
@@ -283,8 +284,8 @@ the book while they show and puts them back after, and sizes each book to its
 longest page. The ids are the old section anchors, so links to `#skills`,
 `#experience`, `#certifications` and `#contact` from the previous design still
 open the right book, and `#projects` and `#home` land on the Index and the
-Wall. The clock under the shelf is Zamboanga time. Every size on the shelf is
-a multiple of `--k`, so on a phone it scales down rather than reflowing.
+Wall. The clock under the shelf is Lamitan City's (Philippine) time. Every
+size on the shelf is a multiple of `--k`.
 
 **On a phone** (760px and narrower), the layout follows the reference's
 phone version. The four sections move to a tab bar at the foot, and the header
@@ -332,9 +333,9 @@ raised paper, ink, muted ink and hairlines — with a dark set under
 `[data-theme="dark"]`. The page is light unless a visitor picks dark with the
 moon; only that click is remembered.
 
-Without JavaScript the Wall is just your name and tagline, the Index is a plain
-list with every description showing, and the six volumes are printed one after
-another, page by page (on a phone the tab bar still works).
+Without JavaScript the Wall is just your name and location, the Index is a
+plain list with every description showing, and the six volumes are printed one
+after another, page by page (on a phone the tab bar still works).
 `prefers-reduced-motion` stops the drift, the marquee, the transitions and the
 book's flight (it opens and closes at once), and a print stylesheet prints the
 content as a plain document.
