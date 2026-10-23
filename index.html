@@ -29,7 +29,7 @@
     <meta property="og:url" content="https://rjtg.vercel.app/" />
     <meta
       property="og:image"
-      content="https://rjtg.vercel.app/assets/img/og-cover.png"
+      content="https://rjtg.vercel.app/assets/img/og-cover.png?v=2"
     />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -48,7 +48,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://rjtg.vercel.app/assets/img/og-cover.png"
+      content="https://rjtg.vercel.app/assets/img/og-cover.png?v=2"
     />
 
     <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
@@ -62,7 +62,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/assets/css/styles.css?v=15" />
+    <link rel="stylesheet" href="/assets/css/styles.css?v=16" />
 
     <!-- The .js class switches on the enhancements (the shelf, the filters, the
          wall); without it every volume and every project is simply listed.
@@ -84,7 +84,12 @@
         "jobTitle": "Computer Engineer",
         "email": "mailto:alrajitheng@gmail.com",
         "url": "https://rjtg.vercel.app/",
-        "address": { "@type": "PostalAddress", "addressCountry": "PH" },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Lamitan City",
+          "addressRegion": "Basilan",
+          "addressCountry": "PH"
+        },
         "alumniOf": {
           "@type": "CollegeOrUniversity",
           "name": "Universidad de Zamboanga"
@@ -169,12 +174,10 @@
 
         <div class="wrap wall__caption">
           <div class="wall__intro">
-            <p class="wall__kicker">Computer Engineer · Zamboanga City, PH</p>
-            <h1 class="wall__title" id="wall-title">Al-Raji Theng</h1>
-            <!-- EDIT: the tagline is a placeholder; say it your way. -->
-            <p class="wall__text">
-              Apps that don&rsquo;t just look good &mdash; they&nbsp;work.
+            <p class="wall__kicker">
+              Computer Engineer · Lamitan City, Basilan, Philippines
             </p>
+            <h1 class="wall__title" id="wall-title">Al-Raji Theng</h1>
           </div>
           <div class="wall__focus" aria-hidden="true">
             <p class="wall__count" data-wall-count></p>
@@ -571,8 +574,8 @@
            A shelf of six volumes (a pile of them on a phone). Each spine is a
            link to its volume, and each volume is a run of pages (.vol__page,
            each with its title). main.js takes the book off the shelf, turns it
-           to its cover and opens it: contents on the left, one page on the
-           right, or one page at a time on a phone. Without scripting the
+           to its cover and opens it: the contents facing the first page, then
+           two pages to a spread, or one page at a time on a phone. Without scripting the
            volumes are simply printed one after another. The ids double as the
            old section anchors (#skills, #experience, #contact), so links to
            the previous design still land. -->
@@ -662,7 +665,7 @@
 
             <p class="shelf__hint" aria-hidden="true">Tap a volume to open it</p>
             <p class="shelf__clock">
-              Zamboanga City<span data-clock-sep hidden> · </span
+              Lamitan City<span data-clock-sep hidden> · </span
               ><time data-clock></time>
             </p>
           </div>
@@ -1415,6 +1418,27 @@
                     </li>
                   </ol>
                 </section>
+                <section class="vol__page">
+                  <h4 class="vol__page-title">ACPES</h4>
+                  <ol class="entries">
+                    <li class="entry">
+                      <p class="entry__when">
+                        2023 – 2026
+                        <span>Universidad de Zamboanga</span>
+                      </p>
+                      <div class="entry__what">
+                        <h4>
+                          Association of Computer Engineering Students (ACPES),
+                          Universidad de Zamboanga (UZ)
+                        </h4>
+                        <p class="entry__role">
+                          Public Relations Officer (PRO) | A.Y.&nbsp;2025&#8288;–&#8288;2026<br />
+                          Representative | 2023&#8288;–&#8288;2025
+                        </p>
+                      </div>
+                    </li>
+                  </ol>
+                </section>
               </div>
 
               <nav class="vol__nav" aria-label="Volumes">
@@ -1584,6 +1608,6 @@
     </footer>
 
     <script src="/assets/js/data-certs.js?v=5"></script>
-    <script src="/assets/js/main.js?v=15"></script>
+    <script src="/assets/js/main.js?v=16"></script>
   </body>
 </html>

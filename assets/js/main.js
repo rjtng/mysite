@@ -466,7 +466,7 @@
     var library = $('[data-library]');
     var reader = library ? bookReader(library, openHooks) : null;
 
-    /* --- the clock under the shelf, in Zamboanga time ---------------------- */
+    /* --- the clock under the shelf, in Lamitan City (Philippine time) ------ */
     var clock = $('[data-clock]');
     if (clock && window.Intl && Intl.DateTimeFormat) {
       var clockFormat = null;
@@ -574,11 +574,11 @@
         // The left-hand page first, so it is read (and tabbed through) first.
         '<div class="fb__flap">' +
           '<div class="fb__cover" aria-hidden="true"></div>' +
-          '<div class="fb__inside"><div class="fb__sheet fb__sheet--left"><div class="fb__body"></div>' +
-            '<p class="fb__folio"><span data-folio-vol></span><span>Contents</span></p></div></div>' +
+          '<div class="fb__inside"><div class="fb__sheet fb__sheet--left"><div class="fb__body" tabindex="-1"></div>' +
+            '<p class="fb__folio"><span></span><span></span></p></div></div>' +
         '</div>' +
-        '<div class="fb__page fb__sheet"><div class="fb__body"></div>' +
-          '<p class="fb__folio"><span data-folio-title></span><span data-folio-num></span></p></div>' +
+        '<div class="fb__page fb__sheet"><div class="fb__body" tabindex="-1"></div>' +
+          '<p class="fb__folio"><span></span><span></span></p></div>' +
       '</div></div>' +
       '<div class="reader__bar">' +
         '<button type="button" class="reader__turn" data-turn="-1" aria-label="Previous page"><span aria-hidden="true">&larr;</span></button>' +
@@ -625,8 +625,8 @@
     var state = 'shelf';  // 'shelf', 'moving' or 'open'
     var single = false;   // one page at a time
     var size = null;      // { W, H, D } in px
-    var at = 0;           // which of list() is on the right-hand page
-    var shown = null;
+    var at = 0;           // which of list() is in view (a spread's left-hand page)
+    var placed = [];      // the items on the pages now
     var endTurn = null;   // ends the turn under way, if any
     var overlay = false;  // the full-screen book of the phone layout
     var queue = Promise.resolve();
@@ -637,8 +637,8 @@
       for (var i = 0; i < volumes.length; i++) { if (volumes[i].id === id) { return volumes[i]; } }
       return null;
     }
-    // What the right-hand page can show: the contents too, on one page.
-    function list() { return single ? [contents].concat(cur.pages) : cur.pages; }
+    // The book in order: the contents, then the volume's pages.
+    function list() { return [contents].concat(cur.pages); }
 
     function play(node, frames, opts) {
       if (!animates || still) { return Promise.resolve(); }
@@ -657,7 +657,6 @@
         '<span class="fb__foot">Vol. ' + esc(v.num) + '</span>';
       spineFace.innerHTML = '<span class="' + v.spine.className.replace(/\s*\b(book--first|is-out)\b/g, '') + '">' +
         v.spine.innerHTML + '</span>';
-      $('[data-folio-vol]', el).textContent = 'Vol. ' + v.num;
       $('.reader__label', el).textContent = 'Vol. ' + v.num + ' \u00b7 ' + v.title;
       toc.innerHTML =
         '<p class="fb__kicker">Vol. ' + esc(v.num) + '</p>' +
@@ -699,41 +698,76 @@
       spineFace.firstChild.style.cssText = '--w:' + v.w + ';--h:' + v.h + ';--k:' + (H / v.h).toFixed(4) +
         ';--z:' + (long ? H / long : 1).toFixed(4);
       fb.classList.toggle('is-single', single);
-      // The contents live on the left page of a spread.
-      if (!single && toc.parentNode !== leftBody) { leftBody.appendChild(toc); }
     }
 
-    /* --- what the right-hand page shows ----------------------------------- */
+    /* --- what the pages show -------------------------------------------------
+       Two to a spread, as in a book: the contents facing the first page,
+       then pages 2 and 3, 4 and 5, and so on. One at a time on a phone, in
+       the same order. Next goes on to the following volume from the end. */
     function home(item) {
-      if (!item) { return; }
-      if (item.toc) {
-        if (single) { toc.remove(); } else { leftBody.appendChild(toc); }
-      } else {
-        item.home.parentNode.insertBefore(item.node, item.home.nextSibling);
-      }
+      if (item.toc) { toc.remove(); }
+      else { item.home.parentNode.insertBefore(item.node, item.home.nextSibling); }
+    }
+    // Folios mirror across the spine: the number at the outer edge.
+    function folio(sheet, item, leftHand) {
+      var n = item ? cur.pages.indexOf(item) + 1 : 0;
+      var ends = !item ? ['', ''] : item.toc ? ['Vol. ' + cur.num, 'Contents'] :
+        leftHand ? [pad(n), cur.title] : [cur.title, pad(n)];
+      $$('.fb__folio span', sheet).forEach(function (span, k) { span.textContent = ends[k]; });
+    }
+    function following() {
+      var i = volumes.indexOf(cur);
+      return i >= 0 && i < volumes.length - 1 ? volumes[i + 1] : null;
     }
     function show(i) {
       var items = list();
-      home(shown);
+      // Focus on the contents follows the reader to the page they chose.
+      var lost = toc.contains(document.activeElement);
+      placed.forEach(home);
       at = Math.max(0, Math.min(items.length - 1, i));
-      shown = items[at];
-      rightBody.appendChild(shown.node);
+      if (!single) { at -= at % 2; }
+      var leftItem = single ? null : items[at];
+      var rightItem = single ? items[at] : items[at + 1] || null;
+      placed = [leftItem, rightItem].filter(Boolean);
+      if (leftItem) { leftBody.appendChild(leftItem.node); }
+      if (rightItem) { rightBody.appendChild(rightItem.node); }
+      leftBody.scrollTop = 0;
       rightBody.scrollTop = 0;
+      if (lost && !toc.isConnected) { (single ? rightBody : leftBody).focus({ preventScroll: true }); }
       right.classList.toggle('fb__sheet--left', verso(at));
+      folio(leftSheet, leftItem, true);
+      folio(right, rightItem, verso(at));
       more();
-      var n = cur.pages.indexOf(shown);
-      $('[data-folio-title]', el).textContent = shown.toc ? 'Vol. ' + cur.num : cur.title;
-      $('[data-folio-num]', el).textContent = n < 0 ? 'Contents' : pad(n + 1);
+      var inView = placed.map(function (p) { return cur.pages.indexOf(p); });
       $$('[data-goto]', toc).forEach(function (b) {
-        if (Number(b.getAttribute('data-goto')) === n) { b.setAttribute('aria-current', 'page'); }
+        if (inView.indexOf(Number(b.getAttribute('data-goto'))) >= 0) { b.setAttribute('aria-current', 'page'); }
         else { b.removeAttribute('aria-current'); }
       });
-      // One page at a time counts the contents as a page, as the reference does.
-      var count = single ? (at + 1) + ' / ' + items.length : (n < 0 ? '' : (n + 1) + ' ') + '/ ' + cur.pages.length;
+      // "Contents / 4", "pp. 2–3 / 4"; one at a time, the contents count
+      // as a page, as the reference does: "1 / 5".
+      var label, count;
+      if (single) {
+        label = items[at].title;
+        count = (at + 1) + ' / ' + items.length;
+      } else {
+        label = at === 0 ? 'Contents' : rightItem ? 'pp. ' + at + '\u2013' + (at + 1) : 'p. ' + at;
+        count = '/ ' + cur.pages.length;
+      }
       where.innerHTML = '<span class="reader__vol">Vol. ' + esc(cur.num) + ' &middot; ' + esc(cur.title) + ' &middot; </span>' +
-        '<b>' + esc(shown.title) + '</b> <span class="reader__count">' + count + '</span>';
+        '<b>' + esc(label) + '</b> <span class="reader__count">' + count + '</span>';
       prev.disabled = at === 0;
-      next.disabled = at === items.length - 1;
+      var last = at + (single ? 1 : 2) > items.length - 1;
+      var after = last ? following() : null;
+      next.disabled = last && !after;
+      if (after) {
+        next.setAttribute('data-vol', after.id);
+        next.setAttribute('aria-label', 'Next volume: ' + after.title);
+        next.innerHTML = 'Vol. ' + esc(after.num) + ' <span aria-hidden="true">&rarr;</span>';
+      } else {
+        next.removeAttribute('data-vol');
+        next.setAttribute('aria-label', 'Next page');
+        next.innerHTML = '<span aria-hidden="true">&rarr;</span>';
+      }
       if (state === 'open') { settled(); }
     }
     /* One page at a time, the pages still fall either side of a spine: the
@@ -747,8 +781,12 @@
 
     // A page longer than the book scrolls, and fades out while there is more.
     function more() {
-      right.classList.toggle('has-more', rightBody.scrollHeight - rightBody.scrollTop - rightBody.clientHeight > 4);
+      [leftSheet, right].forEach(function (sheet) {
+        var body = $('.fb__body', sheet);
+        sheet.classList.toggle('has-more', body.scrollHeight - body.scrollTop - body.clientHeight > 4);
+      });
     }
+    leftBody.addEventListener('scroll', more, { passive: true });
     rightBody.addEventListener('scroll', more, { passive: true });
 
     /* --- poses -------------------------------------------------------------
@@ -817,7 +855,7 @@
       el.classList.remove('is-open');
       dress(v);
       measure(v);
-      shown = null;
+      placed = [];
       show(0);
       side();
       var p = poses(v);
@@ -875,9 +913,8 @@
       el.classList.remove('is-open');
       var done = function () {
         if (!el.isConnected) { return; }
-        home(shown);
-        shown = null;
-        toc.remove();
+        placed.forEach(home);
+        placed = [];
         el.hidden = true;
         fb.style.transform = '';
         flap.style.transform = '';
@@ -957,6 +994,7 @@
     }
 
     function turn(to) {
+      if (!single) { to -= to % 2; }
       if (!cur || state !== 'open' || to === at || to < 0 || to >= list().length) { return; }
       // A turn asked for mid-turn finishes the one under way first.
       if (endTurn) { endTurn(); }
@@ -967,24 +1005,30 @@
         if (across && verso(at) !== forward) { turnOver(to, forward); } else { slide(to, forward); }
         return;
       }
-      var under = null;
-      var front;
+      /* Forward, the right-hand page turns over and its back is the next
+         left-hand one; the old left-hand page stays (a copy) until it lands
+         on it. Back, the reverse, the old right-hand page staying put. */
+      var front, back, held;
       if (forward) {
         front = copy(right, 'fb__leaf-face');
+        held = copy(leftSheet, 'fb__sheet--left fb__under');
+        held.style.left = (6 - size.W) + 'px';
         show(to);
+        back = copy(leftSheet, 'fb__sheet--left');
       } else {
-        under = copy(right, 'fb__under');
-        fb.appendChild(under);
+        back = copy(leftSheet, 'fb__sheet--left');
+        held = copy(right, 'fb__under');
         show(to);
         front = copy(right, 'fb__leaf-face');
       }
-      var leaf = leafOf(front, copy(leftSheet, 'fb__sheet--left'));
+      fb.appendChild(held);
+      var leaf = leafOf(front, back);
       fb.appendChild(leaf);
       // No opacity here: it would flatten the leaf and show its face through.
       leaf.style.transform = forward ? OVER : FLAT;
       var swing = leaf.animate(forward ? [{ transform: FLAT }, { transform: OVER }] : [{ transform: OVER }, { transform: FLAT }],
         { duration: 760, easing: TURN_EASE });
-      finish(under ? [leaf, under] : [leaf], [swing], function () {});
+      finish([leaf, held], [swing], function () {});
     }
 
     // Within a spread: the book slides a page's width, the old page with it.
@@ -1062,6 +1106,16 @@
     }
 
     navClose.addEventListener('click', function () { close({ focus: true }); });
+
+    // A page (or a spread) on, or from the last one the next volume; back.
+    function onward() {
+      var vol = next.getAttribute('data-vol');
+      if (!vol) { turn(at + (single ? 1 : 2)); return; }
+      if (state !== 'open') { return; }
+      try { history.replaceState(history.state, '', location.pathname + location.search + '#' + vol); } catch (error) {}
+      open(vol, { focus: true });
+    }
+    function backward() { turn(at - (single ? 1 : 2)); }
     // Full screen, a link outside the book (the name in the header) puts it
     // back at once and goes where it goes.
     onPage(document, 'click', function (e) {
@@ -1073,8 +1127,9 @@
       var t = e.target.closest ? e.target.closest('button') : null;
       if (!t || !el.contains(t)) { return; }
       if (t.classList.contains('reader__close')) { close({ focus: true }); return; }
-      if (t.hasAttribute('data-turn')) { turn(at + Number(t.getAttribute('data-turn'))); return; }
-      if (t.hasAttribute('data-goto')) { turn(list().indexOf(cur.pages[Number(t.getAttribute('data-goto'))])); }
+      if (t === next) { onward(); return; }
+      if (t === prev) { backward(); return; }
+      if (t.hasAttribute('data-goto')) { turn(Number(t.getAttribute('data-goto')) + 1); }
     });
 
     onPage(document, 'keydown', function (e) {
@@ -1087,8 +1142,8 @@
         if (t.closest('a[href], button, [tabindex]:not([tabindex="-1"])') || r.bottom < navH() || r.top > window.innerHeight) { return; }
       }
       if (e.key === 'Escape') { e.preventDefault(); close({ focus: true }); }
-      else if (e.key === 'ArrowRight') { e.preventDefault(); turn(at + 1); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); turn(at - 1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); onward(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); backward(); }
     });
 
     // A swipe across the page turns it, on a touch screen.
@@ -1103,7 +1158,7 @@
         if (!swiping) { return; }
         swiping = false;
         var dx = e.clientX - sx, dy = e.clientY - sy;
-        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) { turn(at + (dx < 0 ? 1 : -1)); }
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) { if (dx < 0) { onward(); } else { backward(); } }
       });
     }
 
@@ -1114,14 +1169,13 @@
       fitTimer = setTimeout(function () {
         if (state !== 'open') { return; }
         if (endTurn) { endTurn(); }
-        var page = shown;
-        home(shown);
-        shown = null;
+        var was = at;
+        placed.forEach(home);
+        placed = [];
         overlay = phone.matches;
         root.classList.toggle('is-reading', overlay);
         measure(cur);
-        var i = list().indexOf(page);
-        show(i < 0 ? 0 : i);
+        show(was);
         side();
         room(overlay ? 0 : el.offsetHeight);
       }, 150);
@@ -1129,8 +1183,8 @@
     atLeave(function () { clearTimeout(fitTimer); });
 
     // On paper the volumes print whole, so the page in the book goes home.
-    onPage(window, 'beforeprint', function () { if (shown && !shown.toc) { home(shown); } });
-    onPage(window, 'afterprint', function () { if (shown && !shown.toc) { rightBody.appendChild(shown.node); } });
+    onPage(window, 'beforeprint', function () { placed.forEach(home); });
+    onPage(window, 'afterprint', function () { if (cur) { show(at); } });
 
     return {
       has: function (id) { return !!byId(id); },
